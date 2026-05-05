@@ -81,6 +81,7 @@ Follow these rules strictly.
 
   python -m venv .venv
   source .venv/bin/activate
+  uv pip install -r requirements.txt
 
 - Python version:
   python==3.12

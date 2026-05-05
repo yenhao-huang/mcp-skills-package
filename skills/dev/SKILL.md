@@ -43,6 +43,7 @@ Use this skill for coding work and engineering experiments.
 - Preserve user changes and avoid unrelated cleanup.
 - Use deterministic scripts or config files when an experiment will be repeated.
 - For experiment work, isolate outputs under the project's existing output/log directory when one exists.
+- For long data-processing tasks, design a checkpoint mechanism so work can resume from where it left off rather than restarting from scratch.
 
 ### Test
 

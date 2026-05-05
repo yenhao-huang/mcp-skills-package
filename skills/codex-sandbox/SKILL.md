@@ -12,6 +12,7 @@ Expected skill layout:
 ```text
 codex-sandbox/
 ├── SKILL.md
+├── issues/
 └── src/
     ├── Dockerfile
     ├── README.md
@@ -20,6 +21,15 @@ codex-sandbox/
 ```
 
 The normal deliverable is a `.sh` file the user can run later. Do not run it yourself unless the user explicitly requests execution.
+
+## Known Issues
+
+- Before creating, updating, or running a sandbox script, check whether this skill
+  has an `issues/` directory beside `SKILL.md`. If it exists, read the relevant
+  `issues/*.md` notes and apply them to the current task.
+- In particular, known issues may describe host-specific Docker mount behavior
+  that is not captured by the generic script template. Do not rely only on the
+  template when an issue note documents a safer local convention.
 
 ## Path Rules
 
@@ -34,29 +44,47 @@ The normal deliverable is a `.sh` file the user can run later. Do not run it you
 
 ## Required Questions
 
-Before writing the script, ask these questions unless the user already provided the answers:
+Before writing a script, updating a script, or running any sandbox command, ask these questions unless the user already provided explicit answers in the current request. Do not infer the repo/workspace from `cwd`, a parent directory, or a search result.
 
-1. Do you want to mount a model directory? If yes, ask for the host path and container path. Default container path: `/models`.
-2. Do you want to mount a data directory? If yes, ask for the host path and container path. Default container path: `/data`.
-3. Besides the workspace, SSH directory, model directory, and data directory, do you need any extra mounted directories? If yes, ask for each mount as `host_path:container_path` or `host_path:container_path:ro`.
+1. Which repo/workspace directory should be mounted? Ask for the host path and container path. Default container path only after confirmation: `/workspace`.
+2. Which model directory should be mounted? Ask for the host path and container path, or confirm no model mount. Default container path only after confirmation: `/models`.
+3. Which skills directory should be mounted? Ask for the host path and container path. Default container path only after confirmation: `${CONTAINER_HOME}/.agents/skills`.
+4. Which SSH directory or prepared SSH files should be mounted? Ask for the host path and container path, or confirm no SSH mount. Default container path only after confirmation: `${CONTAINER_HOME}/.ssh:ro`.
+5. Which data directory should be mounted? Ask for the host path and container path, or confirm no data mount. Default container path only after confirmation: `/data`.
+6. Besides the repo, model, skills, SSH, and data directories, ask whether any extra mounted directories are needed. If yes, ask for each mount as `host_path:container_path` or `host_path:container_path:ro`.
 
-If the user wants to proceed without answering, create the script with empty `MODEL_DIR`, `DATA_DIR`, and `EXTRA_MOUNTS` variables so they can configure mounts later.
+If the user wants to proceed without answering, do not run the sandbox. Create only a configurable script with empty `WORKSPACE_DIR`, `MODEL_DIR`, `SKILLS_DIR`, `SSH_DIR`, `DATA_DIR`, and `EXTRA_MOUNTS` variables, and make the script fail with a clear error until `WORKSPACE_DIR` and `SKILLS_DIR` are configured.
+
+## Mount Validation
+
+After the required mount questions are answered, validate every non-empty host path before writing a script, updating a script, or running any sandbox command.
+
+- Check that each confirmed host path exists.
+- Check that the repo/workspace host path is readable, writable, and executable/searchable.
+- Check that model, skills, SSH, data, and extra mount host paths are readable and executable/searchable. Also check writability for every mount that will be mounted read-write; Docker `-v host:container` mounts are read-write unless `:ro` is explicitly confirmed.
+- If a host path does not exist, do not guess silently or continue. Ask a correction question in this form: `repo 找不到，你想找的是不是 <candidate>?` Replace `repo` with the mount label (`model`, `skills`, `ssh`, `data`, or `extra mount`) and include the best nearby candidate when one is discoverable. If no candidate is discoverable, ask for the corrected host path without writing or running the sandbox.
+- When looking for a candidate for a missing path, prefer a narrow parent-directory check and common typo correction over broad filesystem scans. For example, if `/mnat/share_data_78/howard/data` is missing but `/mnt/share_data_78/howard/data` exists, ask whether the user meant `/mnt/share_data_78/howard/data`.
+- If a host path exists but lacks required read, write, or execute/search permission, do not change permissions automatically. Ask whether it is acceptable to copy the needed files into the target project's `.runtime/` directory and mount that copy instead. Only copy after explicit confirmation.
+- If the user confirms copying into `.runtime/`, copy only the confirmed directory or prepared files needed for the mount, preserve restrictive permissions for SSH material, and mount the `.runtime/` copy instead of the inaccessible original.
+- If validation fails for any mount, stop before script creation or Docker execution unless the user explicitly provides a corrected path or confirms the `.runtime/` copy fallback.
+- Generated scripts should also fail fast with clear errors when configured mount paths are missing or lack the permissions required by their mount mode.
 
 ## Workflow
 
 1. Locate this skill's `src/` directory beside `SKILL.md`; confirm `src/Dockerfile` exists.
-2. Ask the required mount questions above before editing files, unless the user already answered them.
-3. Update `src/build_and_exec.sh` when editing the installed skill. When creating a sandbox for another project, create a new `.runtime/build_codex_sandbox.sh`-style script in the user's requested target directory and base it on `src/build_and_exec.sh`.
-4. Ensure the target project's `.gitignore` contains `.runtime/` before or while adding generated `.runtime/` files. Preserve existing `.gitignore` contents.
-5. Make the script executable with `chmod +x <script>`.
-6. Keep paths configurable through environment variables, with safe defaults.
-7. Include `set -euo pipefail`.
-8. Derive the default container name from the target repo directory as `codex-sandox-${REPO_SLUG}`, where `REPO_SLUG` is lowercased, strips a trailing `_forked` or `-forked`, and replaces non-alphanumeric characters with `-`. If a container with the chosen name already exists, stop and remove it before starting a new one.
-9. Build `codex-sandbox:local` using the host UID, GID, and username.
-10. Prepare an SSH directory under `.runtime/.ssh` if SSH keys exist on the host. Copy `id_ed25519`, `id_ed25519.pub`, and `known_hosts` only when present; set strict permissions.
-11. Write the script so that, when the user runs it later, it starts a detached container that sleeps forever and mounts the workspace, SSH directory, optional model/data directories, and any extra mount directories.
-12. Write the script so that, when the user runs it later, it ends with `docker exec -it "${CONTAINER_NAME}" bash` and lands inside the container.
-13. Stop after creating and syntax-checking the `.sh` file. Do not run the script or any Docker commands unless the user explicitly asks you to run it.
+2. Ask the required mount questions above before editing files or running Docker, unless the user already answered them explicitly.
+3. Validate confirmed mount host paths using the Mount Validation rules above. Resolve missing paths or permission issues with the user before continuing.
+4. Update `src/build_and_exec.sh` when editing the installed skill. When creating a sandbox for another project, create a new `.runtime/build_codex_sandbox.sh`-style script in the user's requested target directory and base it on `src/build_and_exec.sh`.
+5. Ensure the target project's `.gitignore` contains `.runtime/` before or while adding generated `.runtime/` files. Preserve existing `.gitignore` contents.
+6. Make the script executable with `chmod +x <script>`.
+7. Keep paths configurable through environment variables, with safe defaults.
+8. Include `set -euo pipefail`.
+9. Derive the default container name from the confirmed repo directory as `codex-sandox-${REPO_SLUG}`, where `REPO_SLUG` is lowercased, strips a trailing `_forked` or `-forked`, and replaces non-alphanumeric characters with `-`. If a container with the chosen name already exists, stop and remove it before starting a new one.
+10. Build `codex-sandbox:local` using the host UID, GID, and username.
+11. Prepare an SSH directory under `.runtime/.ssh` if SSH keys exist on the host and validation permits direct reading, or if the user confirms copying inaccessible SSH material into `.runtime/.ssh`. Copy `id_ed25519`, `id_ed25519.pub`, and `known_hosts` only when present; set strict permissions.
+12. Write the script so that, when the user runs it later, it starts a detached container that sleeps forever and mounts exactly the confirmed repo, SSH, skills, model, data, and extra mount directories. Do not add unconfirmed broad parent directories.
+13. Write the script so that, when the user runs it later, it ends with `docker exec -it "${CONTAINER_NAME}" bash` and lands inside the container.
+14. Stop after creating and syntax-checking the `.sh` file. Do not run the script or any Docker commands unless the user explicitly asks you to run it.
 
 ## Script Template
 
@@ -68,44 +96,61 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-REPO_NAME="$(basename "${PROJECT_DIR}")"
-REPO_SLUG="$(printf '%s' "${REPO_NAME}" | sed -E 's/(_forked|-forked)$//I; s/[^A-Za-z0-9]+/-/g; s/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')"
 
 IMAGE_NAME="${IMAGE_NAME:-codex-sandbox:local}"
-CONTAINER_NAME="${CONTAINER_NAME:-codex-sandox-${REPO_SLUG}}"
 USERNAME="${USERNAME:-$(id -un)}"
 CONTAINER_HOME="${CONTAINER_HOME:-/home/${USERNAME}}"
 CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-/workspace}"
 BUILD_CONTEXT="${BUILD_CONTEXT:-/home/howard/.agents/skills/codex-sandbox/src}"
-WORKSPACE_DIR="${WORKSPACE_DIR:-${PROJECT_DIR}}"
-SSH_DIR="${SSH_DIR:-${SCRIPT_DIR}/.ssh}"
+WORKSPACE_DIR="${WORKSPACE_DIR:-}"
+SSH_DIR="${SSH_DIR:-}"
+SKILLS_DIR="${SKILLS_DIR:-}"
 MODEL_DIR="${MODEL_DIR:-}"
 DATA_DIR="${DATA_DIR:-}"
+CONTAINER_SKILLS_DIR="${CONTAINER_SKILLS_DIR:-${CONTAINER_HOME}/.agents/skills}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 
-mkdir -p "${SSH_DIR}"
+if [[ -z "${WORKSPACE_DIR}" ]]; then
+  echo "WORKSPACE_DIR must be set to the confirmed repo/workspace host path." >&2
+  exit 1
+fi
+if [[ -z "${SKILLS_DIR}" ]]; then
+  echo "SKILLS_DIR must be set to the confirmed skills host path." >&2
+  exit 1
+fi
 
-if [[ -f "${HOME}/.ssh/id_ed25519" ]]; then
+REPO_NAME="$(basename "${WORKSPACE_DIR}")"
+REPO_SLUG="$(printf '%s' "${REPO_NAME}" | sed -E 's/(_forked|-forked)$//I; s/[^A-Za-z0-9]+/-/g; s/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')"
+CONTAINER_NAME="${CONTAINER_NAME:-codex-sandox-${REPO_SLUG}}"
+
+if [[ -n "${SSH_DIR}" ]]; then
+  mkdir -p "${SSH_DIR}"
+fi
+mkdir -p "${SKILLS_DIR}"
+
+if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/id_ed25519" ]]; then
   cp "${HOME}/.ssh/id_ed25519" "${SSH_DIR}/"
 fi
-if [[ -f "${HOME}/.ssh/id_ed25519.pub" ]]; then
+if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/id_ed25519.pub" ]]; then
   cp "${HOME}/.ssh/id_ed25519.pub" "${SSH_DIR}/"
 fi
-if [[ -f "${HOME}/.ssh/known_hosts" ]]; then
+if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/known_hosts" ]]; then
   cp "${HOME}/.ssh/known_hosts" "${SSH_DIR}/"
 fi
 
-chmod 700 "${SSH_DIR}"
-if [[ -f "${SSH_DIR}/id_ed25519" ]]; then
+if [[ -n "${SSH_DIR}" ]]; then
+  chmod 700 "${SSH_DIR}"
+fi
+if [[ -n "${SSH_DIR}" && -f "${SSH_DIR}/id_ed25519" ]]; then
   chmod 600 "${SSH_DIR}/id_ed25519"
 fi
-if [[ -f "${SSH_DIR}/id_ed25519.pub" ]]; then
+if [[ -n "${SSH_DIR}" && -f "${SSH_DIR}/id_ed25519.pub" ]]; then
   chmod 644 "${SSH_DIR}/id_ed25519.pub"
 fi
-if [[ -f "${SSH_DIR}/known_hosts" ]]; then
+if [[ -n "${SSH_DIR}" && -f "${SSH_DIR}/known_hosts" ]]; then
   chmod 644 "${SSH_DIR}/known_hosts"
 fi
 
@@ -129,9 +174,12 @@ docker_args=(
   -e "NVIDIA_VISIBLE_DEVICES=${GPU_DEVICES}"
   -e "NVIDIA_DRIVER_CAPABILITIES=compute,utility"
   -v "${WORKSPACE_DIR}:${CONTAINER_WORKDIR}"
-  -v "${SSH_DIR}:${CONTAINER_HOME}/.ssh:ro"
+  -v "${SKILLS_DIR}:${CONTAINER_SKILLS_DIR}"
 )
 
+if [[ -n "${SSH_DIR}" ]]; then
+  docker_args+=(-v "${SSH_DIR}:${CONTAINER_HOME}/.ssh:ro")
+fi
 if [[ -n "${GPU_DEVICES}" && "${GPU_DEVICES}" != "none" ]]; then
   docker_args+=(--gpus "${GPU_DEVICES}")
 fi
