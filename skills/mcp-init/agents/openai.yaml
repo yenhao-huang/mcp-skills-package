@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCP Init"
+  short_description: "Initialize Jina, Firecrawl, and Git MCP servers."
+  default_prompt: "Use $mcp-init to initialize Jina MCP, Firecrawl MCP, and Git MCP for Codex."
