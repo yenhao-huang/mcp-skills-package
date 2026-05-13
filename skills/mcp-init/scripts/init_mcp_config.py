@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize Codex MCP config for Jina, Firecrawl, and Git."""
+"""Initialize Codex MCP config for Jina, Firecrawl, Hugging Face, and Git."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import sys
 import tomllib
 
 
-SERVER_NAMES = ("jina", "firecrawl", "git")
+SERVER_NAMES = ("jina", "firecrawl", "huggingface", "git")
 
 
 def default_config_path() -> Path:
@@ -51,6 +51,15 @@ def managed_blocks(git_repository: str | None) -> str:
             [
                 'command = "npx"',
                 'args = ["-y", "firecrawl-mcp"]',
+                "startup_timeout_sec = 120",
+                "tool_timeout_sec = 600",
+            ],
+        ),
+        (
+            "huggingface",
+            [
+                'url = "https://huggingface.co/mcp"',
+                'bearer_token_env_var = "HF_TOKEN"',
                 "startup_timeout_sec = 120",
                 "tool_timeout_sec = 600",
             ],
