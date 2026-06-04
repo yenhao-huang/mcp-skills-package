@@ -12,7 +12,7 @@ description: Standardize project structure for models, datasets, and environment
 
 ## File Tree
 
-Use the following structure:
+Use this structure strictly. New files and directories must be placed in the matching location below; do not create alternate top-level directories unless the user explicitly requests it or the existing project already has a conflicting established structure.
 
 .
 ├── data/              # project-specific data (intermediate / temp)
