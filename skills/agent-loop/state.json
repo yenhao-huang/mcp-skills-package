@@ -1,0 +1,9 @@
+{
+  "next_loop": 7,
+  "target_loop": 20,
+  "phase": "plan",
+  "current_loop": 7,
+  "last_completed_loop": 6,
+  "best_artifact": "exp/integrated_stage_predictions/best_comb/eval.json",
+  "updated_at": "2026-06-03T13:08:13Z"
+}
