@@ -14,9 +14,11 @@ SSH_DIR="${SSH_DIR:-}"
 SKILLS_DIR="${SKILLS_DIR:-}"
 MODEL_DIR="${MODEL_DIR:-}"
 DATA_DIR="${DATA_DIR:-}"
+DOCKER_SOCK="${DOCKER_SOCK:-/var/run/docker.sock}"
 CONTAINER_SKILLS_DIR="${CONTAINER_SKILLS_DIR:-${CONTAINER_HOME}/.agents/skills}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
+CONTAINER_DOCKER_SOCK="${CONTAINER_DOCKER_SOCK:-/var/run/docker.sock}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 
@@ -41,6 +43,16 @@ mkdir -p "${SKILLS_DIR}"
 if [[ ! -f "${BUILD_CONTEXT}/Dockerfile" ]]; then
   echo "Missing Dockerfile in BUILD_CONTEXT: ${BUILD_CONTEXT}" >&2
   exit 1
+fi
+if [[ -n "${DOCKER_SOCK}" ]]; then
+  if [[ ! -S "${DOCKER_SOCK}" ]]; then
+    echo "DOCKER_SOCK must point to a Docker socket, or set DOCKER_SOCK='' to disable: ${DOCKER_SOCK}" >&2
+    exit 1
+  fi
+  if [[ ! -r "${DOCKER_SOCK}" || ! -w "${DOCKER_SOCK}" ]]; then
+    echo "DOCKER_SOCK must be readable and writable by the current user: ${DOCKER_SOCK}" >&2
+    exit 1
+  fi
 fi
 
 if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/id_ed25519" ]]; then
@@ -94,6 +106,14 @@ if [[ -n "${SSH_DIR}" ]]; then
 fi
 if [[ -n "${GPU_DEVICES}" && "${GPU_DEVICES}" != "none" ]]; then
   docker_args+=(--gpus "${GPU_DEVICES}")
+fi
+
+if [[ -n "${DOCKER_SOCK}" ]]; then
+  docker_args+=(
+    --group-add "$(stat -c '%g' "${DOCKER_SOCK}")"
+    -v "${DOCKER_SOCK}:${CONTAINER_DOCKER_SOCK}"
+    -e "DOCKER_HOST=unix://${CONTAINER_DOCKER_SOCK}"
+  )
 fi
 
 if [[ -n "${MODEL_DIR}" ]]; then

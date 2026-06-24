@@ -51,9 +51,10 @@ Before writing a script, updating a script, or running any sandbox command, ask 
 3. Which skills directory should be mounted? Ask for the host path and container path. Default container path only after confirmation: `${CONTAINER_HOME}/.agents/skills`.
 4. Which SSH directory or prepared SSH files should be mounted? Ask for the host path and container path, or confirm no SSH mount. Default container path only after confirmation: `${CONTAINER_HOME}/.ssh:ro`.
 5. Which data directory should be mounted? Ask for the host path and container path, or confirm no data mount. Default container path only after confirmation: `/data`.
-6. Besides the repo, model, skills, SSH, and data directories, ask whether any extra mounted directories are needed. If yes, ask for each mount as `host_path:container_path` or `host_path:container_path:ro`.
+6. Whether the host Docker socket should be mounted. Default only after confirmation: `/var/run/docker.sock` mounted to `/var/run/docker.sock`; set `DOCKER_SOCK=''` to disable.
+7. Besides the repo, model, skills, SSH, data directories, and Docker socket, ask whether any extra mounted directories are needed. If yes, ask for each mount as `host_path:container_path` or `host_path:container_path:ro`.
 
-If the user wants to proceed without answering, do not run the sandbox. Create only a configurable script with empty `WORKSPACE_DIR`, `MODEL_DIR`, `SKILLS_DIR`, `SSH_DIR`, `DATA_DIR`, and `EXTRA_MOUNTS` variables, and make the script fail with a clear error until `WORKSPACE_DIR` and `SKILLS_DIR` are configured.
+If the user wants to proceed without answering, do not run the sandbox. Create only a configurable script with empty `WORKSPACE_DIR`, `MODEL_DIR`, `SKILLS_DIR`, `SSH_DIR`, `DATA_DIR`, and `EXTRA_MOUNTS` variables; include configurable `DOCKER_SOCK` and `CONTAINER_DOCKER_SOCK` variables; and make the script fail with a clear error until `WORKSPACE_DIR` and `SKILLS_DIR` are configured.
 
 ## Mount Validation
 
@@ -62,6 +63,7 @@ After the required mount questions are answered, validate every non-empty host p
 - Check that each confirmed host path exists.
 - Check that the repo/workspace host path is readable, writable, and executable/searchable.
 - Check that model, skills, SSH, data, and extra mount host paths are readable and executable/searchable. Also check writability for every mount that will be mounted read-write; Docker `-v host:container` mounts are read-write unless `:ro` is explicitly confirmed.
+- If Docker socket mounting is confirmed, check that `DOCKER_SOCK` exists, is a socket, and is readable and writable by the current user. Add the socket's numeric group id to `docker run` with `--group-add "$(stat -c '%g' "${DOCKER_SOCK}")"` so the non-root container user can access it.
 - If a host path does not exist, do not guess silently or continue. Ask a correction question in this form: `repo 找不到，你想找的是不是 <candidate>?` Replace `repo` with the mount label (`model`, `skills`, `ssh`, `data`, or `extra mount`) and include the best nearby candidate when one is discoverable. If no candidate is discoverable, ask for the corrected host path without writing or running the sandbox.
 - When looking for a candidate for a missing path, prefer a narrow parent-directory check and common typo correction over broad filesystem scans. For example, if `/mnat/share_data_78/howard/data` is missing but `/mnt/share_data_78/howard/data` exists, ask whether the user meant `/mnt/share_data_78/howard/data`.
 - If a host path exists but lacks required read, write, or execute/search permission, do not change permissions automatically. Ask whether it is acceptable to copy the needed files into the target project's `.runtime/` directory and mount that copy instead. Only copy after explicit confirmation.
@@ -82,7 +84,7 @@ After the required mount questions are answered, validate every non-empty host p
 9. Derive the default container name from the confirmed repo directory as `codex-sandox-${REPO_SLUG}`, where `REPO_SLUG` is lowercased, strips a trailing `_forked` or `-forked`, and replaces non-alphanumeric characters with `-`. If a container with the chosen name already exists, stop and remove it before starting a new one.
 10. Build `codex-sandbox:local` using the host UID, GID, and username.
 11. Prepare an SSH directory under `.runtime/.ssh` if SSH keys exist on the host and validation permits direct reading, or if the user confirms copying inaccessible SSH material into `.runtime/.ssh`. Copy `id_ed25519`, `id_ed25519.pub`, and `known_hosts` only when present; set strict permissions.
-12. Write the script so that, when the user runs it later, it starts a detached container that sleeps forever and mounts exactly the confirmed repo, SSH, skills, model, data, and extra mount directories. Do not add unconfirmed broad parent directories.
+12. Write the script so that, when the user runs it later, it starts a detached container that sleeps forever and mounts exactly the confirmed repo, SSH, skills, model, data, Docker socket, and extra mount directories. Do not add unconfirmed broad parent directories.
 13. Write the script so that, when the user runs it later, it ends with `docker exec -it "${CONTAINER_NAME}" bash` and lands inside the container.
 14. Stop after creating and syntax-checking the `.sh` file. Do not run the script or any Docker commands unless the user explicitly asks you to run it.
 
@@ -107,9 +109,11 @@ SSH_DIR="${SSH_DIR:-}"
 SKILLS_DIR="${SKILLS_DIR:-}"
 MODEL_DIR="${MODEL_DIR:-}"
 DATA_DIR="${DATA_DIR:-}"
+DOCKER_SOCK="${DOCKER_SOCK:-/var/run/docker.sock}"
 CONTAINER_SKILLS_DIR="${CONTAINER_SKILLS_DIR:-${CONTAINER_HOME}/.agents/skills}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
+CONTAINER_DOCKER_SOCK="${CONTAINER_DOCKER_SOCK:-/var/run/docker.sock}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 
@@ -139,6 +143,17 @@ if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/id_ed25519.pub" ]]; then
 fi
 if [[ -n "${SSH_DIR}" && -f "${HOME}/.ssh/known_hosts" ]]; then
   cp "${HOME}/.ssh/known_hosts" "${SSH_DIR}/"
+fi
+
+if [[ -n "${DOCKER_SOCK}" ]]; then
+  if [[ ! -S "${DOCKER_SOCK}" ]]; then
+    echo "DOCKER_SOCK must point to a Docker socket, or set DOCKER_SOCK='' to disable: ${DOCKER_SOCK}" >&2
+    exit 1
+  fi
+  if [[ ! -r "${DOCKER_SOCK}" || ! -w "${DOCKER_SOCK}" ]]; then
+    echo "DOCKER_SOCK must be readable and writable by the current user: ${DOCKER_SOCK}" >&2
+    exit 1
+  fi
 fi
 
 if [[ -n "${SSH_DIR}" ]]; then
@@ -182,6 +197,14 @@ if [[ -n "${SSH_DIR}" ]]; then
 fi
 if [[ -n "${GPU_DEVICES}" && "${GPU_DEVICES}" != "none" ]]; then
   docker_args+=(--gpus "${GPU_DEVICES}")
+fi
+
+if [[ -n "${DOCKER_SOCK}" ]]; then
+  docker_args+=(
+    --group-add "$(stat -c '%g' "${DOCKER_SOCK}")"
+    -v "${DOCKER_SOCK}:${CONTAINER_DOCKER_SOCK}"
+    -e "DOCKER_HOST=unix://${CONTAINER_DOCKER_SOCK}"
+  )
 fi
 
 if [[ -n "${MODEL_DIR}" ]]; then

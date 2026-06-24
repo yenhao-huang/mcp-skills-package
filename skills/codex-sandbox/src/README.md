@@ -63,9 +63,11 @@ CONTAINER_HOME=/home/howard
 CONTAINER_WORKDIR=/workspace
 MODEL_DIR=/path/to/your/models
 DATA_DIR=/path/to/your/data
+DOCKER_SOCK=/var/run/docker.sock
 CONTAINER_SKILLS_DIR=/home/howard/.agents/skills
 CONTAINER_MODEL_DIR=/models
 CONTAINER_DATA_DIR=/data
+CONTAINER_DOCKER_SOCK=/var/run/docker.sock
 
 docker run -d \
   --name "${CONTAINER_NAME}" \
@@ -74,11 +76,14 @@ docker run -d \
   -e NVIDIA_VISIBLE_DEVICES="${GPU_DEVICES}" \
   -e NVIDIA_DRIVER_CAPABILITIES=compute,utility \
   --gpus "${GPU_DEVICES}" \
+  --group-add "$(stat -c '%g' "${DOCKER_SOCK}")" \
   -v "${WORKSPACE_DIR}:${CONTAINER_WORKDIR}" \
   -v "${SSH_DIR}:${CONTAINER_HOME}/.ssh:ro" \
   -v "${SKILLS_DIR}:${CONTAINER_SKILLS_DIR}" \
   -v "${MODEL_DIR}:${CONTAINER_MODEL_DIR}" \
   -v "${DATA_DIR}:${CONTAINER_DATA_DIR}" \
+  -v "${DOCKER_SOCK}:${CONTAINER_DOCKER_SOCK}" \
+  -e DOCKER_HOST="unix://${CONTAINER_DOCKER_SOCK}" \
   codex-sandbox:local \
   sleep infinity
 ```
@@ -92,9 +97,11 @@ docker run -d \
 - `CONTAINER_WORKDIR=/workspace`，容器內的工作目錄。`docker run -w` 會用到。
 - `MODEL_DIR=/path/to/your/models`，Optional。主機上的模型目錄。會掛到容器內的 `${CONTAINER_MODEL_DIR}`。
 - `DATA_DIR=/path/to/your/data`，Optional。主機上的資料目錄。會掛到容器內的 `${CONTAINER_DATA_DIR}`。
+- `DOCKER_SOCK=/var/run/docker.sock`，Optional。主機 Docker socket。設成空字串可停用掛載。
 - `CONTAINER_SKILLS_DIR=/home/howard/.agents/skills`，Optional。容器內的 skills 掛載目錄。
 - `CONTAINER_MODEL_DIR=/models`，Optional。容器內的模型掛載目錄。
 - `CONTAINER_DATA_DIR=/data`，Optional。容器內的資料掛載目錄。
+- `CONTAINER_DOCKER_SOCK=/var/run/docker.sock`，Optional。容器內 Docker socket 路徑。
 
 4. Enter the container:
 

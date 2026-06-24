@@ -1,0 +1,54 @@
+# Models / binaries
+models/
+*.gguf
+*.bin
+*.safetensors
+*.onnx
+
+# Data
+data/
+datasets/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Logs / outputs / experiments
+logs/
+results/
+exp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Node / frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.next/
+.nuxt/
+coverage/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

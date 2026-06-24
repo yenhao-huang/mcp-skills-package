@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notion Pages"
+  short_description: "Manage frequent Notion pages and databases"
+  default_prompt: "Use $notion to find and update my frequent Notion pages."

@@ -28,7 +28,7 @@ Use this skill for coding work and engineering experiments.
 - Before Superpowers `design`, read this skill's bundled `references/convention.md`. Treat its `File Tree` section as the default mandatory project structure.
 - Also check whether `references/convention.md` exists in the target project. If it exists, read it completely enough to extract the project rules that affect the task.
 - If both conventions exist, the target project's convention may override the bundled convention only when it explicitly defines a conflicting structure or rule. Otherwise, the bundled `File Tree` remains mandatory.
-- For new projects, create the project using the bundled `File Tree` exactly: `data/`, `logs/`, `lib/`, `test/`, `external/`, `configs/`, `core/api/`, `core/service/`, `ui/`, `results/`, `exp/`, `.gitignore`, and `README.md`.
+- For new projects, create the project using the bundled `File Tree` exactly: `data/`, `logs/`, `lib/`, `test/`, `external/`, `configs/`, `core/api/`, `core/service/`, `ui/`, `results/`, `exp/`, `docs/`, `.gitignore`, `AGENT.md`, `CLAUDE.md`, and `README.md`.
 - New files and directories must be placed under the exact tree defined by the active convention unless the user explicitly asks for a different structure or the existing project already has a conflicting established structure.
 - Do not create alternate top-level directories, duplicate category folders, or convenience locations that bypass the active file tree. For example, do not create generic Python `src/` or `tests/` directories when the active tree requires `core/` and `test/`.
 - Carry those rules into the following `design`, `develop`, and `test` steps.
@@ -38,7 +38,7 @@ Use this skill for coding work and engineering experiments.
 Apply this gate whenever the task is to create, open, initialize, scaffold, or set up a new project.
 
 - Before creating files, choose the active convention: bundled `references/convention.md` by default, or a target-project convention only if it explicitly overrides the bundled tree.
-- Scaffold the required top-level tree first. For the bundled convention, that means: `data/`, `logs/`, `lib/`, `test/`, `external/`, `configs/`, `core/api/`, `core/service/`, `ui/`, `results/`, `exp/`, `.gitignore`, and `README.md`.
+- Scaffold the required top-level tree first. For the bundled convention, that means: `data/`, `logs/`, `lib/`, `test/`, `external/`, `configs/`, `core/api/`, `core/service/`, `ui/`, `results/`, `exp/`, `docs/`, `.gitignore`, `AGENT.md`, `CLAUDE.md`, and `README.md`.
 - Place application logic under `core/service/`, API/CLI/routes under `core/api/`, tests under `test/`, shared helpers under `lib/`, UI code under `ui/`, configs under `configs/`, experiment code or notes under `exp/`, outputs under `results/`, and logs under `logs/`.
 - Do not scaffold framework-default directories that conflict with the active tree. If a framework expects names like `src/`, `tests/`, `app/`, or `packages/`, adapt the framework configuration to the active tree instead.
 - Before finishing, inspect the new project file list and remove or relocate any generated files that violate the active tree, including build metadata, caches, or framework defaults created during validation.

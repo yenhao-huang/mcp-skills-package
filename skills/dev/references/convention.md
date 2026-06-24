@@ -27,7 +27,10 @@ Use this structure strictly. New files and directories must be placed in the mat
 ├── ui/                # frontend / interface
 ├── results/           # evaluation outputs
 ├── exp/               # experiments / research
+├── docs/              # project documentation
 ├── .gitignore
+├── AGENT.md           # Codex/agent project instructions
+├── CLAUDE.md          # Claude project instructions
 └── README.md
 
 ---
@@ -95,20 +98,10 @@ Follow these rules strictly.
   - dataset paths
   - DB configs
 
-### 3. Git Ignore
+### 4. Git Ignore
 
-models/
-*.gguf
-*.bin
-
-data/
-datasets/
-
-.env
-.venv/
-logs/
-results/
-exp/
+For new projects, create `.gitignore` from `references/.gitignore.template`.
+Read that template before scaffolding `.gitignore`, and copy its contents exactly unless the target project convention explicitly overrides it.
 
 ---
 
