@@ -1,12 +1,12 @@
 ---
-name: skill-template
+name: skill-create
 description: >
   Use this template when creating a new Codex skill. Replace this description
   with clear trigger conditions: what the skill does, when to use it, and any
   domain-specific keywords that should activate it.
 ---
 
-# Template Skill
+# Create Skill
 
 Use this file for the essential workflow only. Keep detailed schemas, long
 examples, API notes, and domain references in `references/` so they are loaded

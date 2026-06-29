@@ -1,0 +1,12 @@
+{
+  "id": "git-commit",
+  "enabled": true,
+  "interval_hours": 24,
+  "description": "Track new commits on a remote branch and summarize changes, intent, and implementation risks once per day.",
+  "remote_name": "upstream",
+  "remote_url": "http://192.168.1.76:3000/leo/PRetrieval.git",
+  "remote_branch": "main",
+  "initial_compare_base": "HEAD",
+  "reports_dir": "reports",
+  "report_filename_prefix": "remote-commit-insight"
+}

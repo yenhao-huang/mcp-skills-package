@@ -1,4 +1,4 @@
-"""Reference helper code for a template skill.
+"""Reference helper code for a create skill.
 
 Files under references/scripts/ are examples to read or adapt. If a script is
 intended to be executed directly by the skill workflow, put it in top-level

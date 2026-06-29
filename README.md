@@ -20,7 +20,8 @@
 | `mcp-init` | `skills/mcp-init/SKILL.md` | 初始化或修復 Codex MCP 設定，包含 Jina、Firecrawl、Hugging Face、Git MCP。 |
 | `notion` | `skills/notion/SKILL.md` | 管理常用 Notion pages、資料庫、頁面 registry、摘要與更新流程。 |
 | `sandox-tutorial` | `skills/sandox-tutorial/SKILL.md` | 記錄 skill、MCP、AGENTS.md 等安裝與設定筆記。 |
-| `skill-template` | `skills/skill-template/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
+| `set-daily-cron` | `skills/set-daily-cron/SKILL.md` | 設定每日 cron tasks；由 `do-cron-tasks.py` 在新 session 時檢查並執行到期任務。 |
+| `skill-create` | `skills/skill-create/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
 | `vllm-embedding-server` | `skills/vllm-embedding-server/SKILL.md` | 啟動、除錯、驗證本機 vLLM embedding server，特別是 Qwen embedding models。 |
 
 ### 使用原則
@@ -39,11 +40,12 @@
 
 ## Hooks
 
-目前 `hooks/` 底下有一支 hook 腳本。
+目前 `hooks/` 底下有下列 hook 腳本。
 
 | Hook | 路徑 | 事件 | 用途 |
 | --- | --- | --- | --- |
 | `check_session_size.py` | `hooks/check_session_size.py` | `UserPromptSubmit` | 讀取目前 transcript JSONL，檢查最近一次 assistant usage 的有效 context token 數；超過門檻時提醒使用者先執行 `/compact`。 |
+| `do-cron-tasks.py` | `hooks/do-cron-tasks.py` | `SessionStart` | 新 session 啟動時讀取 `set-daily-cron` skill 的 cron 設定；若上次執行超過一天，執行到期任務。 |
 
 ### `check_session_size.py`
 
@@ -67,12 +69,25 @@
 
 預設模式不是 hard block，而是回傳 `hookSpecificOutput.additionalContext`，要求 agent 停下來並提醒使用者執行 `/compact`。
 
+### `do-cron-tasks.py`
+
+行為摘要：
+
+- 從 stdin 讀取 hook payload，使用 payload 的 `cwd` 或目前工作目錄作為 project 根目錄。
+- 掃描 `/workspace/.codex/skills/set-daily-cron/references/tasks/*/task.py`。
+- 每個 task folder 自帶 `config.json`、`state.json`、`reports/`。
+- 動態 import `task.py`，呼叫固定介面 `should_run(config, state, context)` 與 `run(config, state, context)`。
+- 若 task 到期或 `state.json` 的 `last_report` 檔案不存在，執行該 task。
+- 第一個預設 task 是 `references/tasks/git-commit/`，會追蹤 configured remote branch 的新增 commits，輸出 diff 摘要、changed files、commit insight 與 implementation risks。
+- 報告預設寫入該 task 自己的 `reports/`，並只更新該 task 的 `state.json`。
+
 ## 目錄概覽
 
 ```text
 .
 ├── hooks/
-│   └── check_session_size.py
+│   ├── check_session_size.py
+│   └── do-cron-tasks.py
 ├── skills/
 │   ├── claude-sandbox/
 │   ├── codex-sandbox/
@@ -82,7 +97,8 @@
 │   ├── mcp-init/
 │   ├── notion/
 │   ├── sandox-tutorial/
-│   ├── skill-template/
+│   ├── set-daily-cron/
+│   ├── skill-create/
 │   ├── vllm-embedding-server/
 │   └── deprecated/
 │       └── codex-review/

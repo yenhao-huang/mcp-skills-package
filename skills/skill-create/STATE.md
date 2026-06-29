@@ -1,7 +1,7 @@
-# Template Skill State
+# Create Skill State
 
-This file is a reusable per-run template. Copy it to `STATE.md` before starting
-a new execution.
+This file is per-run working state. Reset it from
+`references/template/STATE.template.md` before starting a new execution.
 
 Run ID:
 Instance:
