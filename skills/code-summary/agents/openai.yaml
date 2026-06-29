@@ -1,0 +1,7 @@
+interface:
+  display_name: "Code Summary"
+  short_description: "Architecture and stack summaries"
+  default_prompt: "Use $code-summary to summarize this codebase with architecture diagrams, technical stack, and code statistics."
+
+policy:
+  allow_implicit_invocation: true
