@@ -54,6 +54,13 @@ Do not use this skill when:
   schemas, manipulating views, or working with comments.
 - Use `references/template/STATE.template.md` to reset `STATE.md` for a new run.
 
+## Environment
+
+- The local registry of common pages lives in `references/page-registry.md`.
+- `STATE.md` is per-run working state and should be reset from
+  `references/template/STATE.template.md` for new runs.
+- Prefer Notion tool results and registry IDs over memory.
+
 ## Rules
 
 - Prefer exact Notion IDs or URLs from the registry over semantic search.

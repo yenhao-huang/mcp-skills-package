@@ -1,150 +1,89 @@
 ---
 name: claude-sandbox
-description: Use when the user asks to set up, start, or enter a Claude Code sandbox Docker container. Guide using docker pull, docker run, and docker exec commands to launch an isolated Claude Code environment with bypassPermissions. Trigger on "開 claude sandbox", "start claude sandbox", "run claude in docker", "create claude sandbox", "進 claude 容器".
+description: >
+  Use when the user asks to set up, start, enter, or repair a Claude Code
+  sandbox Docker container. Guide or create scripts for `docker pull`,
+  `docker run`, and `docker exec` workflows that launch an isolated Claude Code
+  environment with `bypassPermissions`. Trigger on "開 claude sandbox",
+  "start claude sandbox", "run claude in docker", "create claude sandbox", or
+  "進 claude 容器".
 ---
 
 # Claude Sandbox
 
-Run Claude Code in an isolated Docker container with `bypassPermissions` mode -- no permission prompts.
+Use this skill to run Claude Code inside an isolated Docker container with a
+prepared runtime home, SSH files, workspace mounts, model/data mounts, and
+`bypassPermissions` behavior.
 
-## On Skill Load
+## When To Use
 
-**When this skill is loaded, immediately generate `shell/start.sh` in the `claude-sandbox` project directory and write the full setup + run script into it.** Do not wait for the user to ask.
+Use this skill when the user asks to:
 
-Use this template:
+- Create, set up, start, restart, or enter a Claude Code sandbox container.
+- Generate or update the bundled `src/build_and_exec.sh` or `src/run.sh`
+  helpers for the Claude sandbox.
+- Pull, tag, build, or publish the Claude sandbox image.
+- Debug whether the `claude-docker` container is running or usable.
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
+Do not use this skill when:
 
-RUNTIME_DIR="/tmp/claude-sandbox-runtime"
-CONTAINER_NAME="claude-docker"
-IMAGE="claude-sandbox"
-MODEL_DIR="/tmp2/share_data"
-DATA_DIR="/mnt/share_data_78"
+- The request is about Codex sandbox setup; use `codex-sandbox` instead.
+- The user only wants generic Docker guidance unrelated to Claude Code.
+- The task would run Docker but the user has not explicitly asked you to run it.
 
-# Prepare runtime directory
-mkdir -p "${RUNTIME_DIR}/ssh" "${RUNTIME_DIR}/claude-home/.claude"
-cp ~/.claude/.credentials.json "${RUNTIME_DIR}/claude-home/.claude/.credentials.json"
-cp ~/.claude/settings.json     "${RUNTIME_DIR}/claude-home/.claude/settings.json"
-cp ~/.ssh/id_ed25519           "${RUNTIME_DIR}/ssh/id_ed25519"
-cp ~/.ssh/id_ed25519.pub       "${RUNTIME_DIR}/ssh/id_ed25519.pub"
-cp ~/.ssh/known_hosts          "${RUNTIME_DIR}/ssh/known_hosts"
-chmod 600 "${RUNTIME_DIR}/claude-home/.claude/.credentials.json"
-chmod 600 "${RUNTIME_DIR}/ssh/id_ed25519"
+## Workflow
 
-# Remove existing container if present
-docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+1. Identify whether the task is setup, start/enter, restart/debug, or image
+   build/publish.
+2. For setup tasks, create or update `src/build_and_exec.sh` or `src/run.sh` in
+   the `claude-sandbox` skill directory using the current runtime conventions
+   below.
+3. Prepare runtime files under `/tmp/claude-sandbox-runtime`, not directly in
+   the skill directory.
+4. Copy only the Claude credentials/settings and SSH files needed by the
+   container.
+5. Start the container as `claude-docker` with the confirmed mounts.
+6. Enter Claude from the caller's current project-relative path under
+   `/workspace`.
+7. Validate with `docker ps`, `docker exec`, or the smallest command that proves
+   the requested behavior.
 
-# Start container
-docker run -d \
-  --name "${CONTAINER_NAME}" \
-  --restart unless-stopped \
-  -v "${RUNTIME_DIR}/claude-home:/claude-home" \
-  -v "${RUNTIME_DIR}/ssh:/claude-home/.ssh:ro" \
-  -v "/tmp2/howard:/workspace" \
-  -v "${MODEL_DIR}:/models" \
-  -v "${DATA_DIR}:/data" \
-  -w /workspace \
-  --network host \
-  --entrypoint sleep \
-  "${IMAGE}" infinity
+## References
 
-# Enter Claude
-REL=$(realpath --relative-to="/tmp2/howard" "$(pwd)" 2>/dev/null || echo ".")
-[[ "$REL" == ..* ]] && REL="."
-docker exec -it \
-  -w "/workspace/${REL}" \
-  --user "$(id -u):$(id -g)" \
-  -e HOME=/claude-home \
-  "${CONTAINER_NAME}" claude "$@"
-```
+- Use `src/build_and_exec.sh` as the setup/start helper.
+- Use `src/run.sh` as the persistent-container enter helper.
+- Use Docker image `yenhao123/claude-sandbox:latest` by default, tagged locally
+  as `claude-sandbox`.
 
-After writing the file, run `chmod +x shell/start.sh` and report the path to the user.
+## Environment
 
-## Setup (First-time)
+- Container name: `claude-docker`.
+- Runtime directory: `/tmp/claude-sandbox-runtime`.
+- Claude home mount: `/tmp/claude-sandbox-runtime/claude-home` to
+  `/claude-home`.
+- SSH mount: `/tmp/claude-sandbox-runtime/ssh` to `/claude-home/.ssh:ro`.
+- Workspace mount: `/tmp2/howard` to `/workspace`.
+- Model mount: `/mnt/share_data_78/howard/models` to `/models`.
+- Data mount: `/mnt/share_data_78/howard/data` to `/data`.
+- Container working directory defaults to `/workspace`.
+- Run Claude as the host UID/GID with `HOME=/claude-home`.
 
-### Pull image
+## Rules
 
-```bash
-docker pull yenhao123/claude-sandbox:latest
-docker tag yenhao123/claude-sandbox:latest claude-sandbox
-```
+- Keep bundled helper scripts executable and aligned with the environment
+  defaults above.
+- Use `set -euo pipefail` in generated shell scripts.
+- Preserve restrictive permissions for copied credentials and private keys.
+- Remove an existing `claude-docker` container before starting a replacement
+  only when the user is asking to start or restart it.
+- Do not expose or print credential file contents.
+- Do not run Docker commands unless the user explicitly asked for execution.
 
-### Prepare runtime directory
+## Output
 
-```bash
-RUNTIME_DIR="/tmp/claude-sandbox-runtime"
-mkdir -p "${RUNTIME_DIR}/ssh" "${RUNTIME_DIR}/claude-home/.claude"
-cp ~/.claude/.credentials.json "${RUNTIME_DIR}/claude-home/.claude/.credentials.json"
-cp ~/.claude/settings.json     "${RUNTIME_DIR}/claude-home/.claude/settings.json"
-cp ~/.ssh/id_ed25519           "${RUNTIME_DIR}/ssh/id_ed25519"
-cp ~/.ssh/id_ed25519.pub       "${RUNTIME_DIR}/ssh/id_ed25519.pub"
-cp ~/.ssh/known_hosts          "${RUNTIME_DIR}/ssh/known_hosts"
-chmod 600 "${RUNTIME_DIR}/claude-home/.claude/.credentials.json"
-chmod 600 "${RUNTIME_DIR}/ssh/id_ed25519"
-```
+Final responses should include:
 
-### Start container
-
-```bash
-RUNTIME_DIR="/tmp/claude-sandbox-runtime"
-MODEL_DIR="/tmp2/share_data"
-DATA_DIR="/mnt/share_data_78"
-
-docker run -d \
-  --name claude-docker \
-  --restart unless-stopped \
-  -v "${RUNTIME_DIR}/claude-home:/claude-home" \
-  -v "${RUNTIME_DIR}/ssh:/claude-home/.ssh:ro" \
-  -v "/tmp2/howard:/workspace" \
-  -v "${MODEL_DIR}:/models" \
-  -v "${DATA_DIR}:/data" \
-  -w /workspace \
-  --network host \
-  --entrypoint sleep \
-  claude-sandbox infinity
-```
-
-## Daily Usage
-
-Run from your project directory:
-
-```bash
-docker exec -it \
-  -w "/workspace/$(realpath --relative-to="/tmp2/howard" "$(pwd)")" \
-  --user "$(id -u):$(id -g)" \
-  -e HOME=/claude-home \
-  claude-docker claude
-```
-
-## Check / Restart Container
-
-```bash
-# Check if running
-docker ps --filter name=claude-docker
-
-# Stop and remove
-docker stop claude-docker && docker rm claude-docker
-
-# Restart: re-run the docker run command in Setup
-```
-
-## Build Custom Image
-
-```bash
-docker build -t claude-sandbox .
-docker tag claude-sandbox yenhao123/claude-sandbox:<version>
-docker push yenhao123/claude-sandbox:<version>
-```
-
-## Key Design
-
-| Detail | Value |
-|--------|-------|
-| Container name | `claude-docker` |
-| Runtime dir | `/tmp/claude-sandbox-runtime` |
-| Workspace mount | `/tmp2/howard` -> `/workspace` |
-| Credentials | `/claude-home/.claude/` |
-| User | host UID:GID (non-root) |
-| Restart policy | `unless-stopped` |
+- What script or container action was created or performed.
+- The helper path or Docker command the user can run.
+- Validation command and result.
+- Whether Docker was executed.

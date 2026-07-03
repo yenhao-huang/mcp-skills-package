@@ -48,7 +48,7 @@ Before writing, resolve:
 If range or source directory is ambiguous, ask once. If only topic is missing,
 infer a concise topic from the loop target stage/methods.
 
-## Required Reading
+## References
 
 For each loop, read available phase files. Prefer exact filenames but fall back
 to any markdown under the phase directory:
@@ -66,6 +66,17 @@ Also read once when available:
   end-to-end cascade behavior
 
 Trust on-disk records over memory.
+
+## Environment
+
+- Supported controller roots include `exp/claude_agent_loop/loops/`,
+  `exp/agent_loop_st3_0612/loops/`, and
+  `exp/agent_loop_controller/loops/`.
+- Default output path:
+  `docs/plans/<controller>_loop_observe/loops_<start>_<end>_<stage>_analysis.md`
+  unless the controller already has an observe directory.
+- Codex-specific loops under `exp/codex_agent_loop/loops/loopsNNN/` should use
+  the existing `codex-loop-analysis` skill when available.
 
 ## Output Format
 
@@ -186,7 +197,11 @@ Keep each subsection concise. Do not paste raw variant grids.
 Optionally end Section 5 with `### 橫向觀察` only when there is a cross-loop
 pattern not already clear from sections 1-3.
 
-## Hygiene Rules
+## Rules
+
+Follow the hygiene rules below and the fixed output format exactly.
+
+### Hygiene Rules
 
 - Never invent numbers, thresholds, artifact paths, or verdicts.
 - If exp/dev/reflect disagree, treat exp metrics as authoritative and flag the
@@ -211,3 +226,12 @@ pattern not already clear from sections 1-3.
 9. Write the markdown file.
 10. Report output path, loops analyzed, verdict counts, and the main unresolved
     issue.
+
+## Output
+
+Final responses should include:
+
+- Output markdown path.
+- Loop range and controller analyzed.
+- Verdict counts.
+- Main unresolved issue or next recommendation.
