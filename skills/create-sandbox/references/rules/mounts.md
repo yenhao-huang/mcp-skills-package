@@ -21,6 +21,20 @@ Before writing, updating, or running a sandbox script, ask for:
 - Extra mounts: any additional `host_path:container_path` or
   `host_path:container_path:ro` entries.
 
+Use this concrete prompt when the request does not already provide explicit
+mount answers:
+
+```text
+要建立 sandbox 前我需要先確認掛載設定：
+
+1. workspace/repo 要掛哪個 host path？container 內路徑要用 `/workspace` 嗎？
+2. model 要掛嗎？如果要，host path 是什麼？container 內路徑要用 `/models` 嗎？
+3. SSH 要掛嗎？使用 host `~/.ssh` 複製必要 key 到 `.runtime/.ssh` 可以嗎？
+4. data 要掛嗎？如果要，host path 是什麼？container 內路徑要用 `/data` 嗎？
+5. Docker socket 要掛嗎？也就是 `/var/run/docker.sock:/var/run/docker.sock`
+6. 還有其他 extra mounts 嗎？格式：`/host/path:/container/path` 或 `/host/path:/container/path:ro`
+```
+
 Skills directories are not part of the standard sandbox mount questions and
 should not be mounted unless the user explicitly provides one as an extra
 mount.

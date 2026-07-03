@@ -46,11 +46,10 @@ Do not use this skill when:
 3. Load only the relevant reference files listed below.
 4. Mark the current step `in_progress` in `STATE.md`.
 5. For project-local script generation, sandbox repair, or sandbox run tasks,
-   ask the required mount questions before writing or running anything unless
-   the user's request already provides explicit answers. Required questions are
-   workspace/repo mount, model mount, SSH mount, data mount, Docker socket, and
-   extra mounts. Do not silently create a blank configurable script just because
-   answers are missing.
+   ask the required mount questions defined in
+   `references/rules/mounts.md` before writing or running anything unless the
+   user's request already provides explicit answers. Do not silently create a
+   blank configurable script just because answers are missing.
 6. If the user explicitly asks to proceed without answering the mount
    questions, create only a configurable script with empty optional mounts and
    clear fail-fast behavior for missing `WORKSPACE_DIR`, as defined in
