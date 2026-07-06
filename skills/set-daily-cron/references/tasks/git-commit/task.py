@@ -34,8 +34,16 @@ def command(cmd: list[str], cwd: Path, timeout: int = 60) -> tuple[int, str]:
     return proc.returncode, proc.stdout.strip()
 
 
+def is_git_worktree(project_dir: Path) -> bool:
+    code, output = command(["git", "rev-parse", "--is-inside-work-tree"], project_dir, timeout=10)
+    return code == 0 and output.splitlines()[-1:] == ["true"]
+
+
 def should_run(config: dict, state: dict, context: dict) -> bool:
     if not config.get("enabled", True):
+        return False
+
+    if not is_git_worktree(Path(context["project_dir"])):
         return False
 
     if not state.get("last_remote_head"):
