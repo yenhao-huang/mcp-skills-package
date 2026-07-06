@@ -1,90 +1,84 @@
 ---
 name: mcp-init
-description: Initialize or repair OpenAI Codex MCP configuration for Jina MCP, Firecrawl MCP, Hugging Face MCP, and Git MCP. Use when the user asks to set up MCP servers, add Jina/Firecrawl/Hugging Face/Git MCP to Codex, bootstrap ~/.codex/config.toml, refresh MCP server blocks, or create a repeatable local MCP initialization workflow.
+description: >
+  Initialize or repair OpenAI Codex MCP configuration for Jina MCP, Firecrawl
+  MCP, Hugging Face MCP, and Git MCP. Use when the user asks to set up MCP
+  servers, add Jina/Firecrawl/Hugging Face/Git MCP to Codex, bootstrap
+  `~/.codex/config.toml`, refresh MCP server blocks, or create a repeatable
+  local MCP initialization workflow.
 ---
 
 # MCP Init
 
-## Overview
+Use this skill to configure Codex MCP servers in
+`${CODEX_HOME:-$HOME/.codex}/config.toml`.
 
-Use this skill to configure `~/.codex/config.toml` with four MCP servers:
+## When To Use
 
-- `jina`: remote Jina MCP at `https://mcp.jina.ai/v1`, authenticated with `JINA_API_KEY` through `bearer_token_env_var`.
-- `firecrawl`: local stdio server launched with `npx -y firecrawl-mcp`, expecting `FIRECRAWL_API_KEY` in the Codex process environment.
-- `huggingface`: remote Hugging Face MCP at `https://huggingface.co/mcp`, authenticated with `HF_TOKEN` through `bearer_token_env_var`.
-- `git`: local stdio server launched with `uvx mcp-server-git`; optionally bind it to a specific repository with `--repository`.
+Use this skill when the user asks to:
 
-Never hardcode API keys into config unless the user explicitly asks. Prefer environment variables and tell the user to export them before starting Codex.
+- Set up, initialize, or repair Codex MCP configuration.
+- Add or refresh Jina, Firecrawl, Hugging Face, or Git MCP server blocks.
+- Bootstrap `~/.codex/config.toml`.
+- Bind Git MCP to a specific repository.
+- Validate MCP config syntax or configured server names.
+
+Do not use this skill when:
+
+- The user is asking about MCP concepts only and no local config change is
+  needed.
+- The request targets a non-Codex MCP client unless the user explicitly wants
+  compatible config guidance.
+- The user wants secrets hardcoded; discourage this unless explicitly required.
 
 ## Workflow
 
-1. Inspect the target Codex config path. Default to `${CODEX_HOME:-$HOME/.codex}/config.toml`.
-2. Check whether `npx` is available for Firecrawl and `uvx` is available for Git. If missing, report the exact missing runtime and do not hide it with fallback installs.
-3. Use `scripts/init_mcp_config.py` to merge or replace the managed MCP blocks. The script creates a timestamped `.bak` before modifying the config.
-4. Ask for API keys only if the user wants you to validate connectivity. For configuration only, use `JINA_API_KEY`, `FIRECRAWL_API_KEY`, and `HF_TOKEN` variable names without seeing the secret values.
-5. After editing, verify the config parses as TOML and show the server names that were configured.
+1. Resolve the target config path; default to
+   `${CODEX_HOME:-$HOME/.codex}/config.toml`.
+2. Check whether `npx` is available for Firecrawl and `uvx` is available for Git.
+3. Use `scripts/init_mcp_config.py` to merge or replace managed MCP blocks. The
+   script creates a timestamped `.bak` before writing.
+4. Ask for API keys only if the user wants connectivity validation. For config
+   creation, use env var names without seeing secret values.
+5. Verify the config parses as TOML.
+6. Report the configured MCP server names and any missing runtime or env var.
 
-## Script Usage
+## References
 
-Run from any working directory:
+- Use `scripts/init_mcp_config.py` as the canonical deterministic tool.
+- Useful command:
+  `python /home/howard/.codex/skills/mcp-init/scripts/init_mcp_config.py`
+- Use `--config <path>` for a non-default config.
+- Use `--git-repository <repo>` to bind Git MCP to a repository.
+- Use `--dry-run` to print the merged config without writing.
 
-```bash
-python /home/howard/.codex/skills/mcp-init/scripts/init_mcp_config.py
-```
+## Environment
 
-Useful options:
+- `jina`: remote MCP at `https://mcp.jina.ai/v1`, authenticated by
+  `JINA_API_KEY` through `bearer_token_env_var`.
+- `firecrawl`: local stdio server launched with `npx -y firecrawl-mcp`, reading
+  `FIRECRAWL_API_KEY` from the Codex process environment.
+- `huggingface`: remote MCP at `https://huggingface.co/mcp`, authenticated by
+  `HF_TOKEN` through `bearer_token_env_var`.
+- `git`: local stdio server launched with `uvx mcp-server-git`, optionally with
+  `--repository`.
 
-```bash
-python /home/howard/.codex/skills/mcp-init/scripts/init_mcp_config.py \
-  --config /home/howard/.codex/config.toml \
-  --git-repository /path/to/repo
-```
+## Rules
 
-Use `--dry-run` to print the merged config without writing:
+- Never hardcode API keys unless the user explicitly asks.
+- Prefer environment variables and tell the user which variables to export
+  before starting Codex.
+- Do not hide missing `npx` or `uvx` behind fallback installs; report the exact
+  missing runtime.
+- Prefer binding Git MCP to the current project when the user wants a narrow
+  repository scope.
 
-```bash
-python /home/howard/.codex/skills/mcp-init/scripts/init_mcp_config.py --dry-run
-```
+## Output
 
-## Expected Config Blocks
+Final responses should include:
 
-The managed output should look like this:
-
-```toml
-[mcp_servers.jina]
-url = "https://mcp.jina.ai/v1"
-bearer_token_env_var = "JINA_API_KEY"
-startup_timeout_sec = 120
-tool_timeout_sec = 600
-
-[mcp_servers.firecrawl]
-command = "npx"
-args = ["-y", "firecrawl-mcp"]
-startup_timeout_sec = 120
-tool_timeout_sec = 600
-
-[mcp_servers.huggingface]
-url = "https://huggingface.co/mcp"
-bearer_token_env_var = "HF_TOKEN"
-startup_timeout_sec = 120
-tool_timeout_sec = 600
-
-[mcp_servers.git]
-command = "uvx"
-args = ["mcp-server-git"]
-startup_timeout_sec = 120
-tool_timeout_sec = 600
-```
-
-When `--git-repository` is supplied, the Git args become:
-
-```toml
-args = ["mcp-server-git", "--repository", "/path/to/repo"]
-```
-
-## Notes
-
-- Firecrawl's MCP server reads `FIRECRAWL_API_KEY` from its process environment. If Codex is launched from a shell, export the variable before starting Codex.
-- Jina can use Codex's `bearer_token_env_var` support for remote HTTP MCP servers, so do not put the token in the URL or headers.
-- Hugging Face can use Codex's `bearer_token_env_var` support for remote HTTP MCP servers. Export `HF_TOKEN` before starting Codex.
-- Git MCP can mutate repositories. Prefer binding it to the current project with `--git-repository` when the user wants a narrow scope.
+- Config path changed or inspected.
+- Backup path when a write occurred.
+- Server names configured.
+- Validation command and result.
+- Missing runtimes or environment variables, if any.

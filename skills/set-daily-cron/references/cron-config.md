@@ -25,11 +25,16 @@ Keep the package source and installed `.codex` copy behaviorally aligned.
 
 The hook runner must:
 
-1. Find `.codex/skills/set-daily-cron/references/tasks/*/task.py`.
-2. Treat each task folder as self-contained with `config.json`, `state.json`,
+1. Derive the project root from the hook file location:
+   `.codex/hooks/do-cron-tasks.py` -> project root. Do not use `/workspace`,
+   payload `cwd`, or container mount names as the source of truth for the task
+   root.
+2. Find `.codex/skills/set-daily-cron/references/tasks/*/task.py` under that
+   hook-derived project root.
+3. Treat each task folder as self-contained with `config.json`, `state.json`,
    and `reports/`.
-3. Dynamically import `task.py`.
-4. Call the fixed task interface:
+4. Dynamically import `task.py`.
+5. Call the fixed task interface:
 
 ```python
 def should_run(config: dict, state: dict, context: dict) -> bool:
@@ -91,7 +96,7 @@ python3 -m py_compile .codex/hooks/do-cron-tasks.py
 Run the hook manually:
 
 ```bash
-printf '{"cwd":"/workspace","hook_event_name":"SessionStart"}' | python3 .codex/hooks/do-cron-tasks.py
+printf '{"cwd":"/any/path","hook_event_name":"SessionStart"}' | python3 .codex/hooks/do-cron-tasks.py
 ```
 
 List reports:

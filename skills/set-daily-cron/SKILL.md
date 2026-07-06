@@ -57,6 +57,14 @@ Do not use this skill when:
   layout.
 - Read `references/rules/state-rules.md` when updating `STATE.md`.
 
+## Environment
+
+- Project cron checks are driven by `.codex/hooks/do-cron-tasks.py`.
+- Project-local cron task state belongs under
+  `.codex/skills/set-daily-cron/references/tasks/`.
+- `STATE.md` is per-run working state and should be reset from
+  `references/template/STATE.template.md` for new runs.
+
 ## Rules
 
 - `.codex/skills/set-daily-cron/references/tasks/` is the active project-local

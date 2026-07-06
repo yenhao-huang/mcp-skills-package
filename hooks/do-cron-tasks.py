@@ -7,12 +7,9 @@ import datetime as dt
 import hashlib
 import importlib.util
 import json
-import os
 import sys
 from pathlib import Path
 from types import ModuleType
-
-DEFAULT_WORKSPACE = Path("/workspace")
 
 
 def utc_now() -> dt.datetime:
@@ -28,24 +25,12 @@ def load_payload() -> dict:
         return {}
 
 
-def project_dir_from_payload(payload: dict) -> Path:
-    cwd = (
-        payload.get("cwd")
-        or payload.get("session_start_cwd")
-        or payload.get("workspace_dir")
-        or payload.get("workspace")
-        or os.getcwd()
-    )
-    return Path(cwd).resolve()
+def hook_project_dir() -> Path:
+    return Path(__file__).resolve().parents[2]
 
 
 def workspace_dir_from_payload(payload: dict, project_dir: Path) -> Path:
-    explicit = payload.get("workspace_dir") or payload.get("workspace")
-    if explicit:
-        return Path(explicit).resolve()
-    if DEFAULT_WORKSPACE.is_dir():
-        return DEFAULT_WORKSPACE
-    return project_dir
+    return hook_project_dir()
 
 
 def tasks_root(workspace_dir: Path) -> Path:
@@ -113,7 +98,7 @@ def dispatch_task(task_path: Path, context: dict) -> str | None:
 
 def main() -> int:
     payload = load_payload()
-    project_dir = project_dir_from_payload(payload)
+    project_dir = hook_project_dir()
     workspace_dir = workspace_dir_from_payload(payload, project_dir)
     root = tasks_root(workspace_dir)
     if not root.is_dir():

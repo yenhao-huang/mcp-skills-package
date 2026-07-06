@@ -7,6 +7,23 @@ description: Use for software development tasks, especially when the user asks t
 
 Use this skill for coding work and engineering experiments.
 
+## When To Use
+
+Use this skill when the user asks to:
+
+- Design, implement, debug, test, refactor, benchmark, or run experiments.
+- Create, initialize, scaffold, or set up a software project.
+- Change source code, tests, configs, scripts, or project documentation.
+- Run engineering experiments, ablations, benchmarks, model/data comparisons,
+  or uncertain technical investigations.
+
+Do not use this skill when:
+
+- The user asks only for a conceptual explanation and no codebase work is
+  needed.
+- Another more specific skill fully covers the request and no software
+  development workflow is involved.
+
 ## Required Habits
 
 1. Always read this skill's bundled `references/convention.md` before changing code. Also read the target project's `references/convention.md` when it exists.
@@ -70,7 +87,37 @@ Apply this gate whenever the task is to create, open, initialize, scaffold, or s
 - For experiments, summarize the ralph-loop table with command/config, key metric, observation, and next decision.
 - If validation cannot run, report the blocker and the best available static check.
 
-## Output Style
+## References
+
+- Always read this skill's bundled `references/convention.md` before changing
+  code.
+- Also read the target project's `references/convention.md` when it exists.
+- Treat the bundled `File Tree` as mandatory unless the target project
+  explicitly defines a conflicting convention.
+
+## Environment
+
+- New projects must start with the active convention's file tree.
+- For the bundled convention, the required top-level structure is: `data/`,
+  `logs/`, `lib/`, `test/`, `external/`, `configs/`, `core/api/`,
+  `core/service/`, `ui/`, `results/`, `exp/`, `docs/`, `.gitignore`,
+  `AGENT.md`, `CLAUDE.md`, and `README.md`.
+- Place application logic under `core/service/`, API/CLI/routes under
+  `core/api/`, tests under `test/`, shared helpers under `lib/`, UI code under
+  `ui/`, configs under `configs/`, experiment code or notes under `exp/`,
+  outputs under `results/`, and logs under `logs/`.
+
+## Rules
+
+- Follow the Superpowers design/develop/test workflow.
+- Keep edits scoped and preserve user changes.
+- Follow the active documented file tree strictly for every new or moved file.
+- Use `ralph-loop` for experiments and record commands, configs, inputs,
+  metrics, and artifacts.
+- Do not create alternate top-level directories or framework-default structures
+  that conflict with the active convention.
+
+## Output
 
 Final responses should include:
 

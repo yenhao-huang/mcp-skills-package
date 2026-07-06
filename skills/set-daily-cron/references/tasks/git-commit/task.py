@@ -78,19 +78,19 @@ def fetch_remote(project_dir: Path, config: dict) -> tuple[str, str, str]:
     remote_url = str(config.get("remote_url") or "")
     remote_branch = str(config.get("remote_branch") or "main")
 
+    if remote_url:
+        code, output = command(["git", "fetch", "--no-tags", remote_url, remote_branch], project_dir, timeout=120)
+        if code != 0:
+            raise RuntimeError(f"git fetch {remote_url} {remote_branch} failed: {output}")
+        return remote_url, remote_branch, "FETCH_HEAD"
+
     if remote_exists(project_dir, remote_name):
         code, output = command(["git", "fetch", remote_name, remote_branch], project_dir, timeout=120)
         if code != 0:
             raise RuntimeError(f"git fetch {remote_name} {remote_branch} failed: {output}")
         return remote_name, remote_branch, f"{remote_name}/{remote_branch}"
 
-    if not remote_url:
-        raise RuntimeError(f"remote {remote_name!r} not found and remote_url is empty")
-
-    code, output = command(["git", "fetch", "--no-tags", remote_url, remote_branch], project_dir, timeout=120)
-    if code != 0:
-        raise RuntimeError(f"git fetch {remote_url} {remote_branch} failed: {output}")
-    return remote_url, remote_branch, "FETCH_HEAD"
+    raise RuntimeError(f"remote {remote_name!r} not found and remote_url is empty")
 
 
 def rev_parse(project_dir: Path, ref: str) -> str:

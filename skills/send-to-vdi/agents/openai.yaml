@@ -1,0 +1,4 @@
+interface:
+  display_name: "Send to VDI"
+  short_description: "Run only send_to_vdi with the requested argument."
+  default_prompt: "Use send_to_vdi to send this file to VDI."

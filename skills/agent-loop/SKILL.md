@@ -18,6 +18,39 @@ Parallel subtasks within dev/exp are dispatched as **concurrent subagents**.
 
 ---
 
+## When To Use
+
+Use this skill when the user asks to:
+
+- Run an agent loop for an optimization task.
+- Optimize a method, benchmark, model, pipeline, or experiment with repeated
+  plan/develop/experiment/reflect cycles.
+- Resume a paused or stalled loop from `exp/agent_loop/claude/<timestamp>`.
+- Run autonomous loop mode with `loop=<N>` or `--autonomous`.
+
+Do not use this skill when:
+
+- The user asks for a one-off code change, experiment, or analysis that does not
+  need the full loop controller.
+- The user asks for Codex-specific loop analysis; use the relevant analysis
+  skill instead.
+- The task has no measurable acceptance/rejection signal.
+
+## Workflow
+
+1. Parse invocation flags such as `resume`, `loop=<N>`, `--autonomous`, and
+   `--resume-after=<Xh>`.
+2. Run Step 0 task intake unless resuming an existing workspace.
+3. Initialize or load the timestamped workspace and `state.json`.
+4. Run the four phases in order: plan, dev, exp, reflect.
+5. Use independent Agent sessions for every phase; use concurrent subagents only
+   where the detailed phase rules allow it.
+6. Synthesize phase outputs into canonical loop records.
+7. Apply reflect verdicts to decide whether to promote, continue, defer, reject,
+   or pause.
+8. Run the usage watchdog at phase boundaries.
+9. Report workspace, loop status, verdict, and next resume command.
+
 ## Invocation
 
 ```
@@ -44,7 +77,7 @@ Check the invocation prompt for either of these signals:
 
 If **either signal is present**, enter **autonomous mode**:
 
-1. Do **not** call `AskUserQuestion`. Do not ask anything.
+1. Do **not** ask the user anything.
 2. Parse `target_loop` from `loop=<N>` in the prompt (or use `100` if
    `--autonomous` is given without a number).
 3. Auto-fill the entire task spec from repo files (steps 0-A.1 and 0-A.3
@@ -81,8 +114,8 @@ Read the following before writing anything:
 ### 0-A.2. Confirm the task spec with the user (interactive mode only)
 
 Present a short proposed task spec and ask the user to confirm or adjust. Use
-`AskUserQuestion` for the decisions with real branch points; ask open questions
-in plain text for the rest. Cover, at minimum:
+the available structured user-input tool only when the current execution mode
+provides one; otherwise ask concise plain-text questions. Cover, at minimum:
 
 - **Objective / scope**: which stage(s) or metric is this loop optimizing, and
   what is the one method idea to try first.
@@ -570,6 +603,36 @@ function usage_watchdog(state, WORKSPACE, LOOP_ID, phase):
   printing the resume command and stopping; the user must re-invoke manually.
 
 ---
+
+## Environment
+
+- New workspaces are created under `exp/agent_loop/claude/<timestamp>/`.
+- Each workspace owns `state.json`, `prompts/`, `logs/`, and
+  `loops/loopsNNN/{plans,dev,exp,reflect}/`.
+- Phase prompts are written from `references/prompts/*.md`.
+- Controller details and promotion helpers live in
+  `references/controller_logic.md`.
+- `--resume-after=<Xh>` defaults to `1h` and stores seconds in state.
+
+## Rules
+
+- Confirm the task spec before creating a new workspace unless autonomous mode
+  is explicitly requested.
+- Do not run the four phases in one Agent session.
+- Do not skip synthesis after parallel subagents.
+- Do not fabricate metric numbers or verdicts.
+- Do not update method registries unless reflect verdict is `accept`.
+- Do not commit or push files unless the user explicitly asks.
+
+## Output
+
+Final responses should include:
+
+- Workspace path.
+- Current loop id and phase status.
+- Latest verdict and promoted artifact, if any.
+- Validation or metric evidence.
+- Resume command when the loop is paused or incomplete.
 
 ## References
 

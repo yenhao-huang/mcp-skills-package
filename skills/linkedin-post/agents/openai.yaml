@@ -1,0 +1,4 @@
+interface:
+  display_name: "LinkedIn Post"
+  short_description: "Write polished technical LinkedIn posts."
+  default_prompt: "Draft a LinkedIn post from these notes:"

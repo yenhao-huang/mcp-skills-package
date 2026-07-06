@@ -86,6 +86,25 @@ install_package_root_files() {
   done
 }
 
+install_git_repo() {
+  local target="$1"
+  local source_git="mcp-skills-package/.git"
+  local target_git="$target/.git"
+
+  if [[ ! -e "$source_git" ]]; then
+    echo "WARN: 找不到 $source_git，略過 $target 的 Git repo 初始化。"
+    return 0
+  fi
+
+  if [[ -e "$target_git" ]]; then
+    echo "INFO: $target_git 已存在，保留既有 Git repo。"
+    return 0
+  fi
+
+  cp -a "$source_git" "$target_git"
+  echo "OK: 已複製 $source_git 到 $target_git，$target 現在可獨立 git pull/push。"
+}
+
 merge_codex_hooks_json() {
   local source_json="mcp-skills-package/hooks.json"
   local target_json=".codex/hooks.json"
@@ -215,6 +234,7 @@ snapshot_target ".claude" "claude"
 
 for target in .codex .claude; do
   mkdir -p "$target"
+  install_git_repo "$target"
   install_package_root_files "$target"
   install_tree_contents "mcp-skills-package/skills" "$target/skills"
   install_tree_contents "mcp-skills-package/hooks" "$target/hooks"
