@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/do-cron-tasks.py\"",
+            "command": "/usr/bin/python3 /workspace/.codex/hooks/do-cron-tasks.py",
             "timeout": 30,
             "statusMessage": "Checking daily cron tasks"
           }
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/check_session_size.py\"",
+            "command": "/usr/bin/python3 /workspace/.codex/hooks/check_session_size.py",
             "timeout": 30,
             "statusMessage": "Checking session size"
           }
