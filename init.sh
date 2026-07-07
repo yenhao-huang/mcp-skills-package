@@ -36,6 +36,17 @@ list_hooks() {
   find "$hooks_dir" -type f -printf '%P\n' | sort
 }
 
+list_utils() {
+  local target="$1"
+  local utils_dir="$target/utils"
+
+  if [[ ! -d "$utils_dir" ]]; then
+    return 0
+  fi
+
+  find "$utils_dir" -type f -printf '%P\n' | sort
+}
+
 list_package_root_files() {
   local target="$1"
 
@@ -64,6 +75,7 @@ snapshot_target() {
 
   list_skills "$target" > "$tmp_dir/${label}_skills_before"
   list_hooks "$target" > "$tmp_dir/${label}_hooks_before"
+  list_utils "$target" > "$tmp_dir/${label}_utils_before"
   list_package_root_files "$target" > "$tmp_dir/${label}_package_root_before"
 }
 
@@ -148,10 +160,12 @@ report_target() {
 
   list_skills "$target" > "$tmp_dir/${label}_skills_after"
   list_hooks "$target" > "$tmp_dir/${label}_hooks_after"
+  list_utils "$target" > "$tmp_dir/${label}_utils_after"
   list_package_root_files "$target" > "$tmp_dir/${label}_package_root_after"
 
   comm -13 "$tmp_dir/${label}_skills_before" "$tmp_dir/${label}_skills_after" > "$tmp_dir/${label}_skills_added"
   comm -13 "$tmp_dir/${label}_hooks_before" "$tmp_dir/${label}_hooks_after" > "$tmp_dir/${label}_hooks_added"
+  comm -13 "$tmp_dir/${label}_utils_before" "$tmp_dir/${label}_utils_after" > "$tmp_dir/${label}_utils_added"
   comm -13 "$tmp_dir/${label}_package_root_before" "$tmp_dir/${label}_package_root_after" > "$tmp_dir/${label}_package_root_added"
 
   echo
@@ -163,6 +177,11 @@ report_target() {
   echo "[$target] hooks"
   print_list "原有:" "$tmp_dir/${label}_hooks_before"
   print_list "新增:" "$tmp_dir/${label}_hooks_added"
+
+  echo
+  echo "[$target] utils"
+  print_list "原有:" "$tmp_dir/${label}_utils_before"
+  print_list "新增:" "$tmp_dir/${label}_utils_added"
 
   echo
   echo "[$target] package root files"
@@ -194,11 +213,20 @@ verify_package_items_exist() {
     fi
   done < <(find mcp-skills-package/hooks -type f | sort)
 
+  local source_util
+  while IFS= read -r source_util; do
+    rel="${source_util#mcp-skills-package/utils/}"
+    if [[ ! -f "$target/utils/$rel" ]]; then
+      echo "FAIL: $target 缺少 util: $rel"
+      missing=1
+    fi
+  done < <(find mcp-skills-package/utils -type f | sort)
+
   if [[ "$missing" -ne 0 ]]; then
     exit 1
   fi
 
-  echo "OK: $target 已包含 mcp-skills-package 的所有 skills/hooks。"
+  echo "OK: $target 已包含 mcp-skills-package 的所有 skills/hooks/utils。"
 }
 
 verify_package_root_files_exist() {
@@ -238,6 +266,7 @@ for target in .codex .claude; do
   install_package_root_files "$target"
   install_tree_contents "mcp-skills-package/skills" "$target/skills"
   install_tree_contents "mcp-skills-package/hooks" "$target/hooks"
+  install_tree_contents "mcp-skills-package/utils" "$target/utils"
 done
 
 merge_codex_hooks_json
