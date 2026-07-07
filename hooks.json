@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/usr/bin/python3 /workspace/.codex/hooks/do-cron-tasks.py",
+            "command": "/usr/bin/python3 \"$(pwd)/.codex/hooks/do-cron-tasks.py\"",
             "timeout": 30,
             "statusMessage": "Checking daily cron tasks"
           }
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'script=\"/workspace/.codex/hooks/check_session_size.py\"; [ -f \"$script\" ] || exit 0; exec /usr/bin/python3 \"$script\"'",
+            "command": "/bin/sh -c 'script=\"$(pwd)/.codex/hooks/check_session_size.py\"; [ -f \"$script\" ] || exit 0; exec /usr/bin/python3 \"$script\"'",
             "timeout": 30,
             "statusMessage": "Checking session size"
           }
