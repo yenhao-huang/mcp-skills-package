@@ -3,10 +3,10 @@
 ## Inspect Whether Cron Ran Today
 
 Read
-`.codex/skills/set-daily-cron/references/tasks/git-commit/state.json` and
+`.codex/skills/Operations/set-daily-cron/references/tasks/git-commit/state.json` and
 inspect `last_run_at`, `last_result`, and `last_report`. Confirm the report file
 exists under
-`.codex/skills/set-daily-cron/references/tasks/git-commit/reports/`.
+`.codex/skills/Operations/set-daily-cron/references/tasks/git-commit/reports/`.
 
 ## Regenerate A Deleted Report
 

@@ -61,16 +61,16 @@ Do not use this skill when:
 
 - Project cron checks are driven by `.codex/hooks/do-cron-tasks.py`.
 - Project-local cron task state belongs under
-  `.codex/skills/set-daily-cron/references/tasks/`.
+  `.codex/skills/Operations/set-daily-cron/references/tasks/`.
 - `STATE.md` is per-run working state and should be reset from
   `references/template/STATE.template.md` for new runs.
 
 ## Rules
 
-- `.codex/skills/set-daily-cron/references/tasks/` is the active project-local
+- `.codex/skills/Operations/set-daily-cron/references/tasks/` is the active project-local
   cron task root.
 - Each cron task lives under
-  `.codex/skills/set-daily-cron/references/tasks/<task-name>/`.
+  `.codex/skills/Operations/set-daily-cron/references/tasks/<task-name>/`.
 - Do not write cron state or reports under `.agents`.
 - Keep this `SKILL.md` focused on trigger conditions and workflow. Put task
   implementation, config, state, reports, and detailed behavior in

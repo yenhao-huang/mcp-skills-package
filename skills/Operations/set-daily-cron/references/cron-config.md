@@ -8,7 +8,7 @@ Use this reference before editing cron task folders or
 ```text
 .codex/hooks/do-cron-tasks.py
 .codex/hooks.json
-.codex/skills/set-daily-cron/references/tasks/
+.codex/skills/Operations/set-daily-cron/references/tasks/
 ```
 
 The package source lives under:
@@ -29,7 +29,7 @@ The hook runner must:
    `.codex/hooks/do-cron-tasks.py` -> project root. Do not use `/workspace`,
    payload `cwd`, or container mount names as the source of truth for the task
    root.
-2. Find `.codex/skills/set-daily-cron/references/tasks/*/task.py` under that
+2. Find `.codex/skills/Operations/set-daily-cron/references/tasks/*/task.py` under that
    hook-derived project root.
 3. Treat each task folder as self-contained with `config.json`, `state.json`,
    and `reports/`.
@@ -102,5 +102,5 @@ printf '{"cwd":"/any/path","hook_event_name":"SessionStart"}' | python3 .codex/h
 List reports:
 
 ```bash
-find .codex/skills/set-daily-cron/references/tasks/git-commit/reports -maxdepth 1 -type f -printf '%f\n' | sort
+find .codex/skills/Operations/set-daily-cron/references/tasks/git-commit/reports -maxdepth 1 -type f -printf '%f\n' | sort
 ```

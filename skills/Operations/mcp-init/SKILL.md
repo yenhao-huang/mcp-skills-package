@@ -47,7 +47,7 @@ Do not use this skill when:
 
 - Use `scripts/init_mcp_config.py` as the canonical deterministic tool.
 - Useful command:
-  `python /home/howard/.codex/skills/mcp-init/scripts/init_mcp_config.py`
+  `python .codex/skills/Operations/mcp-init/scripts/init_mcp_config.py`
 - Use `--config <path>` for a non-default config.
 - Use `--git-repository <repo>` to bind Git MCP to a repository.
 - Use `--dry-run` to print the merged config without writing.

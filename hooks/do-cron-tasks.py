@@ -34,7 +34,15 @@ def workspace_dir_from_payload(payload: dict, project_dir: Path) -> Path:
 
 
 def tasks_root(workspace_dir: Path) -> Path:
-    return workspace_dir / ".codex" / "skills" / "set-daily-cron" / "references" / "tasks"
+    return (
+        workspace_dir
+        / ".codex"
+        / "skills"
+        / "Operations"
+        / "set-daily-cron"
+        / "references"
+        / "tasks"
+    )
 
 
 def load_json(path: Path, default: dict) -> dict:

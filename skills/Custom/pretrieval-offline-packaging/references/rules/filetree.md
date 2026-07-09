@@ -29,6 +29,6 @@ Packaging support files belong at their existing project locations:
 
 - root `.dockerignore` for root Docker build context
 - `web/.dockerignore` for frontend build context
-- `.codex/skills/pretrieval-offline-packaging/` for this skill
+- `.codex/skills/Custom/pretrieval-offline-packaging/` for this skill
 
 Do not commit generated `dist/` bundles.

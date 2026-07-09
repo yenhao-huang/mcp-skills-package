@@ -1,13 +1,12 @@
 ---
 name: agent-loop
 description: >
-  Run a 4-phase agent loop (plan → dev → exp → reflect) for any optimization
-  task. Creates an independent timestamped workspace at
-  exp/agent_loop/claude/<timestamp>/. Each phase is a separate Agent
-  session (fresh context window). Parallel subtasks within a phase are dispatched
-  as concurrent subagents. Use when the user says "run agent loop on X",
-  "optimize X with agent loop", "agent loop 跑 X", or resumes a stalled loop
-  with "resume loop / 繼續 loop <path>".
+  Run a 4-phase agent loop for optimization tasks: plan, dev, exp, and reflect.
+  Creates an independent timestamped workspace under exp/agent_loop/claude.
+  Each phase is a separate Agent session with fresh context. Parallel subtasks
+  within a phase are dispatched as concurrent subagents. Use when the user says
+  "run agent loop on X", "optimize X with agent loop", "agent loop run X", or
+  resumes a stalled loop with "resume loop" plus a workspace path.
 ---
 
 # Agent Loop Skill
