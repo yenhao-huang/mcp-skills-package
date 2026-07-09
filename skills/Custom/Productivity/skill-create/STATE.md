@@ -3,17 +3,17 @@
 This file is a reusable per-run template. Copy it to `STATE.md` before starting
 a new execution.
 
-Run ID: categorize-all-skills-20260709T000000Z
+Run ID: document-skill-categories-20260709T000000Z
 Instance: /workspace/PRetrieval_forked/.codex/skills
 Started: 2026-07-09T00:00:00Z
-Scope: Categorize current skills into Sales, Engineer, Operations, Finance, Legal, Content-Producer, Custom, and Others.
+Scope: Document the approved skill category taxonomy inside skill-create and enforce it in local validation.
 
 Last updated: 2026-07-09T00:00:00Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User asked to start categorizing skills under Sales, Engineer, Operations, Finance, Legal, Content-Producer, Custom, and Others. | Preserve earlier requested Custom/Productivity and Custom/wingene subcategories. |
-| 1. Read Relevant Context | completed | Read skill-create SKILL.md, filetree rules, current skill inventory, and .codex git status. |  |
-| 2. Execute Workflow | completed | Moved remaining skills into category folders, added empty category keepers, moved debug into Engineer, updated hardcoded self paths, and normalized OpenSpec frontmatter for validation. |  |
-| 3. Validate Result | completed | quick_validate passed for every visible SKILL.md; validate_skill_layout.py passed for skill-create and repo-create; py_compile passed for moved scripts and hook; git diff --check passed. |  |
-| 4. Handoff Summary | completed | Final response will report category mapping, validation commands, commit, and unrelated dirty state left untouched. |  |
+| 0. Define Scope | completed | User asked to write the skills category definitions into skill-create. | Categories: Sales, Engineer, Operations, Finance, Legal, Content-Producer, Custom, Others. |
+| 1. Read Relevant Context | completed | Read skill-create SKILL.md, filetree rules, current categorized skill inventory, and validator script. |  |
+| 2. Execute Workflow | completed | Added references/rules/categories.md, updated SKILL.md and filetree rules, and extended validate_skill_layout.py with category validation and --category-only mode. |  |
+| 3. Validate Result | completed | quick_validate passed for every visible SKILL.md; category-only validation passed for every visible skill; full layout validation passed for skill-create and repo-create; py_compile and git diff --check passed. |  |
+| 4. Handoff Summary | completed | Final response will report category definitions, validator changes, commit, and unrelated dirty state left untouched. |  |

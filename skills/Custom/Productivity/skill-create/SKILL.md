@@ -16,13 +16,16 @@ initializer creates by default.
 2. Read `STATE.md`; for a new run, reset it from
    `references/template/STATE.template.md`.
 3. Read the required references:
+   - `references/rules/categories.md` before choosing a target directory or
+     moving an existing skill.
    - `references/rules/filetree.md` before adding, moving, or removing files in
      any skill directory.
    - `references/rules/env.md` before installing packages, starting services,
      choosing frameworks, or assuming runtime details.
    - `references/rules/state-rules.md` before changing any `STATE.md`.
 4. Mark the current step `in_progress` in `STATE.md` before editing.
-5. Create or update the skill using the local required layout from
+5. Create or update the skill under the category selected from
+   `references/rules/categories.md`, using the local required layout from
    `references/rules/filetree.md`.
 6. Validate with both checks:
    - Generic skill validation, when available:
@@ -62,6 +65,7 @@ part of the skill workflow.
 - Put detailed domain behavior in `references/`.
 - Put reusable operating rules in `references/rules/`.
 - Put state templates in `references/template/`.
+- Keep skill directories under the approved category taxonomy.
 - Load only the reference files needed for the current request.
 - Do not add README, changelog, installation guide, or quick-reference files
   unless the user explicitly asks for user-facing documentation.

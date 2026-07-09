@@ -6,7 +6,7 @@ directory.
 ## Required Layout
 
 ```text
-skill-name/
+skills/<Category>/<skill-name>/
 ├── agents/
 │   └── openai.yaml
 ├── SKILL.md
@@ -23,6 +23,12 @@ skill-name/
         └── STATE.template.md
 ```
 
+`Custom` may use one extra subcategory level:
+
+```text
+skills/Custom/<subcategory>/<skill-name>/
+```
+
 The files shown without an "optional" comment are required for every new
 repo-local skill.
 
@@ -30,6 +36,10 @@ repo-local skill.
 
 - `SKILL.md`: Required skill entry point. Keep trigger conditions, core
   workflow, and short rules here.
+- `skills/<Category>/`: Business-function category selected from
+  `references/rules/categories.md`.
+- `skills/Custom/<subcategory>/`: Optional subcategory for internal or
+  user-specific skills, such as `Productivity` or `wingene`.
 - `STATE.md`: Per-run working state. Keep it at the skill root so it is easy to
   find and update.
 - `agents/openai.yaml`: UI metadata for skill lists and default prompts.
@@ -56,6 +66,17 @@ python skills/Custom/Productivity/skill-create/scripts/validate_skill_layout.py 
 If the generic validator is unavailable because dependencies such as PyYAML are
 missing, use the repository virtual environment or report the blocker. Do not
 skip the local layout validator.
+
+The local layout validator also checks that skills under `skills/` use an
+approved top-level category.
+
+To check only category placement for all skills, run:
+
+```bash
+find skills -name SKILL.md -type f -exec dirname {} \; \
+  | sort \
+  | xargs -n1 python skills/Custom/Productivity/skill-create/scripts/validate_skill_layout.py --category-only
+```
 
 ## Cleanup Rules
 
