@@ -28,7 +28,7 @@ initializer creates by default.
    - Generic skill validation, when available:
      `/home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py`
    - Local layout validation:
-     `skills/skill-create/scripts/validate_skill_layout.py <skill-dir>`
+     `skills/Custom/Productivity/skill-create/scripts/validate_skill_layout.py <skill-dir>`
 7. Mark the workflow step `completed`, `blocked`, or `skipped` in `STATE.md`
    with concrete evidence.
 

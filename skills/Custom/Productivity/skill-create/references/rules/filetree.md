@@ -50,7 +50,7 @@ Run both validators before claiming a skill is complete:
 
 ```bash
 python /home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-dir>
-python skills/skill-create/scripts/validate_skill_layout.py <skill-dir>
+python skills/Custom/Productivity/skill-create/scripts/validate_skill_layout.py <skill-dir>
 ```
 
 If the generic validator is unavailable because dependencies such as PyYAML are
