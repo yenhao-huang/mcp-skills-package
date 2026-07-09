@@ -2,3 +2,5 @@
 .codex-history/
 __pycache__/
 *.py[cod]
+reports/
+**/reports/*.md
