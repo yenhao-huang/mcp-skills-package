@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Create"
+  short_description: "Plan and scaffold repo governance docs"
+  default_prompt: "Use $repo-create to discuss and set up repository governance docs."
