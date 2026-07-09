@@ -15,6 +15,8 @@ Recommended sections:
   moving, or deleting directories.
 - `Environment Rules`: require reading `docs/rules/environment.md` before
   installing packages, changing runtimes, starting services, or assuming paths.
+- `Git Rules`: require reading `docs/rules/git.md` before staging, committing,
+  branch changes, or remote operations.
 - `Feature Tracking`: require updating `docs/feature-list.md` when major
   features are added, removed, or materially changed.
 - `Validation`: common test, lint, type-check, build, or smoke commands.
@@ -44,6 +46,8 @@ Avoid:
   structure.
 - Framework-default paths that conflict with the repo's chosen organization.
 
+Use `references/rules/filetree.md` for the fuller target-repo design rules.
+
 ## docs/rules/environment.md
 
 Purpose: define runtime and service assumptions.
@@ -63,6 +67,23 @@ Mark unknowns explicitly, for example:
 ```text
 Decision needed: choose Python version before adding runtime-specific tooling.
 ```
+
+## docs/rules/git.md
+
+Purpose: define version-control behavior for humans and agents.
+
+Include:
+
+- Whether local commits are expected after validated changes.
+- How to inspect the working tree before staging.
+- Rule to stage only files related to the current task.
+- Rule to inspect staged diff before committing.
+- Conventional Commit examples.
+- Rule that remote pushes require explicit user instruction.
+- Nested repository guidance: verify `git rev-parse --show-toplevel` before
+  staging or committing.
+
+Use `references/rules/git.md` as the source pattern.
 
 ## docs/feature-list.md
 

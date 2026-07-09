@@ -30,11 +30,15 @@ the repo.
    - Teach the user where the important docs live and how to update them.
    - Point agents to `docs/rules/filetree.md` before directory changes and to
      `docs/rules/environment.md` before environment changes.
+   - Point agents to `docs/rules/git.md` before staging, committing, or
+     changing branch/remotes.
 5. Create or update `docs/rules/`:
    - `filetree.md`: allowed directory tree, directory roles, creation rules,
      generated-file rules, and how to propose new directories.
    - `environment.md`: language/runtime versions, package managers, services,
      secrets, data/model storage, and validation commands.
+   - `git.md`: commit workflow, staging scope, dirty-worktree handling,
+     Conventional Commit guidance, and remote/push rules.
 6. Create or update `docs/feature-list.md`:
    - Track major user-visible or operational features.
    - Keep entries short, current, and linked to docs or implementation files
@@ -56,6 +60,7 @@ the repo.
 - Read `references/rules/filetree.md` before creating or moving governance
   files.
 - Read `references/rules/env.md` before writing environment assumptions.
+- Read `references/rules/git.md` before writing git workflow rules.
 - Read `references/rules/state-rules.md` before changing `STATE.md`.
 
 ## Rules

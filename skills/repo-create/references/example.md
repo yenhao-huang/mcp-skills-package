@@ -16,7 +16,8 @@ Expected behavior:
 - Discuss the repository purpose, maintainers, languages, runtime services, and
   expected directory structure.
 - Create `AGENTS.md`, `docs/rules/filetree.md`,
-  `docs/rules/environment.md`, and `docs/feature-list.md`.
+  `docs/rules/environment.md`, `docs/rules/git.md`, and
+  `docs/feature-list.md`.
 - Mark unknown runtime decisions explicitly instead of inventing them.
 
 ## Existing Repository Cleanup
@@ -33,6 +34,8 @@ Expected behavior:
 - Preserve current required instructions.
 - Add or revise repo governance docs without moving implementation files unless
   the user explicitly asks for a refactor.
+- Define git rules that protect unrelated dirty changes and prevent accidental
+  pushes.
 
 ## Feature Tracking
 
