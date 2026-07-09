@@ -38,7 +38,7 @@ def tasks_root(workspace_dir: Path) -> Path:
         workspace_dir
         / ".codex"
         / "skills"
-        / "Operations"
+        / "operations"
         / "set-daily-cron"
         / "references"
         / "tasks"
