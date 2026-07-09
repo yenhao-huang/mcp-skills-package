@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Create"
+  short_description: "Create and validate repo-local skills"
+  default_prompt: "Use $skill-create to create or repair a repository-local Codex skill."

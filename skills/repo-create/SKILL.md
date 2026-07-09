@@ -16,36 +16,47 @@ the repo.
    - Read existing `AGENTS.md`, `README.md`, `docs/`, `.gitignore`, dependency
      files, and visible top-level directories.
    - Preserve existing conventions unless the user asks to replace them.
-2. Discuss scope with the user when it is not already clear:
+2. Read `STATE.md`; for a new run, reset it from
+   `references/template/STATE.template.md`, then mark the active step
+   `in_progress`.
+3. Discuss scope with the user when it is not already clear:
    - Ask what the repo is for, who will maintain it, expected languages,
      runtime services, and what directories should be allowed.
    - If the user gave enough direction, proceed with conservative defaults and
      state the assumptions.
-3. Create or update `AGENTS.md`:
+4. Create or update `AGENTS.md`:
    - Explain the repo purpose, operating rules, validation commands, and git
      hygiene.
    - Teach the user where the important docs live and how to update them.
    - Point agents to `docs/rules/filetree.md` before directory changes and to
      `docs/rules/environment.md` before environment changes.
-4. Create or update `docs/rules/`:
+5. Create or update `docs/rules/`:
    - `filetree.md`: allowed directory tree, directory roles, creation rules,
      generated-file rules, and how to propose new directories.
    - `environment.md`: language/runtime versions, package managers, services,
      secrets, data/model storage, and validation commands.
-5. Create or update `docs/feature-list.md`:
+6. Create or update `docs/feature-list.md`:
    - Track major user-visible or operational features.
    - Keep entries short, current, and linked to docs or implementation files
      when useful.
-6. Validate the docs:
+7. Validate the docs:
    - Check links and paths against the actual repo.
    - Run the smallest relevant validation command if the repo defines one.
    - Inspect `git diff --check` before committing or handing off.
+8. Mark completed or blocked steps in `STATE.md` with evidence before the final
+   response.
 
 ## Reference
 
-Read `references/governance-docs.md` when writing or revising the actual
-`AGENTS.md`, `docs/rules/filetree.md`, `docs/rules/environment.md`, or
-`docs/feature-list.md` content.
+- Read `references/example.md` to understand trigger examples and expected
+  outputs.
+- Read `references/governance-docs.md` when writing or revising the actual
+  `AGENTS.md`, `docs/rules/filetree.md`, `docs/rules/environment.md`, or
+  `docs/feature-list.md` content.
+- Read `references/rules/filetree.md` before creating or moving governance
+  files.
+- Read `references/rules/env.md` before writing environment assumptions.
+- Read `references/rules/state-rules.md` before changing `STATE.md`.
 
 ## Rules
 

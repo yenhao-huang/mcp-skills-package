@@ -1,94 +1,76 @@
 ---
 name: skill-create
-description: >
-  Use this template when creating a new Codex skill. Replace this description
-  with clear trigger conditions: what the skill does, when to use it, and any
-  domain-specific keywords that should activate it.
+description: Create or update repository-local Codex skills under .codex/skills. Use when the user asks to create a skill, update a SKILL.md, change skill metadata, add skill references/rules/templates, validate skill behavior, or fix a skill's required layout.
 ---
 
 # Create Skill
 
-Use this file for the essential workflow only. Keep detailed schemas, long
-examples, API notes, and domain references in `references/` so they are loaded
-only when needed.
-
-## When To Use
-
-Use this skill when the user asks to:
-
-- Replace this bullet with a concrete task this skill supports.
-- Replace this bullet with another trigger phrase or workflow.
-- Replace this bullet with domain-specific language that should activate the skill.
-
-Do not use this skill when:
-
-- The task is unrelated to the skill domain.
-- A simpler built-in answer is enough.
-- The user is asking only for general discussion and no specialized workflow is needed.
+Use this skill to create and maintain repo-local Codex skills. In this
+repository, a valid skill has a stricter layout than the generic system skill
+initializer creates by default.
 
 ## Workflow
 
-1. Read the user's request and identify the exact scope.
-2. Read `STATE.md`; if this is a new run, reset it from
+1. Read the user's request and identify the exact skill name, purpose, and
+   target directory.
+2. Read `STATE.md`; for a new run, reset it from
    `references/template/STATE.template.md`.
-3. Load only the relevant files from `references/`.
-4. Mark the current step `in_progress` in `STATE.md`.
-5. Perform the work using the repository's existing conventions.
-6. Validate the result with the smallest command that proves the change.
-7. Mark the step `completed`, `blocked`, or `skipped` in `STATE.md` with evidence.
+3. Read the required references:
+   - `references/rules/filetree.md` before adding, moving, or removing files in
+     any skill directory.
+   - `references/rules/env.md` before installing packages, starting services,
+     choosing frameworks, or assuming runtime details.
+   - `references/rules/state-rules.md` before changing any `STATE.md`.
+4. Mark the current step `in_progress` in `STATE.md` before editing.
+5. Create or update the skill using the local required layout from
+   `references/rules/filetree.md`.
+6. Validate with both checks:
+   - Generic skill validation, when available:
+     `/home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py`
+   - Local layout validation:
+     `skills/skill-create/scripts/validate_skill_layout.py <skill-dir>`
+7. Mark the workflow step `completed`, `blocked`, or `skipped` in `STATE.md`
+   with concrete evidence.
 
-## References
+## Conflict Rule
 
-- Read `references/example.md` when you need the example domain rules, file map,
-  or validation checklist.
-- Read `references/rules/env.md` before installing packages, starting services,
-  choosing frameworks, or assuming a runtime language.
-- Read `references/rules/filetree.md` before adding, moving, or removing files
-  in a skill directory.
-- Read `references/rules/state-rules.md` when the workflow uses `STATE.md`
-  or needs explicit per-run progress tracking.
-- Use `references/scripts/` for reference code that should be read or adapted,
-  not executed as the skill's primary deterministic tooling.
-- Add more reference files for large details instead of expanding this file.
+If a generic system initializer or external template conflicts with
+`references/rules/filetree.md`, the repo-local filetree rule wins. Do not stop
+after generic validation passes; the local layout validator must also pass.
 
-## Environment
+## Skill Layout Contract
 
-Follow `references/rules/env.md` for package management, service definitions,
-framework choices, and programming language expectations. If the repository
-does not define the required environment, tell the user what is missing before
-making assumptions.
+Every newly created or substantially updated repo-local skill must include:
 
-## Rules
+- `SKILL.md`
+- `STATE.md`
+- `agents/openai.yaml`
+- `references/example.md`
+- `references/rules/filetree.md`
+- `references/rules/env.md`
+- `references/rules/state-rules.md`
+- `references/template/STATE.template.md`
 
-### State Rules
+Additional domain references are allowed under `references/`. Runnable helper
+scripts belong in top-level `scripts/` only when deterministic execution is
+part of the skill workflow.
 
-Keep state rules small in `SKILL.md`. Use `STATE.md` as per-run working state,
-reset it from `references/template/STATE.template.md` for new executions, and
-read `references/rules/state-rules.md` for status values, hard guards, and
-update rules.
+## Reference Rules
 
-Minimum contract:
-
-- `STATE.md` is per-run working state.
-- `references/template/STATE.template.md` is the reset source for new runs.
-- Do not claim a step is complete unless `STATE.md` was updated with evidence.
-
-### Reference Rules
-
-- Keep `SKILL.md` focused on trigger conditions and core workflow.
-- Follow `references/rules/env.md` before changing environment assumptions.
-- Follow `references/rules/filetree.md` for the expected skill directory layout.
-- Put detailed domain rules in `references/`.
-- Put reusable rules in `references/rules/`.
-- Put skill/state templates in `references/template/`.
-- Put reference code examples in `references/scripts/`; use top-level
-  `scripts/` only for deterministic tools the agent should run directly.
+- Keep `SKILL.md` focused on trigger conditions, core workflow, and short
+  guardrails.
+- Put detailed domain behavior in `references/`.
+- Put reusable operating rules in `references/rules/`.
+- Put state templates in `references/template/`.
 - Load only the reference files needed for the current request.
+- Do not add README, changelog, installation guide, or quick-reference files
+  unless the user explicitly asks for user-facing documentation.
 
 ## Output
 
 Final responses should include:
 
-- What changed or what was investigated.
-- Validation command and result.
+- What skill files changed.
+- Which validation commands passed.
+- Whether the target skill now satisfies the local required layout.
 - Any blocker or remaining risk.

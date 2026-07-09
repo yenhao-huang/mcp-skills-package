@@ -7,18 +7,24 @@ directory.
 
 ```text
 skill-name/
+├── agents/
+│   └── openai.yaml
 ├── SKILL.md
 ├── STATE.md
+├── scripts/                         # optional deterministic tools
+│   └── <tool>.py
 └── references/
     ├── example.md
     ├── rules/
+    │   ├── env.md
     │   ├── filetree.md
     │   └── state-rules.md
-    ├── scripts/
-    │   └── example_helper.py
     └── template/
         └── STATE.template.md
 ```
+
+The files shown without an "optional" comment are required for every new
+repo-local skill.
 
 ## Placement Rules
 
@@ -26,14 +32,30 @@ skill-name/
   workflow, and short rules here.
 - `STATE.md`: Per-run working state. Keep it at the skill root so it is easy to
   find and update.
+- `agents/openai.yaml`: UI metadata for skill lists and default prompts.
+- `references/example.md`: Concrete examples of when the skill should trigger
+  and what outputs it should produce.
 - `references/rules/`: Reusable operating rules, such as state handling and
-  filetree conventions.
+  filetree conventions. `env.md`, `filetree.md`, and `state-rules.md` are
+  required.
 - `references/template/`: Copyable templates, such as `STATE.template.md`.
-- `references/scripts/`: Reference code examples to read or adapt.
 - `scripts/`: Deterministic executable tools used directly by the workflow.
   Add this directory only when the skill needs runnable helper scripts.
 - `assets/`: Output assets or templates consumed by the task. Add only when the
   skill needs non-reference files such as images, fonts, or boilerplate.
+
+## Validation Rules
+
+Run both validators before claiming a skill is complete:
+
+```bash
+python /home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-dir>
+python skills/skill-create/scripts/validate_skill_layout.py <skill-dir>
+```
+
+If the generic validator is unavailable because dependencies such as PyYAML are
+missing, use the repository virtual environment or report the blocker. Do not
+skip the local layout validator.
 
 ## Cleanup Rules
 

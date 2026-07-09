@@ -7,13 +7,13 @@ Use this reference when a skill tracks multi-step work with `STATE.md`.
 State file:
 
 ```text
-deprecated/skills/template/STATE.md
+<skill-dir>/STATE.md
 ```
 
 Reusable template:
 
 ```text
-deprecated/skills/template/references/template/STATE.template.md
+<skill-dir>/references/template/STATE.template.md
 ```
 
 `STATE.md` is per-run working state. Before starting a new execution, reset it
