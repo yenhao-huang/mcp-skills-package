@@ -16,6 +16,9 @@
 | `codex-sandbox` | `skills/codex-sandbox/SKILL.md` | 建立、更新或執行 Codex sandbox；以 bundled `src/` 為 Dockerfile 與腳本來源。 |
 | `dev` | `skills/dev/SKILL.md` | 軟體開發、除錯、測試、重構、benchmark 或實驗工作；要求先讀 `references/convention.md`。 |
 | `find-skills` | `skills/find-skills/SKILL.md` | 協助搜尋、挑選、安裝 open agent skills ecosystem 的 skills。 |
+| `git-commit` | `skills/engineer/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
+| `github-issues` | `skills/engineer/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
+| `github-pr-workflow` | `skills/engineer/github-pr-workflow/SKILL.md` | 依 repository contribution 規則準備 branch、commit、push、建立及驗證 GitHub PR。 |
 | `loop-analysis` | `skills/loop-analysis/SKILL.md` | 針對 ESG contest agent-loop runs 產出固定格式的繁中 markdown 分析。 |
 | `mcp-init` | `skills/mcp-init/SKILL.md` | 初始化或修復 Codex MCP 設定，包含 Jina、Firecrawl、Hugging Face、Git MCP。 |
 | `notion` | `skills/notion/SKILL.md` | 管理常用 Notion pages、資料庫、頁面 registry、摘要與更新流程。 |
@@ -92,6 +95,10 @@
 │   ├── claude-sandbox/
 │   ├── codex-sandbox/
 │   ├── dev/
+│   ├── engineer/
+│   │   ├── git-commit/
+│   │   ├── github-issues/
+│   │   └── github-pr-workflow/
 │   ├── find-skills/
 │   ├── loop-analysis/
 │   ├── mcp-init/

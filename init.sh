@@ -20,7 +20,7 @@ list_skills() {
     return 0
   fi
 
-  find "$skills_dir" -mindepth 2 -maxdepth 2 -name SKILL.md -printf '%P\n' \
+  find "$skills_dir" -mindepth 2 -type f -name SKILL.md -printf '%P\n' \
     | sed 's#/SKILL.md$##' \
     | sort
 }
@@ -203,7 +203,7 @@ verify_package_items_exist() {
       echo "FAIL: $target 缺少 skill: $rel"
       missing=1
     fi
-  done < <(find mcp-skills-package/skills -mindepth 2 -maxdepth 2 -name SKILL.md | sort)
+  done < <(find mcp-skills-package/skills -mindepth 2 -type f -name SKILL.md | sort)
 
   while IFS= read -r source_hook; do
     rel="${source_hook#mcp-skills-package/hooks/}"

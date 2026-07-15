@@ -37,6 +37,9 @@ Current examples:
 - `code-summary`
 - `debug`
 - `dev`
+- `git-commit`
+- `github-issues`
+- `github-pr-workflow`
 - `openspec-*`
 - `repo-create`
 

@@ -1,19 +1,16 @@
 # Create Skill State
 
-This file is a reusable per-run template. Copy it to `STATE.md` before starting
-a new execution.
+Run ID: add-github-skills-20260715T054716Z
+Instance: /workspace/mcp-skills-package/skills/custom/productivity/skill-create
+Started: 2026-07-15T05:47:16Z
+Scope: Add git-commit, github-issues, and github-pr-workflow skills under the engineer category.
 
-Run ID: lowercase-skill-categories-20260709T053159Z
-Instance: /workspace/PRetrieval_forked/.codex/skills/custom/productivity/skill-create
-Started: 2026-07-09T05:31:59Z
-Scope: Rename skill category directories and category rules to lowercase.
-
-Last updated: 2026-07-09T05:34:10Z
+Last updated: 2026-07-15T05:54:45Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested lowercase categories, specifically Content-Producer -> content-producer. | Apply to all top-level categories and Custom/Productivity -> custom/productivity for consistency. |
-| 1. Read Relevant Context | completed | Read skill-create SKILL.md, categories.md, filetree.md, and git status. | Existing unrelated dirty files must be preserved. |
-| 2. Execute Workflow | completed | Renamed category directories to lowercase, including content-producer and custom/productivity; updated categories.md, filetree.md, hook paths, and skill path references. |  |
-| 3. Validate Result | completed | quick_validate passed for all skills; py_compile passed for hooks/do-cron-tasks.py and moved helper scripts; git diff --check passed; find confirmed lowercase category directories. |  |
-| 4. Handoff Summary | in_progress | Final response will summarize lowercase category paths, validation, commit, and restored unrelated dirty files. |  |
+| 0. Define Scope | completed | User named three GitHub workflow skills and specified the official git-commit upstream URL. | Create three independent skills under `skills/engineer/`. |
+| 1. Read Relevant Context | completed | Read AGENTS.md, dev convention, skill-create workflow, category/filetree/env/state rules, upstream git-commit and github-issues skills, and repository status. | Worktree was clean at start. |
+| 2. Execute Workflow | completed | Added three skills under `skills/engineer/`, documented them in README/category rules, and made installer discovery recursive. | `git-commit/SKILL.md` is verbatim upstream; the other two are adapted/local workflows. |
+| 3. Validate Result | completed | All three quick_validate runs passed; upstream git-commit diff was empty; `bash -n init.sh`, `git diff --check`, required-layout checks, and recursive installer discovery smoke test passed. | Validator used `PYTHONPATH=/opt/python/lib/python3.11/site-packages` because system Python did not expose PyYAML by default. |
+| 4. Handoff Summary | completed | Final response reports skill paths, validation, source provenance, and the focused local commit. | No push requested or performed. |
