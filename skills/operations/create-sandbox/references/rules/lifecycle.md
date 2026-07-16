@@ -18,6 +18,8 @@ which work belongs before vs. after container creation.
 
 - Stop/remove the previous same-name container if present.
 - Start the new detached container.
+- Copy prepared SSH files from the read-only staging mount into the container
+  home and apply strict Linux permissions.
 - Start the internal `dockerd` daemon and wait for it to become ready.
 - Run `sudo /usr/sbin/sshd`.
 - Write a readiness marker after both services start, and make the host script
@@ -45,4 +47,5 @@ performs workspace-level bootstrap:
 
 - Run `src/test_service.sh` after `after_create_container.sh` completes.
 - Enter the container with `docker exec -it "${CONTAINER_NAME}" bash` only after
-  service tests finish or are skipped.
+  service tests finish or are skipped and when `ENTER_CONTAINER=1`.
+- Set `ENTER_CONTAINER=0` for non-interactive validation or automation.

@@ -35,5 +35,5 @@ When `RUN_AGENT_PACKAGE_INIT=1`, the service test should verify:
 - `.codex/hooks.json`
 - A sandbox skill exists under both `.codex/skills/` and `.claude/skills/`
 
-Accept both `create-sandbox` and the older package name `codex-sandbox` during
-migration.
+Accept categorized `operations/create-sandbox`, ungrouped `create-sandbox`, and
+the older package name `codex-sandbox` during migration.

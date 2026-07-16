@@ -121,9 +121,11 @@ check_agent_package() {
     "${CONTAINER_NAME}" bash -lc '
     set -euo pipefail
     test -d "${CONTAINER_WORKDIR}/mcp-skills-package/.git"
-    test -f "${CONTAINER_WORKDIR}/.codex/skills/create-sandbox/SKILL.md" \
+    test -f "${CONTAINER_WORKDIR}/.codex/skills/operations/create-sandbox/SKILL.md" \
+      || test -f "${CONTAINER_WORKDIR}/.codex/skills/create-sandbox/SKILL.md" \
       || test -f "${CONTAINER_WORKDIR}/.codex/skills/codex-sandbox/SKILL.md"
-    test -f "${CONTAINER_WORKDIR}/.claude/skills/create-sandbox/SKILL.md" \
+    test -f "${CONTAINER_WORKDIR}/.claude/skills/operations/create-sandbox/SKILL.md" \
+      || test -f "${CONTAINER_WORKDIR}/.claude/skills/create-sandbox/SKILL.md" \
       || test -f "${CONTAINER_WORKDIR}/.claude/skills/codex-sandbox/SKILL.md"
     test -f "${CONTAINER_WORKDIR}/.codex/hooks.json"
   '

@@ -88,5 +88,8 @@ and make the script fail until `WORKSPACE_DIR` is set.
   key as `authorized_keys`.
 - Set strict permissions: `.runtime/.ssh` `700`, private key `600`, public key
   `644`, `known_hosts` `644`, and `authorized_keys` `600`.
-- Mount prepared SSH directories read-write so the sandbox user can update
-  `known_hosts`, SSH config, and other per-user SSH state.
+- Mount the prepared SSH directory read-only at a staging path such as
+  `/tmp/codex-sandbox-ssh`, then copy the allowed files into the container
+  user's `${HOME}/.ssh` and apply strict Linux permissions there. Do not mount
+  Windows/DrvFS SSH files directly at `${HOME}/.ssh`; their effective `0777`
+  mode causes OpenSSH to reject private keys.

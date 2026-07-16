@@ -3,17 +3,17 @@
 This file is per-run working state. Copy it to `STATE.md` before starting a new
 execution.
 
-Run ID: 20260716-create-sandbox-dind
+Run ID: 20260716-create-sandbox-crlf-live-validation
 Instance: C:\Users\User\Desktop\mcp-skills-package\skills\operations\create-sandbox
-Started: 2026-07-16T02:02:40Z
-Scope: Replace host Docker socket passthrough with a Docker-in-Docker daemon and persistent internal Docker data volume.
+Started: 2026-07-16T03:35:19Z
+Scope: Fix CRLF helper execution under WSL and validate the DinD sandbox end to end.
 
-Last updated: 2026-07-16T02:09:22Z
+Last updated: 2026-07-16T03:39:59Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested Docker-in-Docker because host socket passthrough resolves bind paths outside the sandbox. | Preserve current image/container naming and other mounts. |
-| 1. Read Relevant Context | completed | Read SKILL.md, prior STATE.md, and lifecycle, mounts, environment, service-test, filetree, and state rules; inspected all scripts in `src/`. | Docker execution was not requested. |
-| 2. Execute Workflow | completed | Installed the full Docker Engine, added the sandbox user to the docker group, launched the container privileged with a named `/var/lib/docker` volume, started internal `dockerd`, removed host socket bind/validation, and added readiness synchronization. | Updated SKILL.md plus lifecycle, mounts, environment, service-test, and tooling references to match. |
-| 3. Validate Result | completed | `bash -n` passed `build_and_exec.sh`, `after_create_container.sh`, and `test_service.sh`; generic skill validation, `git diff --check`, required-layout inspection, and no-host-socket-bind grep passed; read-only forward-test confirmed DinD behavior. | Docker was not run because the user requested a configuration change, not Docker execution. |
-| 4. Handoff Summary | completed | Final response should summarize internal daemon behavior, named data volume, readiness wait, validation, and the local commit. | Report the pre-existing project-generation support-file contract as a remaining risk. |
+| 0. Define Scope | completed | Live sandbox run failed because `after_create_container.sh` was checked out with a `bash\r` shebang. | User authorized repeated Docker validation until passing. |
+| 1. Read Relevant Context | completed | Read skill and relevant rules; `git ls-files --eol` showed `after_create_container.sh` as `w/crlf` while the other helpers were `w/lf`. | Preserve DinD behavior and GPU-disabled project wrapper. |
+| 2. Execute Workflow | completed | Added repository `*.sh` LF enforcement, `ENTER_CONTAINER=0`, read-only SSH staging followed by strict-permission container-local copies, and categorized skill-path acceptance in service tests. | Resolved CRLF shebang failure, DrvFS `0777` private-key rejection, and stale ungrouped skill checks. |
+| 3. Validate Result | completed | `bash -n`, generic skill validation, and `git diff --check` passed; live run passed container, CLI, workspace, SSH, DinD, and package-init checks; an inner Alpine container successfully bind-mounted and read the sandbox `/workspace`. | Docker info: `root=/var/lib/docker driver=overlay2`; model/data checks skipped as explicitly unmounted. |
+| 4. Handoff Summary | completed | Final response should state that `codex-sandbox-agent-workspace` is running and provide the interactive entry command and commit. | No remaining blocker. |

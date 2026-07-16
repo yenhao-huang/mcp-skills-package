@@ -9,6 +9,7 @@ USERNAME="${USERNAME:-$(id -un)}"
 HOST_GROUP_IDS="${HOST_GROUP_IDS:-$(id -G)}"
 CONTAINER_HOME="${CONTAINER_HOME:-/home/${USERNAME}}"
 CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-/workspace}"
+CONTAINER_SSH_STAGING_DIR="${CONTAINER_SSH_STAGING_DIR:-/tmp/codex-sandbox-ssh}"
 BUILD_CONTEXT="${BUILD_CONTEXT:-${SCRIPT_DIR}}"
 WORKSPACE_DIR="${WORKSPACE_DIR:-}"
 HOST_SSH_DIR="${HOST_SSH_DIR:-${HOME}/.ssh}"
@@ -24,6 +25,7 @@ GPU_DEVICES="${GPU_DEVICES:-all}"
 SSH_PORT="${SSH_PORT:-}"
 PREPARE_SSH_DIR="${PREPARE_SSH_DIR:-1}"
 RUN_SERVICE_TESTS="${RUN_SERVICE_TESTS:-1}"
+ENTER_CONTAINER="${ENTER_CONTAINER:-1}"
 AFTER_CREATE_CONTAINER_SCRIPT="${AFTER_CREATE_CONTAINER_SCRIPT:-${BUILD_CONTEXT}/after_create_container.sh}"
 TEST_SERVICE_SCRIPT="${TEST_SERVICE_SCRIPT:-${BUILD_CONTEXT}/test_service.sh}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-1}"
@@ -145,7 +147,10 @@ docker_args=(
 )
 
 if [[ -n "${SSH_DIR}" ]]; then
-  docker_args+=(-v "${SSH_DIR}:${CONTAINER_HOME}/.ssh")
+  docker_args+=(
+    -e "CONTAINER_SSH_STAGING_DIR=${CONTAINER_SSH_STAGING_DIR}"
+    -v "${SSH_DIR}:${CONTAINER_SSH_STAGING_DIR}:ro"
+  )
 fi
 if [[ -n "${SSH_PORT}" ]]; then
   docker_args+=(-p "${SSH_PORT}:22")
@@ -175,6 +180,21 @@ fi
 
 docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
   set -euo pipefail
+
+  if [[ -d "${CONTAINER_SSH_STAGING_DIR:-}" ]]; then
+    install -d -m 0700 "${HOME}/.ssh"
+    for ssh_file in id_ed25519 id_ed25519.pub known_hosts authorized_keys; do
+      if [[ -f "${CONTAINER_SSH_STAGING_DIR}/${ssh_file}" ]]; then
+        cp "${CONTAINER_SSH_STAGING_DIR}/${ssh_file}" "${HOME}/.ssh/${ssh_file}"
+      fi
+    done
+    if [[ ! -f "${HOME}/.ssh/authorized_keys" && -f "${HOME}/.ssh/id_ed25519.pub" ]]; then
+      cp "${HOME}/.ssh/id_ed25519.pub" "${HOME}/.ssh/authorized_keys"
+    fi
+    chmod 0600 "${HOME}/.ssh/id_ed25519" "${HOME}/.ssh/authorized_keys" 2>/dev/null || true
+    chmod 0644 "${HOME}/.ssh/id_ed25519.pub" "${HOME}/.ssh/known_hosts" 2>/dev/null || true
+  fi
+
   sudo sh -c "nohup dockerd --host=unix://${DIND_DOCKER_SOCK} --storage-driver=${DIND_STORAGE_DRIVER} >/var/log/dockerd.log 2>&1 &"
 
   for attempt in $(seq 1 60); do
@@ -231,4 +251,6 @@ if [[ "${RUN_SERVICE_TESTS}" == "1" ]]; then
     "${TEST_SERVICE_SCRIPT}"
 fi
 
-docker exec -it "${CONTAINER_NAME}" bash
+if [[ "${ENTER_CONTAINER}" == "1" ]]; then
+  docker exec -it "${CONTAINER_NAME}" bash
+fi
