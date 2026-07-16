@@ -69,12 +69,16 @@ openssh-client
 openssh-server
 ```
 
-## Docker Client
+## Docker Engine
 
-Tools for Docker-from-inside-the-sandbox when the host Docker socket is mounted.
+Tools for the privileged Docker-in-Docker daemon and its clients. The daemon
+uses an internal Unix socket and does not use the host Docker socket.
 
 ```text
+docker-ce
 docker-ce-cli
+containerd.io
+docker-buildx-plugin
 docker-compose-plugin
 ```
 

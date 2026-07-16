@@ -15,10 +15,10 @@ HOST_SSH_DIR="${HOST_SSH_DIR:-${HOME}/.ssh}"
 SSH_DIR="${SSH_DIR:-${SCRIPT_DIR}/.ssh}"
 MODEL_DIR="${MODEL_DIR:-}"
 DATA_DIR="${DATA_DIR:-}"
-DOCKER_SOCK="${DOCKER_SOCK:-/var/run/docker.sock}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
-CONTAINER_DOCKER_SOCK="${CONTAINER_DOCKER_SOCK:-/var/run/docker.sock}"
+DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
+DIND_STORAGE_DRIVER="${DIND_STORAGE_DRIVER:-overlay2}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 SSH_PORT="${SSH_PORT:-}"
@@ -70,6 +70,7 @@ fi
 REPO_NAME="$(basename "${WORKSPACE_DIR}")"
 REPO_SLUG="$(printf '%s' "${REPO_NAME}" | sed -E 's/(_forked|-forked)$//I; s/[^A-Za-z0-9]+/-/g; s/^-+|-+$//g' | tr '[:upper:]' '[:lower:]')"
 CONTAINER_NAME="${CONTAINER_NAME:-codex-sandbox-${REPO_SLUG}}"
+DIND_DATA_VOLUME="${DIND_DATA_VOLUME:-${CONTAINER_NAME}-docker-data}"
 
 if [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" ]]; then
   mkdir -p "${SSH_DIR}"
@@ -83,17 +84,6 @@ if [[ ! -x "${AFTER_CREATE_CONTAINER_SCRIPT}" ]]; then
   echo "Missing executable after-create-container script: ${AFTER_CREATE_CONTAINER_SCRIPT}" >&2
   exit 1
 fi
-if [[ -n "${DOCKER_SOCK}" ]]; then
-  if [[ ! -S "${DOCKER_SOCK}" ]]; then
-    echo "DOCKER_SOCK must point to a Docker socket, or set DOCKER_SOCK='' to disable: ${DOCKER_SOCK}" >&2
-    exit 1
-  fi
-  if [[ ! -r "${DOCKER_SOCK}" || ! -w "${DOCKER_SOCK}" ]]; then
-    echo "DOCKER_SOCK must be readable and writable by the current user: ${DOCKER_SOCK}" >&2
-    exit 1
-  fi
-fi
-
 if [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" && -f "${HOST_SSH_DIR}/id_ed25519" ]]; then
   cp "${HOST_SSH_DIR}/id_ed25519" "${SSH_DIR}/"
 fi
@@ -142,10 +132,16 @@ docker_args=(
   run -d
   --name "${CONTAINER_NAME}"
   -w "${CONTAINER_WORKDIR}"
+  --privileged
   -e "HOME=${CONTAINER_HOME}"
+  -e "DIND_DOCKER_SOCK=${DIND_DOCKER_SOCK}"
+  -e "DIND_STORAGE_DRIVER=${DIND_STORAGE_DRIVER}"
+  -e "DOCKER_HOST=unix://${DIND_DOCKER_SOCK}"
+  -e "DOCKER_TLS_CERTDIR="
   -e "NVIDIA_VISIBLE_DEVICES=${GPU_DEVICES}"
   -e "NVIDIA_DRIVER_CAPABILITIES=compute,utility"
   -v "${WORKSPACE_DIR}:${CONTAINER_WORKDIR}"
+  -v "${DIND_DATA_VOLUME}:/var/lib/docker"
 )
 
 if [[ -n "${SSH_DIR}" ]]; then
@@ -162,14 +158,6 @@ for group_id in ${HOST_GROUP_IDS}; do
   docker_args+=(--group-add "${group_id}")
 done
 
-if [[ -n "${DOCKER_SOCK}" ]]; then
-  docker_args+=(
-    --group-add "$(stat -c '%g' "${DOCKER_SOCK}")"
-    -v "${DOCKER_SOCK}:${CONTAINER_DOCKER_SOCK}"
-    -e "DOCKER_HOST=unix://${CONTAINER_DOCKER_SOCK}"
-  )
-fi
-
 if [[ -n "${MODEL_DIR}" ]]; then
   docker_args+=(-v "${MODEL_DIR}:${CONTAINER_MODEL_DIR}")
 fi
@@ -185,7 +173,45 @@ if [[ -n "${EXTRA_MOUNTS}" ]]; then
   done
 fi
 
-docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc "sudo /usr/sbin/sshd && sleep infinity"
+docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
+  set -euo pipefail
+  sudo sh -c "nohup dockerd --host=unix://${DIND_DOCKER_SOCK} --storage-driver=${DIND_STORAGE_DRIVER} >/var/log/dockerd.log 2>&1 &"
+
+  for attempt in $(seq 1 60); do
+    if docker info >/dev/null 2>&1; then
+      break
+    fi
+    sleep 1
+  done
+
+  if ! docker info >/dev/null 2>&1; then
+    echo "Docker-in-Docker daemon did not become ready." >&2
+    sudo tail -n 100 /var/log/dockerd.log >&2 || true
+    exit 1
+  fi
+
+  sudo /usr/sbin/sshd
+  touch /tmp/codex-sandbox-ready
+  exec sleep infinity
+'
+
+for attempt in $(seq 1 70); do
+  if docker exec "${CONTAINER_NAME}" test -f /tmp/codex-sandbox-ready >/dev/null 2>&1; then
+    break
+  fi
+  if [[ "$(docker inspect -f '{{.State.Running}}' "${CONTAINER_NAME}")" != "true" ]]; then
+    echo "Sandbox container exited before Docker-in-Docker and SSH became ready." >&2
+    docker logs "${CONTAINER_NAME}" >&2 || true
+    exit 1
+  fi
+  sleep 1
+done
+
+if ! docker exec "${CONTAINER_NAME}" test -f /tmp/codex-sandbox-ready >/dev/null 2>&1; then
+  echo "Timed out waiting for Docker-in-Docker and SSH readiness." >&2
+  docker logs "${CONTAINER_NAME}" >&2 || true
+  exit 1
+fi
 
 CONTAINER_NAME="${CONTAINER_NAME}" \
 CONTAINER_WORKDIR="${CONTAINER_WORKDIR}" \
@@ -200,7 +226,7 @@ if [[ "${RUN_SERVICE_TESTS}" == "1" ]]; then
   CONTAINER_WORKDIR="${CONTAINER_WORKDIR}" \
   CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR}" \
   CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR}" \
-  CONTAINER_DOCKER_SOCK="${CONTAINER_DOCKER_SOCK}" \
+  DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK}" \
   RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT}" \
     "${TEST_SERVICE_SCRIPT}"
 fi

@@ -5,8 +5,8 @@ description: >
   run an agent sandbox Docker environment for Codex and Claude. Trigger on
   requests such as "建立 sandbox", "建立 codex sandbox", "create a sandbox",
   "create a codex sandbox", "幫我開 sandbox", "make a sandbox for Codex",
-  "make a sandbox for Claude", sandbox mounts, sandbox SSH, sandbox Docker
-  socket access, custom skills/hooks bootstrap, or project-specific sandbox
+  "make a sandbox for Claude", sandbox mounts, sandbox SSH,
+  Docker-in-Docker, custom skills/hooks bootstrap, or project-specific sandbox
   setup such as Pretrieval. Create or update a project-local
   `.runtime/build_codex_sandbox.sh` script from this skill's bundled `src/`
   files. Do not execute Docker commands unless the user explicitly asks.
@@ -24,10 +24,10 @@ Use this skill when the user asks to:
 
 - Create, update, repair, or run a Codex/Claude agent sandbox container.
 - Build a project-local `.runtime/build_codex_sandbox.sh` script.
-- Configure sandbox mounts for a repo, models, SSH files, data, Docker socket,
-  GPUs, or extra directories.
+- Configure sandbox mounts for a repo, models, SSH files, data, GPUs, or extra
+  directories, and configure its Docker-in-Docker daemon.
 - Configure or explain post-create custom skills/hooks bootstrap.
-- Validate sandbox services such as SSH server, Docker socket access, and
+- Validate sandbox services such as SSH server, Docker-in-Docker readiness, and
   mounted workspace paths.
 
 Do not use this skill when:
@@ -72,7 +72,7 @@ Do not use this skill when:
 - Read `references/rules/lifecycle.md` before changing build/run/post-create
   behavior or explaining which work happens before vs. after container create.
 - Read `references/rules/mounts.md` before asking mount questions, validating
-  paths, preparing SSH files, or handling Docker socket/extra mounts.
+  paths, preparing SSH files, or handling Docker-in-Docker data/extra mounts.
 - Read `references/rules/runtime-mount-permissions.md` when Docker bind mounts
   fail or when host paths are under `/home`/NFS.
 - Read `references/rules/env.md` before changing image/container defaults,

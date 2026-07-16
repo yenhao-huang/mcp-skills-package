@@ -1,7 +1,7 @@
 # Mount Rules
 
 Use this reference before asking mount questions, validating host paths,
-preparing SSH files, or handling Docker socket and extra mounts.
+preparing SSH files, or handling Docker-in-Docker data and extra mounts.
 
 ## Required Mount Questions
 
@@ -16,8 +16,8 @@ Before writing, updating, or running a sandbox script, ask for:
   `${CONTAINER_HOME}/.ssh`.
 - Data mount: host path and container path, or confirmation of no data mount.
   Default container path only after confirmation: `/data`.
-- Docker socket: whether to mount `/var/run/docker.sock` to
-  `/var/run/docker.sock`; set `DOCKER_SOCK=''` to disable.
+- Docker data: optional named-volume override for `/var/lib/docker`. Default to
+  `codex-sandbox-${REPO_SLUG}-docker-data`.
 - Extra mounts: any additional `host_path:container_path` or
   `host_path:container_path:ro` entries.
 
@@ -31,7 +31,7 @@ mount answers:
 2. model 要掛嗎？如果要，host path 是什麼？container 內路徑要用 `/models` 嗎？
 3. SSH 要掛嗎？使用 host `~/.ssh` 複製必要 key 到 `.runtime/.ssh` 可以嗎？
 4. data 要掛嗎？如果要，host path 是什麼？container 內路徑要用 `/data` 嗎？
-5. Docker socket 要掛嗎？也就是 `/var/run/docker.sock:/var/run/docker.sock`
+5. Docker-in-Docker 資料 volume 要自訂名稱嗎？預設會使用 sandbox 專屬 named volume
 6. 還有其他 extra mounts 嗎？格式：`/host/path:/container/path` 或 `/host/path:/container/path:ro`
 ```
 
@@ -41,8 +41,8 @@ mount.
 
 If the user asks to proceed without answering, create only a configurable script
 with empty `WORKSPACE_DIR`, `MODEL_DIR`, `SSH_DIR`, `DATA_DIR`, and
-`EXTRA_MOUNTS`; include configurable `DOCKER_SOCK` and
-`CONTAINER_DOCKER_SOCK`; and make the script fail until `WORKSPACE_DIR` is set.
+`EXTRA_MOUNTS`; keep the default internal Docker daemon and named data volume;
+and make the script fail until `WORKSPACE_DIR` is set.
 
 ## Path Rules
 
@@ -61,10 +61,10 @@ with empty `WORKSPACE_DIR`, `MODEL_DIR`, `SSH_DIR`, `DATA_DIR`, and
   executable/searchable.
 - Check that model, SSH, data, and extra mount host paths are readable and
   executable/searchable; also check writability for every read-write mount.
-- If Docker socket mounting is confirmed, check that `DOCKER_SOCK` exists, is a
-  socket, and is readable and writable by the current user.
-- Add the Docker socket's numeric group id to `docker run` with
-  `--group-add "$(stat -c '%g' "${DOCKER_SOCK}")"` when the socket is mounted.
+- Do not bind-mount the host Docker socket. Run the sandbox with `--privileged`
+  and mount `DIND_DATA_VOLUME` at `/var/lib/docker` for the internal daemon.
+- Keep `DIND_DOCKER_SOCK` inside the sandbox; default it to
+  `/var/run/docker.sock` and set `DOCKER_HOST` to that internal Unix socket.
 - If a path is missing, ask a correction question in this form:
   `repo 找不到，你想找的是不是 <candidate>?`, replacing `repo` with the mount
   label.

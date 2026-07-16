@@ -16,6 +16,15 @@ placement, agent package settings, or Docker execution behavior.
 - Container workdir: `/workspace`
 - Container home: `/home/${USERNAME}`
 - GPU devices: `all` unless explicitly disabled or overridden.
+- Docker daemon: internal Docker-in-Docker daemon at
+  `unix:///var/run/docker.sock`.
+- Docker data volume: `codex-sandbox-${REPO_SLUG}-docker-data`, mounted at
+  `/var/lib/docker`.
+- Docker storage driver: `overlay2`.
+
+The sandbox runs with `--privileged` so the internal daemon can manage nested
+containers. Do not mount the host Docker socket; inner Docker bind paths must
+resolve against the sandbox filesystem.
 
 `REPO_SLUG` is derived from the confirmed repo directory, lowercased, stripped
 of a trailing `_forked` or `-forked`, and normalized to alphanumeric plus

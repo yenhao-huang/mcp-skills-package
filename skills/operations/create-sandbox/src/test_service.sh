@@ -5,7 +5,7 @@ CONTAINER_NAME="${CONTAINER_NAME:-}"
 CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-/workspace}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
-CONTAINER_DOCKER_SOCK="${CONTAINER_DOCKER_SOCK:-/var/run/docker.sock}"
+DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-0}"
 
 if [[ -z "${CONTAINER_NAME}" ]]; then
@@ -96,16 +96,18 @@ check_ssh() {
 }
 
 check_docker() {
-  if ! docker exec "${CONTAINER_NAME}" test -S "${CONTAINER_DOCKER_SOCK}"; then
-    skip "docker socket not present: ${CONTAINER_DOCKER_SOCK}"
-    return
+  if ! docker exec "${CONTAINER_NAME}" test -S "${DIND_DOCKER_SOCK}"; then
+    echo "Docker-in-Docker socket is not present: ${DIND_DOCKER_SOCK}" >&2
+    exit 1
   fi
 
   docker exec "${CONTAINER_NAME}" bash -lc '
     set -euo pipefail
     docker version >/dev/null
+    docker info >/dev/null
+    test "$(docker info --format "{{.DockerRootDir}}")" = "/var/lib/docker"
   '
-  pass "docker CLI can reach daemon"
+  pass "Docker-in-Docker daemon is ready with internal data root"
 }
 
 check_agent_package() {

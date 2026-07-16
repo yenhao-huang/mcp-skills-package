@@ -8,7 +8,7 @@ which work belongs before vs. after container creation.
 - Validate confirmed host paths.
 - Prepare project-local runtime files such as `.runtime/.ssh`.
 - Compute image/container names.
-- Validate Docker socket access.
+- Select the persistent Docker-in-Docker data volume.
 - Verify `src/Dockerfile`, `src/build_and_exec.sh`,
   `src/after_create_container.sh`, and `src/test_service.sh` exist.
 - Build the Docker image.
@@ -18,8 +18,16 @@ which work belongs before vs. after container creation.
 
 - Stop/remove the previous same-name container if present.
 - Start the new detached container.
+- Start the internal `dockerd` daemon and wait for it to become ready.
 - Run `sudo /usr/sbin/sshd`.
+- Write a readiness marker after both services start, and make the host script
+  wait for that marker before post-create bootstrap.
 - Keep the container alive with `sleep infinity`.
+
+The outer sandbox container runs with `--privileged`; it must not bind-mount
+the host Docker socket. The internal daemon stores its state in a named volume
+mounted at `/var/lib/docker`, so bind-mount source paths used by inner
+containers resolve in the sandbox filesystem.
 
 ## After Create-Container
 

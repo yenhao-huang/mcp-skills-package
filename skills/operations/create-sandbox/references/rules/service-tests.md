@@ -26,7 +26,8 @@ The service test should verify:
 - Optional model/data mounts exist when configured.
 - SSH server config/listener works.
 - SSH key login works when keys are available.
-- Docker socket access works when mounted.
+- The Docker-in-Docker socket exists, the internal daemon responds to
+  `docker info`, and its data root is `/var/lib/docker`.
 
 When `RUN_AGENT_PACKAGE_INIT=1`, the service test should verify:
 
