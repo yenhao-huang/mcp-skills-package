@@ -69,6 +69,19 @@ print_list() {
   fi
 }
 
+run_python() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 "$@"
+  elif command -v python >/dev/null 2>&1; then
+    python "$@"
+  elif command -v py >/dev/null 2>&1; then
+    py -3 "$@"
+  else
+    echo "FAIL: 找不到 Python 3，無法合併 .codex/hooks.json。"
+    exit 1
+  fi
+}
+
 snapshot_target() {
   local target="$1"
   local label="$2"
@@ -127,7 +140,7 @@ merge_codex_hooks_json() {
     return 0
   fi
 
-  python3 - "$source_json" "$target_json" <<'PY'
+  run_python - "$source_json" "$target_json" <<'PY'
 import json
 import sys
 from pathlib import Path
