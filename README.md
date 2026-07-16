@@ -6,6 +6,22 @@
 - `hooks/`: agent hook 腳本。
 - `.skill-lock.json`: skills CLI 的安裝紀錄，目前只記錄 `find-skills` 來源。
 
+## Windows 初始化
+
+將 `mcp-skills-package` 放在 project 根目錄下，使用 Git Bash 或 WSL 執行：
+
+```bash
+bash mcp-skills-package/init-windows.sh
+```
+
+也可以傳入 Windows 或 Unix 格式的 project 根目錄：
+
+```bash
+bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
+```
+
+此腳本會先將 package 內的 shell scripts 統一轉為 LF line endings，再執行安裝。
+
 ## Skills
 
 目前 `skills/` 底下有下列 skills。
