@@ -155,6 +155,24 @@ with target_path.open("r", encoding="utf-8") as fh:
     target = json.load(fh)
 
 target_hooks = target.setdefault("hooks", {})
+
+# Older package versions registered a UserPromptSubmit gate that compared
+# cumulative session usage with a context threshold. Remove only that legacy
+# entry; preserve any unrelated prompt hooks configured by the user.
+prompt_entries = target_hooks.get("UserPromptSubmit", [])
+prompt_entries = [
+    entry
+    for entry in prompt_entries
+    if not any(
+        "check_session_size.py" in str(handler.get("command", ""))
+        for handler in entry.get("hooks", [])
+    )
+]
+if prompt_entries:
+    target_hooks["UserPromptSubmit"] = prompt_entries
+else:
+    target_hooks.pop("UserPromptSubmit", None)
+
 for event, source_entries in source.get("hooks", {}).items():
     target_entries = target_hooks.setdefault(event, [])
     for entry in source_entries:

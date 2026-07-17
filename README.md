@@ -63,30 +63,19 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 
 | Hook | 路徑 | 事件 | 用途 |
 | --- | --- | --- | --- |
-| `check_session_size.py` | `hooks/check_session_size.py` | `UserPromptSubmit` | 讀取目前 transcript JSONL，檢查最近一次 assistant usage 的有效 context token 數；超過門檻時提醒使用者先執行 `/compact`。 |
+| `check_session_size.py` | `hooks/check_session_size.py` | 未註冊（legacy diagnostic） | 手動檢查 transcript；永遠回傳成功，不會阻擋 prompt。 |
 | `do-cron-tasks.py` | `hooks/do-cron-tasks.py` | `SessionStart` | 新 session 啟動時讀取 `set-daily-cron` skill 的 cron 設定；若上次執行超過一天，執行到期任務。 |
 
-### `check_session_size.py`
+### Automatic compaction
 
-行為摘要：
+Codex 會依目前模型的 active context 自動 compact，compact 完成後會繼續同一個 session。若要提早 compact，可在 `~/.codex/config.toml` 設定：
 
-- 從 stdin 讀取 hook payload。
-- 使用 payload 內的 `transcript_path` 找到 transcript JSONL。
-- 讀取最近一次 assistant message 的 `usage`。
-- 將下列 token 數相加作為有效 context size：
-  - `input_tokens`
-  - `cache_creation_input_tokens`
-  - `cache_read_input_tokens`
-- 若總數超過門檻，輸出 hook response。
+```toml
+model_auto_compact_token_limit = 220000
+model_auto_compact_token_limit_scope = "total"
+```
 
-可用環境變數：
-
-| 變數 | 預設值 | 說明 |
-| --- | --- | --- |
-| `COMPACT_THRESHOLD` | `500000` | 超過此 token 數時觸發提醒。 |
-| `COMPACT_HARD_BLOCK` | unset | 設為 `1` 時改為 block prompt，要求先 `/compact`。 |
-
-預設模式不是 hard block，而是回傳 `hookSpecificOutput.additionalContext`，要求 agent 停下來並提醒使用者執行 `/compact`。
+不要用 transcript 的 `total_token_usage` 判斷是否需要 compact；它是整個 session 的累積用量，不是目前送進模型的 context。舊版 `UserPromptSubmit` gate 因此已移除，`check_session_size.py` 只保留為不阻擋的 legacy diagnostic。安裝腳本也會移除既有的舊 gate，同時保留使用者自己的其他 `UserPromptSubmit` hooks。
 
 ### `do-cron-tasks.py`
 

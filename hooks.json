@@ -12,18 +12,6 @@
           }
         ]
       }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'script=\"$(pwd)/.codex/hooks/check_session_size.py\"; [ -f \"$script\" ] || exit 0; exec /usr/bin/python3 \"$script\"'",
-            "timeout": 30,
-            "statusMessage": "Checking session size"
-          }
-        ]
-      }
     ]
   }
 }
