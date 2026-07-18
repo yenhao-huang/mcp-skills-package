@@ -23,6 +23,7 @@ DIND_STORAGE_DRIVER="${DIND_STORAGE_DRIVER:-overlay2}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 SSH_PORT="${SSH_PORT:-}"
+RESTART_POLICY="${RESTART_POLICY:-unless-stopped}"
 PREPARE_SSH_DIR="${PREPARE_SSH_DIR:-1}"
 RUN_SERVICE_TESTS="${RUN_SERVICE_TESTS:-1}"
 ENTER_CONTAINER="${ENTER_CONTAINER:-1}"
@@ -97,8 +98,13 @@ if [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" && -f "${HOST_SSH_DIR}/know
 fi
 if [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" && -f "${HOST_SSH_DIR}/authorized_keys" ]]; then
   cp "${HOST_SSH_DIR}/authorized_keys" "${SSH_DIR}/"
-elif [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" && -f "${SSH_DIR}/id_ed25519.pub" && ! -f "${SSH_DIR}/authorized_keys" ]]; then
-  cp "${SSH_DIR}/id_ed25519.pub" "${SSH_DIR}/authorized_keys"
+fi
+if [[ -n "${SSH_DIR}" && -f "${SSH_DIR}/id_ed25519.pub" ]]; then
+  public_key="$(tr -d '\r' < "${SSH_DIR}/id_ed25519.pub")"
+  touch "${SSH_DIR}/authorized_keys"
+  if ! grep -qxF "${public_key}" "${SSH_DIR}/authorized_keys"; then
+    printf '%s\n' "${public_key}" >> "${SSH_DIR}/authorized_keys"
+  fi
 fi
 
 if [[ "${PREPARE_SSH_DIR}" == "1" && -n "${SSH_DIR}" ]]; then
@@ -133,6 +139,7 @@ docker build \
 docker_args=(
   run -d
   --name "${CONTAINER_NAME}"
+  --restart "${RESTART_POLICY}"
   -w "${CONTAINER_WORKDIR}"
   --privileged
   -e "HOME=${CONTAINER_HOME}"
@@ -180,6 +187,7 @@ fi
 
 docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
   set -euo pipefail
+  rm -f /tmp/codex-sandbox-ready
 
   if [[ -d "${CONTAINER_SSH_STAGING_DIR:-}" ]]; then
     install -d -m 0700 "${HOME}/.ssh"
@@ -195,7 +203,12 @@ docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
     chmod 0644 "${HOME}/.ssh/id_ed25519.pub" "${HOME}/.ssh/known_hosts" 2>/dev/null || true
   fi
 
-  sudo sh -c "nohup dockerd --host=unix://${DIND_DOCKER_SOCK} --storage-driver=${DIND_STORAGE_DRIVER} >/var/log/dockerd.log 2>&1 &"
+  if ! docker info >/dev/null 2>&1; then
+    # Container restarts preserve the writable layer, so a dead dockerd can
+    # leave a PID file that points at an unrelated live process after restart.
+    sudo rm -f /var/run/docker.pid
+    sudo sh -c "nohup dockerd --host=unix://${DIND_DOCKER_SOCK} --storage-driver=${DIND_STORAGE_DRIVER} >/var/log/dockerd.log 2>&1 &"
+  fi
 
   for attempt in $(seq 1 60); do
     if docker info >/dev/null 2>&1; then
@@ -247,6 +260,7 @@ if [[ "${RUN_SERVICE_TESTS}" == "1" ]]; then
   CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR}" \
   CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR}" \
   DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK}" \
+  RESTART_POLICY="${RESTART_POLICY}" \
   RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT}" \
     "${TEST_SERVICE_SCRIPT}"
 fi

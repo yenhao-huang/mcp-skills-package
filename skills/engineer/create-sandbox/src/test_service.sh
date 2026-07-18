@@ -6,6 +6,7 @@ CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-/workspace}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
+RESTART_POLICY="${RESTART_POLICY:-unless-stopped}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-0}"
 
 if [[ -z "${CONTAINER_NAME}" ]]; then
@@ -29,6 +30,16 @@ check_container_running() {
     exit 1
   fi
   pass "container is running"
+}
+
+check_restart_policy() {
+  local actual_policy
+  actual_policy="$(docker inspect -f '{{.HostConfig.RestartPolicy.Name}}' "${CONTAINER_NAME}")"
+  if [[ "${actual_policy}" != "${RESTART_POLICY}" ]]; then
+    echo "Unexpected restart policy: expected=${RESTART_POLICY} actual=${actual_policy}" >&2
+    exit 1
+  fi
+  pass "container restart policy is ${RESTART_POLICY}"
 }
 
 check_exec() {
@@ -133,6 +144,7 @@ check_agent_package() {
 }
 
 check_container_running
+check_restart_policy
 check_exec
 check_agent_clis
 check_mounts
