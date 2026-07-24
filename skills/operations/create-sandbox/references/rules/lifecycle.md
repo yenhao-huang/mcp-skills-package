@@ -9,14 +9,21 @@ which work belongs before vs. after container creation.
 - Prepare project-local runtime files such as `.runtime/.ssh`.
 - Compute image/container names.
 - Select the persistent Docker-in-Docker data volume.
+- Stop/remove the previous same-name container, then select an unbound SSH host
+  port immediately before assembling `docker run` arguments. Use `SSH_PORT`
+  when explicitly configured; otherwise scan `SSH_PORT_RANGE_START` through
+  `SSH_PORT_RANGE_END`.
 - Verify `src/Dockerfile`, `src/build_and_exec.sh`,
   `src/after_create_container.sh`, and `src/test_service.sh` exist.
 - Build the Docker image.
 - Assemble `docker run` arguments.
 
+The availability probe releases the port before `docker run` binds it. Docker
+remains the final authority if another process claims the port in that short
+interval.
+
 ## Create-Container
 
-- Stop/remove the previous same-name container if present.
 - Start the new detached container.
 - Start the internal `dockerd` daemon and wait for it to become ready.
 - Run `sudo /usr/sbin/sshd`.

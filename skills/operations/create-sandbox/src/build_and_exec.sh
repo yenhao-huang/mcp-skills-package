@@ -22,6 +22,8 @@ DIND_STORAGE_DRIVER="${DIND_STORAGE_DRIVER:-overlay2}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 SSH_PORT="${SSH_PORT:-}"
+SSH_PORT_RANGE_START="${SSH_PORT_RANGE_START:-3417}"
+SSH_PORT_RANGE_END="${SSH_PORT_RANGE_END:-3499}"
 PREPARE_SSH_DIR="${PREPARE_SSH_DIR:-1}"
 RUN_SERVICE_TESTS="${RUN_SERVICE_TESTS:-1}"
 AFTER_CREATE_CONTAINER_SCRIPT="${AFTER_CREATE_CONTAINER_SCRIPT:-${BUILD_CONTEXT}/after_create_container.sh}"
@@ -30,6 +32,7 @@ RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-1}"
 AGENT_PACKAGE_REPO="${AGENT_PACKAGE_REPO:-git@github.com:yenhao-huang/mcp-skills-package.git}"
 AGENT_PACKAGE_DIRNAME="${AGENT_PACKAGE_DIRNAME:-mcp-skills-package}"
 AGENT_PACKAGE_REF="${AGENT_PACKAGE_REF:-}"
+PORT_PROBE_PYTHON="${PORT_PROBE_PYTHON:-}"
 
 validate_dir() {
   local label="$1"
@@ -51,6 +54,101 @@ validate_dir() {
     echo "${label} must be writable by the current user: ${path}" >&2
     exit 1
   fi
+}
+
+validate_port_number() {
+  local label="$1"
+  local port="$2"
+
+  if [[ ! "${port}" =~ ^[0-9]+$ ]] || ((port < 1 || port > 65535)); then
+    echo "${label} must be an integer from 1 through 65535: ${port}" >&2
+    exit 1
+  fi
+}
+
+require_port_probe() {
+  if [[ -n "${PORT_PROBE_PYTHON}" ]]; then
+    if ! "${PORT_PROBE_PYTHON}" -c 'import socket' >/dev/null 2>&1; then
+      echo "PORT_PROBE_PYTHON cannot run the socket module: ${PORT_PROBE_PYTHON}" >&2
+      exit 1
+    fi
+  elif command -v python3 >/dev/null 2>&1 \
+    && python3 -c 'import socket' >/dev/null 2>&1; then
+    PORT_PROBE_PYTHON="python3"
+  elif command -v python >/dev/null 2>&1 \
+    && python -c 'import socket' >/dev/null 2>&1; then
+    PORT_PROBE_PYTHON="python"
+  else
+    echo "Automatic SSH port discovery requires python3 or python on the host." >&2
+    exit 1
+  fi
+}
+
+port_is_available() {
+  local port="$1"
+
+  "${PORT_PROBE_PYTHON}" - "${port}" <<'PY'
+import errno
+import socket
+import sys
+
+port = int(sys.argv[1])
+sockets = []
+
+try:
+    ipv4 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    ipv4.bind(("0.0.0.0", port))
+    sockets.append(ipv4)
+
+    try:
+        ipv6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+        ipv6.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+        ipv6.bind(("::", port))
+        sockets.append(ipv6)
+    except OSError as exc:
+        if exc.errno not in (errno.EAFNOSUPPORT, errno.EADDRNOTAVAIL):
+            raise
+except OSError:
+    sys.exit(1)
+finally:
+    for sock in sockets:
+        sock.close()
+PY
+}
+
+resolve_ssh_port() {
+  local candidate
+
+  require_port_probe
+  validate_port_number "SSH_PORT_RANGE_START" "${SSH_PORT_RANGE_START}"
+  validate_port_number "SSH_PORT_RANGE_END" "${SSH_PORT_RANGE_END}"
+  if ((SSH_PORT_RANGE_START > SSH_PORT_RANGE_END)); then
+    echo "SSH_PORT_RANGE_START must not exceed SSH_PORT_RANGE_END." >&2
+    exit 1
+  fi
+
+  if [[ -n "${SSH_PORT}" ]]; then
+    validate_port_number "SSH_PORT" "${SSH_PORT}"
+    if ! port_is_available "${SSH_PORT}"; then
+      echo "Requested SSH_PORT is already bound: ${SSH_PORT}" >&2
+      exit 1
+    fi
+  else
+    printf 'Searching for an unbound SSH host port in %s-%s...\n' \
+      "${SSH_PORT_RANGE_START}" "${SSH_PORT_RANGE_END}" >&2
+    for ((candidate = SSH_PORT_RANGE_START; candidate <= SSH_PORT_RANGE_END; candidate++)); do
+      if port_is_available "${candidate}"; then
+        SSH_PORT="${candidate}"
+        break
+      fi
+    done
+    if [[ -z "${SSH_PORT}" ]]; then
+      echo "No unbound SSH host port found in ${SSH_PORT_RANGE_START}-${SSH_PORT_RANGE_END}." >&2
+      exit 1
+    fi
+  fi
+
+  printf 'Forwarding host port %s to container port 22.\n' "${SSH_PORT}" >&2
 }
 
 if [[ -z "${WORKSPACE_DIR}" ]]; then
@@ -128,6 +226,8 @@ docker build \
   -t "${IMAGE_NAME}" \
   "${BUILD_CONTEXT}"
 
+resolve_ssh_port
+
 docker_args=(
   run -d
   --name "${CONTAINER_NAME}"
@@ -147,9 +247,7 @@ docker_args=(
 if [[ -n "${SSH_DIR}" ]]; then
   docker_args+=(-v "${SSH_DIR}:${CONTAINER_HOME}/.ssh")
 fi
-if [[ -n "${SSH_PORT}" ]]; then
-  docker_args+=(-p "${SSH_PORT}:22")
-fi
+docker_args+=(-p "${SSH_PORT}:22")
 if [[ -n "${GPU_DEVICES}" && "${GPU_DEVICES}" != "none" ]]; then
   docker_args+=(--gpus "${GPU_DEVICES}")
 fi
@@ -227,6 +325,7 @@ if [[ "${RUN_SERVICE_TESTS}" == "1" ]]; then
   CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR}" \
   CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR}" \
   DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK}" \
+  SSH_PORT="${SSH_PORT}" \
   RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT}" \
     "${TEST_SERVICE_SCRIPT}"
 fi

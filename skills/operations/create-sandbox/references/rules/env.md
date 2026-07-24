@@ -21,6 +21,25 @@ placement, agent package settings, or Docker execution behavior.
 - Docker data volume: `codex-sandbox-${REPO_SLUG}-docker-data`, mounted at
   `/var/lib/docker`.
 - Docker storage driver: `overlay2`.
+- SSH host port: the first unbound port in `3417-3499`, forwarded to container
+  port `22`.
+
+SSH port selection is configurable:
+
+```text
+SSH_PORT=
+SSH_PORT_RANGE_START=3417
+SSH_PORT_RANGE_END=3499
+PORT_PROBE_PYTHON=
+```
+
+When `SSH_PORT` is empty, the host script probes the configured range and uses
+the first port that can bind on both IPv4 and IPv6 when IPv6 is available.
+When `SSH_PORT` is set, the script validates that exact port before creating
+the container and fails if another process already binds it. Port discovery
+requires `python3` or `python` on the host.
+Set `PORT_PROBE_PYTHON` to an explicit interpreter path when neither command
+name resolves to the intended Python installation.
 
 The sandbox runs with `--privileged` so the internal daemon can manage nested
 containers. Do not mount the host Docker socket; inner Docker bind paths must

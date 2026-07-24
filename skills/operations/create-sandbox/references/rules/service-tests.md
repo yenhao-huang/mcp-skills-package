@@ -26,6 +26,7 @@ The service test should verify:
 - Optional model/data mounts exist when configured.
 - SSH server config/listener works.
 - SSH key login works when keys are available.
+- Container port `22` is published on the selected `SSH_PORT`.
 - The Docker-in-Docker socket exists, the internal daemon responds to
   `docker info`, and its data root is `/var/lib/docker`.
 

@@ -6,6 +6,7 @@ CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-/workspace}"
 CONTAINER_MODEL_DIR="${CONTAINER_MODEL_DIR:-/models}"
 CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
+SSH_PORT="${SSH_PORT:-}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-0}"
 
 if [[ -z "${CONTAINER_NAME}" ]]; then
@@ -95,6 +96,22 @@ check_ssh() {
   fi
 }
 
+check_host_ssh_forward() {
+  if [[ -z "${SSH_PORT}" ]]; then
+    skip "host SSH port validation not requested"
+    return
+  fi
+
+  if ! docker port "${CONTAINER_NAME}" 22/tcp \
+    | awk -F: -v expected="${SSH_PORT}" '$NF == expected { found = 1 } END { exit !found }'; then
+    echo "Container port 22 is not forwarded to expected host port ${SSH_PORT}." >&2
+    docker port "${CONTAINER_NAME}" 22/tcp >&2 || true
+    exit 1
+  fi
+
+  pass "container SSH port 22 is forwarded to host port ${SSH_PORT}"
+}
+
 check_docker() {
   if ! docker exec "${CONTAINER_NAME}" test -S "${DIND_DOCKER_SOCK}"; then
     echo "Docker-in-Docker socket is not present: ${DIND_DOCKER_SOCK}" >&2
@@ -135,5 +152,6 @@ check_exec
 check_agent_clis
 check_mounts
 check_ssh
+check_host_ssh_forward
 check_docker
 check_agent_package
