@@ -1,4 +1,7 @@
 .runtime/
+.agents/
+.codex/
+.claude/
 .codex-history/
 __pycache__/
 *.py[cod]

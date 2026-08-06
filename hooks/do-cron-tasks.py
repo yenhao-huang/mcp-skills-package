@@ -34,6 +34,19 @@ def workspace_dir_from_payload(payload: dict, project_dir: Path) -> Path:
 
 
 def tasks_root(workspace_dir: Path) -> Path:
+    current_root = (
+        workspace_dir
+        / ".agents"
+        / "skills"
+        / "operations"
+        / "set-daily-cron"
+        / "references"
+        / "tasks"
+    )
+    if current_root.is_dir():
+        return current_root
+
+    # Keep installations created by the legacy init.sh working.
     return (
         workspace_dir
         / ".codex"
