@@ -48,6 +48,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `git-commit` | `skills/engineer/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
 | `github-issues` | `skills/engineer/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
 | `github-pr-workflow` | `skills/engineer/github-pr-workflow/SKILL.md` | 依 repository contribution 規則準備 branch、commit、push、建立及驗證 GitHub PR。 |
+| `solve-issue` | `skills/engineer/solve-issue/SKILL.md` | 從讀取 GitHub issue、實作與測試，到 commit、PR、CI 與 review 的完整問題解決流程。 |
 | `ui-ux-pro-max` | `skills/engineer/ui-ux-pro-max/SKILL.md` | 搜尋可落地的 UI/UX 風格、色彩、排版、元件與技術棧建議。 |
 | `loop-analysis` | `skills/loop-analysis/SKILL.md` | 針對 ESG contest agent-loop runs 產出固定格式的繁中 markdown 分析。 |
 | `mcp-init` | `skills/mcp-init/SKILL.md` | 初始化或修復 Codex MCP 設定，包含 Jina、Firecrawl、Hugging Face、Git MCP。 |
@@ -117,7 +118,8 @@ model_auto_compact_token_limit_scope = "total"
 │   ├── engineer/
 │   │   ├── git-commit/
 │   │   ├── github-issues/
-│   │   └── github-pr-workflow/
+│   │   ├── github-pr-workflow/
+│   │   └── solve-issue/
 │   ├── find-skills/
 │   ├── loop-analysis/
 │   ├── mcp-init/

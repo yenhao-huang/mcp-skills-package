@@ -3,17 +3,17 @@
 This file is per-run working state. Copy it to `STATE.md` before starting a new
 execution.
 
-Run ID: 20260731-storage-path-menu
-Instance: /tmp2/howard/PRetrieval/mcp-skills-package/skills/engineer/create-sandbox
-Started: 2026-07-31T01:37:31Z
-Scope: Ask where Docker data should be stored and default Docker, data, and model host paths to the shared-data filesystem.
+Run ID: 20260812-add-container-init
+Instance: /workspace/mcp-skills-package/skills/engineer/create-sandbox
+Started: 2026-08-12T07:21:56Z
+Scope: Add Docker's init process to sandbox containers so PID 1 reaps orphaned child processes.
 
-Last updated: 2026-07-31T01:48:00Z
+Last updated: 2026-08-12T07:25:00Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User specified `/mnt/share_data_78/howard/docker`, `/mnt/share_data_78/howard/data`, and `/mnt/share_data_78/howard/models` as defaults. | Docker data must no longer default under the workspace mount. |
-| 1. Read Relevant Context | completed | Read SKILL.md, mount/lifecycle/environment/service-test/filetree/state rules, and `src/build_and_exec.sh` plus `src/test_service.sh`. | Current daemon root is `${CONTAINER_WORKDIR}/docker-overlay2-data` despite separate named-volume documentation. |
-| 2. Execute Workflow | completed | Added `DIND_DATA_DIR`, bind-mounted it at `/var/lib/docker`, set the three requested host defaults, updated the storage prompt and rules, and added service validation plus stopped-daemon migration guards. | Existing state is not migrated or deleted by this skill update. |
-| 3. Validate Result | completed | `bash -n` passed for all three scripts; generic skill validation, exact default/bind assertions, required-layout inspection, shared-path permission checks, and `git diff --check` passed. | Docker was not executed. |
-| 4. Handoff Summary | completed | Handoff reports the storage menu/defaults, `/var/lib/docker` bind behavior, validation, stopped-daemon migration guard, and focused local commit. | No existing Docker state was moved or deleted; no push is authorized. |
+| 0. Define Scope | completed | User requested adding `--init` to the canonical sandbox Docker run arguments. | No Docker execution was requested. |
+| 1. Read Relevant Context | completed | Read SKILL.md, lifecycle/environment/state rules, repository instructions, and the current `src/build_and_exec.sh` after syncing `origin/main`. | Keep the existing `sleep infinity` lifecycle; Docker's init process becomes PID 1 and reaps adopted processes. |
+| 2. Execute Workflow | completed | Added `--init` immediately after `run -d` in the canonical Docker argument array. | Existing lifecycle and all other Docker arguments are unchanged. |
+| 3. Validate Result | completed | `bash -n` passed for `build_and_exec.sh`, `after_create_container.sh`, and `test_service.sh`; generic skill validation, exact `--init` assertion, required-layout checks, and `git diff --check` passed. | Docker was not executed. |
+| 4. Handoff Summary | completed | Final handoff will report that new containers run with Docker's init process and include commit/push details. | Existing containers must be recreated to receive `--init`. |

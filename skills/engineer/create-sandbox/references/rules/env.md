@@ -27,7 +27,9 @@ placement, agent package settings, or Docker execution behavior.
   `/models`; explicitly set `MODEL_DIR=` to disable it.
 
 The sandbox runs with `--privileged` so the internal daemon can manage nested
-containers. Do not mount the host Docker socket; inner Docker bind paths must
+containers. Host Docker is disabled by default with `ENABLE_HOST_DOCKER=0`;
+when explicitly enabled, mount it at `/var/run/host-docker.sock`, separate
+from the inner daemon at `/var/run/docker.sock`. Inner Docker bind paths must
 resolve against the sandbox filesystem.
 
 `REPO_SLUG` is derived from the confirmed repo directory, lowercased, stripped
@@ -54,8 +56,8 @@ AGENT_PACKAGE_DIRNAME=mcp-skills-package
 AGENT_PACKAGE_REF=
 ```
 
-Post-create bootstrap belongs in `src/after_create_container.sh`, not inline in
-the main build/run script.
+Post-create bootstrap belongs in `src/after_create_container.sh`,
+not inline in the main build/run script.
 
 ## Docker Execution Boundary
 

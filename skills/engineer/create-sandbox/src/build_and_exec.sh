@@ -21,6 +21,9 @@ CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
 DIND_DATA_DIR="${DIND_DATA_DIR:-/mnt/share_data_78/howard/docker}"
 DIND_DATA_ROOT="${DIND_DATA_ROOT:-/var/lib/docker}"
+ENABLE_HOST_DOCKER="${ENABLE_HOST_DOCKER:-0}"
+HOST_DOCKER_SOCK="${HOST_DOCKER_SOCK:-/var/run/docker.sock}"
+CONTAINER_HOST_DOCKER_SOCK="${CONTAINER_HOST_DOCKER_SOCK:-/var/run/host-docker.sock}"
 EXTRA_MOUNTS="${EXTRA_MOUNTS:-}"
 GPU_DEVICES="${GPU_DEVICES:-all}"
 SSH_PORT="${SSH_PORT:-}"
@@ -67,6 +70,16 @@ validate_dir "MODEL_DIR" "${MODEL_DIR}" 1
 validate_dir "DATA_DIR" "${DATA_DIR}" 1
 validate_dir "DIND_DATA_DIR" "${DIND_DATA_DIR}" 1
 DIND_DATA_DIR="$(cd "${DIND_DATA_DIR}" && pwd -P)"
+if [[ "${ENABLE_HOST_DOCKER}" != "0" && "${ENABLE_HOST_DOCKER}" != "1" ]]; then
+  echo "ENABLE_HOST_DOCKER must be 0 or 1." >&2
+  exit 1
+fi
+if [[ "${ENABLE_HOST_DOCKER}" == "1" ]]; then
+  if [[ ! -S "${HOST_DOCKER_SOCK}" || ! -r "${HOST_DOCKER_SOCK}" || ! -w "${HOST_DOCKER_SOCK}" ]]; then
+    echo "HOST_DOCKER_SOCK must be a readable and writable socket: ${HOST_DOCKER_SOCK}" >&2
+    exit 1
+  fi
+fi
 if [[ "${PREPARE_SSH_DIR}" == "1" ]]; then
   validate_dir "HOST_SSH_DIR" "${HOST_SSH_DIR}" 0
 else
@@ -140,6 +153,7 @@ docker build \
 
 docker_args=(
   run -d
+  --init
   --name "${CONTAINER_NAME}"
   --restart "${RESTART_POLICY}"
   -w "${CONTAINER_WORKDIR}"
@@ -171,6 +185,13 @@ fi
 for group_id in ${HOST_GROUP_IDS}; do
   docker_args+=(--group-add "${group_id}")
 done
+
+if [[ "${ENABLE_HOST_DOCKER}" == "1" ]]; then
+  docker_args+=(
+    --group-add "$(stat -c '%g' "${HOST_DOCKER_SOCK}")"
+    -v "${HOST_DOCKER_SOCK}:${CONTAINER_HOST_DOCKER_SOCK}"
+  )
+fi
 
 if [[ -n "${MODEL_DIR}" ]]; then
   docker_args+=(-v "${MODEL_DIR}:${CONTAINER_MODEL_DIR}")
@@ -205,6 +226,8 @@ docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
     chmod 0644 "${HOME}/.ssh/id_ed25519.pub" "${HOME}/.ssh/known_hosts" 2>/dev/null || true
   fi
 
+  sudo /usr/sbin/sshd
+
   if ! docker info >/dev/null 2>&1; then
     # Container restarts preserve the writable layer, so a dead dockerd can
     # leave a PID file that points at an unrelated live process after restart.
@@ -225,7 +248,6 @@ docker "${docker_args[@]}" "${IMAGE_NAME}" bash -lc '
     exit 1
   fi
 
-  sudo /usr/sbin/sshd
   touch /tmp/codex-sandbox-ready
   exec sleep infinity
 '
@@ -264,6 +286,8 @@ if [[ "${RUN_SERVICE_TESTS}" == "1" ]]; then
   DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK}" \
   DIND_DATA_DIR="${DIND_DATA_DIR}" \
   DIND_DATA_ROOT="${DIND_DATA_ROOT}" \
+  ENABLE_HOST_DOCKER="${ENABLE_HOST_DOCKER}" \
+  CONTAINER_HOST_DOCKER_SOCK="${CONTAINER_HOST_DOCKER_SOCK}" \
   RESTART_POLICY="${RESTART_POLICY}" \
   RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT}" \
     "${TEST_SERVICE_SCRIPT}"

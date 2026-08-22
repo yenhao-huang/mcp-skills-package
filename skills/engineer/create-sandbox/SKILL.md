@@ -8,15 +8,16 @@ description: >
   "make a sandbox for Claude", sandbox mounts, sandbox SSH,
   Docker-in-Docker, custom skills/hooks bootstrap, or project-specific sandbox
   setup such as Pretrieval. Create or update a project-local
-  `.runtime/build_codex_sandbox.sh` script from this skill's bundled `src/`
-  files. Do not execute Docker commands unless the user explicitly asks.
+  `.runtime/build_codex_sandbox.sh` script from this skill's bundled
+  `src/` files. Do not execute Docker commands unless the user
+  explicitly asks.
 ---
 
 # Create Sandbox
 
 Use this skill to create repeatable Codex/Claude Docker sandbox scripts from
-the bundled Docker source in `src/`. Keep `SKILL.md` focused on the workflow;
-load detailed rules from `references/` only when needed.
+the bundled Docker scripts in `src/`. Keep `SKILL.md` focused
+on the workflow; load detailed rules from `references/` only when needed.
 
 ## When To Use
 
@@ -54,17 +55,17 @@ Do not use this skill when:
    questions, create only a configurable script with empty optional mounts and
    clear fail-fast behavior for missing `WORKSPACE_DIR`, as defined in
    `references/rules/mounts.md`.
-7. Validate every confirmed non-empty host path before writing or running a
+8. Validate every confirmed non-empty host path before writing or running a
    script.
-8. If updating this skill, edit bundled files in `src/`, `references/`, and
-   this `SKILL.md` as needed.
-9. If creating a sandbox for another project, create or update only that
+9. If updating this skill, edit bundled files in `src/`,
+   `references/`, and this `SKILL.md` as needed.
+10. If creating a sandbox for another project, create or update only that
    project's `.runtime/build_codex_sandbox.sh`, based on
    `src/build_and_exec.sh`.
-10. Ensure the target project's `.gitignore` contains `.runtime/`.
-11. Validate changed shell scripts with `bash -n`; make generated scripts
+11. Ensure the target project's `.gitignore` contains `.runtime/`.
+12. Validate changed shell scripts with `bash -n`; make generated scripts
     executable with `chmod +x`.
-12. Mark the step `completed`, `blocked`, or `skipped` in `STATE.md` with
+13. Mark the step `completed`, `blocked`, or `skipped` in `STATE.md` with
     evidence.
 
 ## References
@@ -86,8 +87,8 @@ Do not use this skill when:
 - Use `src/Dockerfile` as the canonical Docker build definition.
 - Use `src/build_and_exec.sh` as the canonical executable template for
   generated project-local scripts.
-- Use `src/after_create_container.sh` for post-create bootstrap in the running
-  container.
+- Use `src/after_create_container.sh` for post-create bootstrap
+  in the running container.
 - Use `src/test_service.sh` for post-start service checks.
 
 ## Environment

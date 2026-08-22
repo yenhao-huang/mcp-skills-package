@@ -8,6 +8,8 @@ CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
 DIND_DATA_DIR="${DIND_DATA_DIR:-/mnt/share_data_78/howard/docker}"
 DIND_DATA_ROOT="${DIND_DATA_ROOT:-/var/lib/docker}"
+ENABLE_HOST_DOCKER="${ENABLE_HOST_DOCKER:-0}"
+CONTAINER_HOST_DOCKER_SOCK="${CONTAINER_HOST_DOCKER_SOCK:-/var/run/host-docker.sock}"
 RESTART_POLICY="${RESTART_POLICY:-unless-stopped}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-0}"
 
@@ -88,7 +90,11 @@ check_ssh() {
     set -euo pipefail
     ssh -V >/dev/null 2>&1
     sudo /usr/sbin/sshd -t
-    timeout 5 bash -lc "</dev/tcp/127.0.0.1/22"
+    for _ in $(seq 1 15); do
+      timeout 1 bash -lc "</dev/tcp/127.0.0.1/22" && break
+      sleep 1
+    done
+    timeout 1 bash -lc "</dev/tcp/127.0.0.1/22"
 
     if [[ -f "${HOME}/.ssh/id_ed25519" && -f "${HOME}/.ssh/authorized_keys" ]]; then
       ssh -i "${HOME}/.ssh/id_ed25519" \
@@ -135,6 +141,15 @@ check_docker() {
   fi
 
   pass "Docker-in-Docker daemon is ready with overlay2 data at ${DIND_DATA_DIR}"
+
+  if [[ "${ENABLE_HOST_DOCKER}" == "1" ]]; then
+    docker exec "${CONTAINER_NAME}" test -S "${CONTAINER_HOST_DOCKER_SOCK}"
+    docker exec "${CONTAINER_NAME}" \
+      docker -H "unix://${CONTAINER_HOST_DOCKER_SOCK}" info >/dev/null
+    pass "host Docker daemon is available through the opt-in socket"
+  else
+    skip "host Docker disabled"
+  fi
 }
 
 check_agent_package() {

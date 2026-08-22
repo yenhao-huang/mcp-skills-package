@@ -12,7 +12,8 @@ TEST_SERVICE_SCRIPT=${BUILD_CONTEXT}/test_service.sh
 ```
 
 `RUN_SERVICE_TESTS=1` runs `src/test_service.sh` after
-`src/after_create_container.sh` completes and before entering the container.
+`src/after_create_container.sh` completes and before entering
+the container.
 `RUN_SERVICE_TESTS=0` skips service tests.
 
 ## Required Checks
@@ -30,6 +31,8 @@ The service test should verify:
   `docker info`, and its data root is `/var/lib/docker`.
 - `/var/lib/docker` is a mount point backed by the confirmed Docker host
   directory.
+- When host Docker is explicitly enabled, its separate socket responds to
+  `docker info` without replacing the default DinD socket.
 
 When `RUN_AGENT_PACKAGE_INIT=1`, the service test should verify:
 

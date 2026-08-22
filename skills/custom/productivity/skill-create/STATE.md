@@ -1,16 +1,16 @@
 # Create Skill State
 
-Run ID: 20260731-create-sandbox-storage-defaults
-Instance: /tmp2/howard/PRetrieval/mcp-skills-package/skills/custom/productivity/skill-create
-Started: 2026-07-31T01:37:31Z
-Scope: Update create-sandbox so its user questions and generated script use explicit Docker, data, and model host storage defaults.
+Run ID: 20260822-add-solve-issue
+Instance: /workspace/mcp-skills-package/skills/custom/productivity/skill-create
+Started: 2026-08-22T04:39:00Z
+Scope: Add the externally sourced solve-issue workflow as a repository-local packaged skill.
 
-Last updated: 2026-07-31T01:48:00Z
+Last updated: 2026-08-22T04:47:00Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User provided the exact Docker, data, and model default host paths and requested a Docker storage question in the user menu. | Target is the tracked `skills/engineer/create-sandbox` skill. |
-| 1. Read Relevant Context | completed | Read repository `AGENTS.md`, this workflow, category/filetree/env/state rules, target skill workflow and state, mount/lifecycle/environment/service-test rules, and both shell scripts. | Existing target category is preserved; no files are added or moved. |
-| 2. Execute Workflow | completed | Updated create-sandbox defaults, bind-mount assembly, service-test inputs, storage question, environment/lifecycle/service-test rules, and stopped-daemon migration guard. | Docker now defaults to a host directory mounted at `/var/lib/docker`; data and models use the requested shared-data defaults. |
-| 3. Validate Result | completed | `bash -n`, generic `quick_validate.py`, exact storage-default/bind assertions, required-layout checks, path permission checks, and `git diff --check` all passed. | The three requested default directories exist and are readable, writable, and searchable. |
-| 4. Handoff Summary | completed | Handoff records changed skill files, validation evidence, no Docker execution, migration risk, and the focused local commit. | No push is authorized or performed. |
+| 0. Define Scope | completed | User requested `skill/solve-issue` be added to `/workspace/mcp-skills-package`, committed, and pushed. | Source resolved to `canpok1/claude-code-plugins` commit `04f81f5ffc0d83dab157171203520e1d635742cb`. |
+| 1. Read Relevant Context | completed | Read repository `AGENTS.md`, skill-create workflow, category/filetree/env/state rules, source skill, upstream MIT license, README, and target-adjacent GitHub skills. | New skill belongs in the approved `engineer` category. |
+| 2. Execute Workflow | completed | Added `skills/engineer/solve-issue` with the required local layout, adapted workflow, upstream MIT notice, and README catalog entry. | Adapted the Claude-plugin workflow to the package's existing development and GitHub skills while retaining attribution. |
+| 3. Validate Result | completed | Generic `quick_validate.py` reported `Skill is valid!`; required-layout, forbidden-directory, README catalog, and `git diff --check` assertions passed. | Used the existing `/workspace/PRetrieval_forked/.venv` because system Python lacks PyYAML. |
+| 4. Handoff Summary | completed | Handoff prepared with source provenance, changed layout, validation commands, and repository synchronization status. | Commit and push are handled by the repository Git workflow after the skill-create workflow. |

@@ -35,7 +35,8 @@ create-sandbox/
 - `STATE.md`: Per-run working state.
 - `references/rules/`: Detailed operating rules loaded only when relevant.
 - `references/template/`: Copyable templates.
-- `src/`: Deterministic executable templates and scripts used by the workflow.
+- `src/`: Deterministic executable templates and scripts used by
+  the workflow.
 
 ## Cleanup Rules
 

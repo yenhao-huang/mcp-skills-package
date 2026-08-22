@@ -22,21 +22,22 @@ which work belongs before vs. after container creation.
 - Start the new detached container.
 - Copy prepared SSH files from the read-only staging mount into the container
   home and apply strict Linux permissions.
-- Start the internal `dockerd` daemon and wait for it to become ready.
 - Run `sudo /usr/sbin/sshd`.
+- Start the internal `dockerd` daemon and wait for it to become ready.
 - Write a readiness marker after both services start, and make the host script
   wait for that marker before post-create bootstrap.
 - Keep the container alive with `sleep infinity`.
 
-The outer sandbox container runs with `--privileged`; it must not bind-mount
-the host Docker socket. The internal daemon stores its state in the confirmed
-host directory bind-mounted at `/var/lib/docker`, so bind-mount source paths
-used by inner containers resolve in the sandbox filesystem.
+The outer sandbox container runs with `--privileged`. The internal daemon
+stores its state in the confirmed host directory bind-mounted at
+`/var/lib/docker`, so bind-mount source paths used by inner containers resolve
+in the sandbox filesystem. Host Docker remains disabled by default; when
+explicitly enabled, expose it separately at `/var/run/host-docker.sock`.
 
 ## After Create-Container
 
-Run `src/after_create_container.sh` against the running container. This phase
-performs workspace-level bootstrap:
+Run `src/after_create_container.sh` against the running
+container. This phase performs workspace-level bootstrap:
 
 - Confirm the container is running.
 - If `RUN_AGENT_PACKAGE_INIT=1`, clone or update the agent package in
@@ -47,7 +48,8 @@ performs workspace-level bootstrap:
 
 ## After-Create Validation
 
-- Run `src/test_service.sh` after `after_create_container.sh` completes.
+- Run `src/test_service.sh` after
+  `after_create_container.sh` completes.
 - Enter the container with `docker exec -it "${CONTAINER_NAME}" bash` only after
   service tests finish or are skipped and when `ENTER_CONTAINER=1`.
 - Set `ENTER_CONTAINER=0` for non-interactive validation or automation.

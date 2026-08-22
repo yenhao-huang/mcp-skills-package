@@ -92,7 +92,7 @@ RUN git clone --depth 1 --branch "${LLAMA_CPP_REF}" https://github.com/ggml-org/
  && rm -rf /tmp/llama.cpp
 
 RUN npm install -g \
-    @openai/codex@0.125.0 \
+    @openai/codex@latest \
     @anthropic-ai/claude-code@2.1.199
 
 ARG UID=1000
