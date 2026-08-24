@@ -32,7 +32,8 @@ repo-local skill.
 ## Placement Rules
 
 - `SKILL.md`: Required skill entry point. Keep trigger conditions, core
-  workflow, and short rules here.
+  workflow, and short rules here. It must contain an explicit `## Workflow`
+  section with executable ordered steps.
 - `skills/<category>/`: Business-function category selected from
   `references/rules/categories.md`.
 - `skills/custom/<subcategory>/`: Optional subcategory for internal or
@@ -67,6 +68,9 @@ Also inspect the skill directory against this file and
   `skills/custom/<subcategory>/<skill-name>/`.
 - The category must be one of the approved categories.
 - Required Markdown files must be present.
+- `SKILL.md` must contain a second-level `## Workflow` heading.
+- When the skill is intended to be reversible, its validation evidence must
+  satisfy `references/rules/workflow.md`; a static layout check is not enough.
 
 ## Cleanup Rules
 

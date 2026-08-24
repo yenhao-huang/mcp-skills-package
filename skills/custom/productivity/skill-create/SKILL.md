@@ -20,18 +20,26 @@ initializer creates by default.
      moving an existing skill.
    - `references/rules/filetree.md` before adding, moving, or removing files in
      any skill directory.
+   - `references/rules/workflow.md` before creating or changing a skill's
+     workflow, installation steps, rollback behavior, or validation plan.
    - `references/rules/env.md` before installing packages, starting services,
      choosing frameworks, or assuming runtime details.
    - `references/rules/state-rules.md` before changing any `STATE.md`.
 4. Mark the current step `in_progress` in `STATE.md` before editing.
 5. Create or update the skill under the category selected from
    `references/rules/categories.md`, using the local required layout from
-   `references/rules/filetree.md`.
-6. Validate with generic skill validation when available:
+   `references/rules/filetree.md` and the workflow contract from
+   `references/rules/workflow.md`.
+6. Require an explicit `## Workflow` section. When a skill is intended to be
+   reversible, pair every step that installs or enables component A with
+   instructions that uninstall, disable, or otherwise roll back that same A.
+7. Validate with generic skill validation when available:
    `/home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py`
    Then inspect the skill directory against `references/rules/filetree.md` and
-   `references/rules/categories.md`.
-7. Mark the workflow step `completed`, `blocked`, or `skipped` in `STATE.md`
+   `references/rules/categories.md`. For each reversible installation path,
+   also run and record the full `install A -> rollback A -> install A` sequence
+   required by `references/rules/workflow.md`.
+8. Mark the workflow step `completed`, `blocked`, or `skipped` in `STATE.md`
    with concrete evidence.
 
 ## Conflict Rule
@@ -50,6 +58,8 @@ Every newly created or substantially updated repo-local skill must include:
 - `references/rules/state-rules.md`
 - `references/template/STATE.template.md`
 
+`SKILL.md` must contain a `## Workflow` section with executable ordered steps.
+
 Additional domain references are allowed under `references/`.
 `references/scripts/` is the place for executable code needed by the skill.
 Do not add `agents/` or top-level `scripts/` as part of the default
@@ -63,6 +73,8 @@ repo-local skill layout.
 - Put skill executable code in `references/scripts/`.
 - Put reusable operating rules in `references/rules/`.
 - Put state templates in `references/template/`.
+- Require runtime evidence for reversible installation workflows; prose-only
+  inspection does not satisfy the `install -> rollback -> install` check.
 - Keep skill directories under the approved category taxonomy.
 - Load only the reference files needed for the current request.
 - Do not add README, changelog, installation guide, or quick-reference files
