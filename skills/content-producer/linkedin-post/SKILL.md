@@ -19,15 +19,26 @@ hook, concise context, concrete results, and practical takeaways.
    feedback, or summarize findings.
 2. Extract the audience, topic, claim, evidence, numbers, methods, links, and
    acknowledgements from the user input.
-3. Read `references/style-guide.md` for the default post structure, tone, and
+3. Refresh the archive from the author's LinkedIn activity feed, following
+   `references/rules/archive.md`. Do this before drafting, every time the skill
+   runs. If the fetch fails or the harness has no web access, say so and draft
+   from whatever `references/past-posts/` already holds.
+4. Read `references/style-guide.md` for the default post structure, tone, and
    sample-derived rules.
-4. Draft a post in the user's language unless they request another language.
-5. Keep the post skimmable: short paragraphs, section labels, and bullets for
+5. Read `references/voice.md` and the entries in `references/past-posts/`, and
+   match the author's published voice. Where they conflict with
+   `references/style-guide.md`, the archive wins.
+6. Draft a post in the user's language unless they request another language.
+   The archive is written in English; keep English unless asked otherwise.
+7. Keep the post skimmable: short paragraphs, section labels, and bullets for
    results or findings.
-6. Preserve factual uncertainty. Do not invent metrics, dataset details, links,
+8. Preserve factual uncertainty. Do not invent metrics, dataset details, links,
    model names, or acknowledgements.
-7. If the user provides only rough notes, produce a complete draft and mark any
+9. If the user provides only rough notes, produce a complete draft and mark any
    missing facts as bracketed placeholders.
+10. After the author publishes a post, add its final text to
+    `references/past-posts/` under the same naming and front matter rules, and
+    re-derive `references/voice.md` if the new post changes the pattern.
 
 ## Default Style
 
@@ -41,5 +52,11 @@ hook, concise context, concrete results, and practical takeaways.
 
 ## References
 
+- Read `references/rules/archive.md` before fetching the activity feed or
+  writing anything into `references/past-posts/`.
 - Read `references/style-guide.md` when drafting, rewriting, or evaluating a
   LinkedIn post.
+- Read `references/voice.md` for the voice rules read off the author's own
+  published posts.
+- Read `references/past-posts/` for those posts. One file per post, named
+  `<year>_<month>_<day>.md`.

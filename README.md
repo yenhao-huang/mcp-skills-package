@@ -6,6 +6,18 @@
 - `hooks/`: agent hook 腳本。
 - `.skill-lock.json`: skills CLI 的安裝紀錄，目前只記錄 `find-skills` 來源。
 
+## macOS 初始化
+
+`init-macos.sh` 會把 `mcp-skills-package` 本身視為 project home，因此可從任何目錄執行：
+
+```bash
+bash /path/to/mcp-skills-package/init-macos.sh
+```
+
+Codex skills 會同步到 project 的 `.agents/skills`，hooks 與 utilities 會同步到
+`.codex/`。Claude 的 skills、hook scripts 與 utilities 會同步到 `.claude/`；
+Claude 既有 settings 不會被修改。同名 package 檔案會更新，其他既有檔案會保留。
+
 ## Windows 初始化
 
 將 `mcp-skills-package` 放在 project 根目錄下，使用 Git Bash 或 WSL 執行：
