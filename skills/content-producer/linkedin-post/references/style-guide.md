@@ -77,11 +77,11 @@ Use this shape:
 
 ## Author's Published Voice
 
-`past-posts.md` holds the author's own published posts and the voice rules read
-off them. Read it before drafting. Where it disagrees with this file, it wins.
-The points that most often differ from the generic shape below: 🚀 opens the
-title line, bullets use `•`, section labels are a single emoji plus two or three
-words, and pipelines are written with `→`.
+`past-posts/` holds the author's own published posts, one file per post, and
+`voice.md` holds the rules read off them. Read both before drafting. Where they
+disagree with this file, they win. The points that most often differ from the
+generic shape below: 🚀 opens the title line, bullets use `•`, section labels
+are a single emoji plus two or three words, and pipelines are written with `→`.
 
 ## Sample-Derived Rules
 
