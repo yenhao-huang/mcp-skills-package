@@ -21,13 +21,18 @@ hook, concise context, concrete results, and practical takeaways.
    acknowledgements from the user input.
 3. Read `references/style-guide.md` for the default post structure, tone, and
    sample-derived rules.
-4. Draft a post in the user's language unless they request another language.
-5. Keep the post skimmable: short paragraphs, section labels, and bullets for
+4. Read `references/past-posts.md` and match the author's published voice. Where
+   it conflicts with `references/style-guide.md`, the archive wins.
+5. Draft a post in the user's language unless they request another language.
+   The archive is written in English; keep English unless asked otherwise.
+6. Keep the post skimmable: short paragraphs, section labels, and bullets for
    results or findings.
-6. Preserve factual uncertainty. Do not invent metrics, dataset details, links,
+7. Preserve factual uncertainty. Do not invent metrics, dataset details, links,
    model names, or acknowledgements.
-7. If the user provides only rough notes, produce a complete draft and mark any
+8. If the user provides only rough notes, produce a complete draft and mark any
    missing facts as bracketed placeholders.
+9. After the author publishes a post, append its final text to
+   `references/past-posts.md` so the archive stays current.
 
 ## Default Style
 
@@ -43,3 +48,5 @@ hook, concise context, concrete results, and practical takeaways.
 
 - Read `references/style-guide.md` when drafting, rewriting, or evaluating a
   LinkedIn post.
+- Read `references/past-posts.md` for the author's previously published posts
+  and the voice rules read off them.
