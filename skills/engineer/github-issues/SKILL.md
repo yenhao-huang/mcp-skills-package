@@ -12,6 +12,17 @@ description: >
 
 Manage GitHub issues with GitHub MCP read tools and the authenticated `gh` CLI.
 
+## Hard Guardrails
+
+- Never write to an upstream/public community repository (社群 repo). Send
+  every write to the user's designated fork instead — `nvidia/tensorrt` ->
+  `yenhao-huang/TensorRT`, `pytorch/executorch` -> `yenhao-huang/executorch`;
+  ask for the fork when a community repository is not listed. Pass
+  `--repo <fork>` explicitly rather than relying on the working directory's
+  remote, whose `upstream` may point at the community repository with push
+  enabled. Drafting text for a community thread and handing it to the user is
+  in scope; posting it is not.
+
 ## Prerequisites
 
 1. Confirm the target `owner/repo`; do not infer it when multiple remotes or
