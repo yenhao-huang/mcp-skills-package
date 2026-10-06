@@ -12,12 +12,25 @@ the issue from the current conversation or ask the user before changing code.
 
 ## Notes
 
-1. Only send pull requests to the user's designated private repository, never
-   to the upstream/public community repository (社群 repo). For example, use
-   `https://github.com/yenhao-huang/TensorRT` as the private PR target; do not
-   send PRs to `https://github.com/nvidia/tensorrt`. Verify the destination
-   before creating or retargeting a PR; do not infer it from the issue URL or
-   GitHub's default upstream selection.
+1. Never write anything to the upstream/public community repository (社群
+   repo). This covers pull requests, issues, issue and pull-request comments,
+   review replies, labels, assignees, and state changes — not pull requests
+   alone. Send every such action to the user's designated fork instead:
+
+   | community repo | fork to use |
+   |---|---|
+   | `nvidia/tensorrt` | `yenhao-huang/TensorRT` |
+   | `pytorch/executorch` | `yenhao-huang/executorch` |
+
+   For a community repository not listed here, ask for the fork before writing
+   anything. Verify the destination before creating or retargeting a write; do
+   not infer it from the issue URL or from GitHub's default upstream selection,
+   and pass `--repo <fork>` explicitly rather than relying on the working
+   directory's remote, whose `upstream` may point at the community repository
+   with push enabled.
+
+   Drafting a comment, review reply, or issue body for a community thread and
+   handing the text back to the user is in scope. Posting it is not.
 
 ## Workflow
 
@@ -70,18 +83,20 @@ the issue from the current conversation or ask the user before changing code.
    every criterion. Mark each as passed, failed, or blocked; unexecuted checks
    are blocked, not passed. Do not claim acceptance while any required
    criterion is failed or blocked. Keep `STATE.md` aligned with this evidence.
-5. Commit and push the branch to the user's designated private repository
-   for validation. Confirm the remote points to that repository.
-6. Use `github-pr-workflow` to open a pull request only against that private
-   repository, linking the issue and acceptance report and reporting validation
+5. Commit and push the branch to the user's designated fork for validation.
+   Confirm the remote points to that fork, not to the community repository.
+6. Use `github-pr-workflow` to open a pull request only against that fork,
+   linking the issue and acceptance report and reporting validation
    evidence and remaining blockers. Specify the destination explicitly (for example, `gh pr create --repo
    yenhao-huang/TensorRT`) so the PR cannot default to the community upstream.
-   If the private destination is unknown, ask for it before publishing.
+   If the fork is unknown, ask for it before publishing.
    Do not offer or request approval to publish a community PR as part of this
    workflow.
-7. Monitor CI and review feedback, address failures or actionable comments,
-   and merge only when the user explicitly requested merging or repository
-   policy clearly grants that authority.
+7. Monitor CI and review feedback on the fork's pull request, address failures
+   or actionable comments, and merge only when the user explicitly requested
+   merging or repository policy clearly grants that authority. Review feedback
+   that lives on a community thread is answered by handing a draft reply to the
+   user, never by posting to that thread.
 8. Summarize the result, validation, pull request state, and any follow-up or
     residual risk. Mark the run complete in `STATE.md` only when the requested
     lifecycle is actually finished.
@@ -97,10 +112,11 @@ the issue from the current conversation or ask the user before changing code.
   commands, and verify a remote branch before deleting it.
 - If code changes, make each commit a coherent logical unit and validate it in
   proportion to risk.
-- Committing, pushing, and opening the PR in the user's designated private
-  repository are in scope when solving an issue. Never create or retarget a
-  PR against the upstream/public community repository; follow `Notes` and
-  explicitly verify the PR destination.
+- Committing, pushing, and opening the PR in the user's designated fork are in
+  scope when solving an issue. Never create or retarget a PR against the
+  upstream/public community repository, and never comment on, label, or change
+  the state of anything there; follow `Notes` and explicitly verify every write
+  destination.
 - Do not merge, close an issue, force-push, delete a branch, or perform another
   consequential remote action unless the user's request or established
   repository workflow authorizes it.
