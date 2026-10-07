@@ -3,17 +3,18 @@
 This file is a reusable per-run template. Copy it to `STATE.md` before starting
 a new execution.
 
-Run ID: 20260905-solve-issue-private-pr
+Run ID: 20261007-solve-issue-community-link-format
 Instance: skills/custom/productivity/skill-create
-Started: 2026-09-05T07:30:40.976989+00:00
-Scope: Continue #17 / PR #18 with ordered development substeps and an acceptance report template.
+Started: 2026-10-07T23:10:00+00:00
+Scope: Add a required safe-link format and a cross-reference-avoidance note to
+skills/engineer/solve-issue/SKILL.md, per issue #34.
 
-Last updated: 2026-09-05T07:40:52.500161+00:00
+Last updated: 2026-10-07T23:20:00+00:00
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested reproduce, dev, regression test and references/report_template.md. Updated issue #17 acceptance criteria. | Continues PR #18. |
-| 1. Read Relevant Context | completed | Read user-provided ExecuTorch 18832.md, existing skill, repository instructions and relevant skill-create rules. | Template generalizes the example rather than requiring its machine-specific paths. |
-| 2. Execute Workflow | completed | Added ordered development substeps, acceptance criteria/evidence requirements, report template and filetree entry; synchronized installed skill. | Preserves private PR policy. |
-| 3. Validate Result | completed | Generic validator passed for repository and installed skill; layout, substep ordering, template link, copy equality and git diff --check passed. | Documentation-only change; no installation lifecycle applies. |
-| 4. Handoff Summary | in_progress | Updating existing PR #18 linked to #17. | Review and merge remain pending; no merge requested. |
+| 0. Define Scope | completed | Issue #34 filed: https://github.com/yenhao-huang/mcp-skills-package/issues/34 (Problem/Scope/Acceptance criteria, following the #32 precedent). Branch `fix/34-solve-issue-community-issue-link-format` created from `origin/main`. | Edit `skills/engineer/solve-issue/SKILL.md` only; no file added, moved, or removed, so `skill-create/references/rules/filetree.md` layout is unchanged. |
+| 1. Read Relevant Context | completed | Read current `solve-issue/SKILL.md` from `origin/main` (not the stale local clone), `AGENTS.md`, and skill-create's `categories.md`, `workflow.md`, `state-rules.md`, `filetree.md`. Read precedent issue #32 / PR #33 for the issue+PR body conventions this repo uses. | `solve-issue` already matches the repo-local layout contract; no category move needed. |
+| 2. Execute Workflow | completed | Added item 2 under `## Notes` stating the bare-link cross-reference problem and the required `Related issue: [<repo> #<number>](https://redirect.github.com/<owner>/<repo>/issues/<number>)` form (AC1, AC2). Updated `## Workflow` step 6 to point at this required form (AC3). | No structural/workflow-ordering change, no install/enable step added, so the Reversibility Contract in `workflow.md` does not apply. |
+| 3. Validate Result | completed | `python /home/howard/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/engineer/solve-issue` -> "Skill is valid!" `git diff --check` clean (no whitespace errors). Diff manually checked against AC1 (bare-link-is-a-write stated), AC2 (safe form + reasoning given), AC3 (step 6 points at the safe form). | Documentation-only change; no install/rollback lifecycle applies. |
+| 4. Handoff Summary | in_progress |  | Committing, pushing, and opening the PR next. |
