@@ -32,6 +32,37 @@ the issue from the current conversation or ask the user before changing code.
    Drafting a comment, review reply, or issue body for a community thread and
    handing the text back to the user is in scope. Posting it is not.
 
+2. Referencing the community issue in the fork pull request's own description
+   is also a write to the community repository, even though no API call
+   targets it. GitHub parses a bare `owner/repo#number` reference or a bare
+   `https://github.com/owner/repo/issues/number` URL anywhere in a pull
+   request body — on any repository, including a fork — and immediately posts
+   a "mentioned this issue in a pull request" cross-reference onto that
+   issue's public timeline. This happens on creation and on every later edit
+   to the body (observed within one second of an edit), it cannot be removed
+   afterward by editing the reference back out or by closing the pull
+   request, and it is visible to anyone browsing the community issue,
+   including its maintainers.
+
+   Reference the issue only through GitHub's own redirect host, which does not
+   match the pattern the cross-reference parser resolves, so it stays silent
+   while remaining a working, clickable link:
+
+   ```text
+   Related issue: [<short repo name> #<number>](https://redirect.github.com/<owner>/<repo>/issues/<number>)
+   ```
+
+   for example:
+
+   ```text
+   Related issue: [ExecuTorch #11323](https://redirect.github.com/pytorch/executorch/issues/11323)
+   ```
+
+   Never put a bare `owner/repo#number` or a bare `https://github.com/...`
+   issue URL anywhere in a fork pull request's description, title, or commit
+   message — not even to label it "upstream issue" or "closes" — regardless of
+   the format used elsewhere in the same run.
+
 ## Definition Of Done
 
 A solved issue is a pull request on the user's designated fork, not a commit on
@@ -117,7 +148,9 @@ existing remote history.
    result in `STATE.md`. A run that ends here has not solved the issue.
 6. Use `github-pr-workflow` to open a pull request only against that fork,
    linking the issue and acceptance report and reporting validation
-   evidence and remaining blockers. Specify the destination explicitly (for example, `gh pr create --repo
+   evidence and remaining blockers. Write the description's issue reference in
+   the `Related issue: [...](https://redirect.github.com/...)` form required
+   by `Notes`, never a bare link or `owner/repo#number`. Specify the destination explicitly (for example, `gh pr create --repo
    yenhao-huang/TensorRT`) so the PR cannot default to the community upstream.
    Opening this fork pull request is pre-authorized; do not stop to ask for it.
    If the fork is unknown, ask for it before publishing.
