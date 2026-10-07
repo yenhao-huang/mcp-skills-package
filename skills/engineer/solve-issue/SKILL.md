@@ -32,6 +32,28 @@ the issue from the current conversation or ask the user before changing code.
    Drafting a comment, review reply, or issue body for a community thread and
    handing the text back to the user is in scope. Posting it is not.
 
+## Definition Of Done
+
+A solved issue is a pull request on the user's designated fork, not a commit on
+this machine. The run is complete only when both of these are true, and the
+final report carries both:
+
+1. the branch exists on the fork (`git ls-remote --heads <fork-remote>
+   <branch>` finds it); and
+2. a pull request for that branch exists on the fork, identified by URL.
+
+Commits that exist only in the local repository are an unfinished run. Report
+that state as `blocked` or `in_progress` in `STATE.md` with the reason, and say
+plainly that nothing was published. Never describe such a run as complete,
+delivered, or done, and never close it by offering to push as an optional extra
+step.
+
+Steps 5 and 6 are pre-authorized by this workflow: pushing a feature branch to
+the designated fork and opening a pull request against that fork need no
+further approval from the user, because the user asked for the issue to be
+solved. Ask only when the fork is unknown, or when a push would overwrite
+existing remote history.
+
 ## Workflow
 
 1. Read `STATE.md`, reset it from `references/template/STATE.template.md` for
@@ -60,10 +82,15 @@ the issue from the current conversation or ask the user before changing code.
 4. Read the repository instructions and
    [references/report_template.md](references/report_template.md). Create an
    issue report at the repository's established report location (for example,
-   `docs/howard/<issue-number>.md`) and record its path in `STATE.md`. Before
-   implementation, organize acceptance criteria from the issue and discussion:
-   give each criterion an ID, expected behavior, verification method, and
-   required evidence. Then use `dev` with these ordered development substeps:
+   `docs/howard/<issue-number>.md`) and record its path in `STATE.md`. Goal and
+   report files always live under the repository's `docs/` tree — goal files in
+   `docs/goals/`, reports at the established report location — never at the
+   repository root and never in a top-level `goals/` directory. A repository
+   that documents its own layout wins; follow it and record the chosen path.
+   Before implementation, organize acceptance criteria from the issue and
+   discussion: give each criterion an ID, expected behavior, verification
+   method, and required evidence. Then use `dev` with these ordered development
+   substeps:
 
    1. **reproduce**: Run the smallest reproducer on the unmodified baseline.
       Record the commit, environment, exact command, expected versus actual
@@ -83,13 +110,20 @@ the issue from the current conversation or ask the user before changing code.
    every criterion. Mark each as passed, failed, or blocked; unexecuted checks
    are blocked, not passed. Do not claim acceptance while any required
    criterion is failed or blocked. Keep `STATE.md` aligned with this evidence.
-5. Commit and push the branch to the user's designated fork for validation.
-   Confirm the remote points to that fork, not to the community repository.
+5. Commit, then push the branch to the user's designated fork. Confirm the
+   remote points to that fork, not to the community repository, and push
+   without pausing for approval — this step is pre-authorized. Read the push
+   back with `git ls-remote --heads <fork-remote> <branch>` and record the
+   result in `STATE.md`. A run that ends here has not solved the issue.
 6. Use `github-pr-workflow` to open a pull request only against that fork,
    linking the issue and acceptance report and reporting validation
    evidence and remaining blockers. Specify the destination explicitly (for example, `gh pr create --repo
    yenhao-huang/TensorRT`) so the PR cannot default to the community upstream.
+   Opening this fork pull request is pre-authorized; do not stop to ask for it.
    If the fork is unknown, ask for it before publishing.
+   Then read the pull request back with `gh pr view --repo <fork> <number>
+   --json url,state,headRefName` and record the URL and state in `STATE.md`;
+   an unverified `gh pr create` is not evidence that the PR exists.
    Do not offer or request approval to publish a community PR as part of this
    workflow.
 7. Monitor CI and review feedback on the fork's pull request, address failures
@@ -97,9 +131,10 @@ the issue from the current conversation or ask the user before changing code.
    merging or repository policy clearly grants that authority. Review feedback
    that lives on a community thread is answered by handing a draft reply to the
    user, never by posting to that thread.
-8. Summarize the result, validation, pull request state, and any follow-up or
-    residual risk. Mark the run complete in `STATE.md` only when the requested
-    lifecycle is actually finished.
+8. Summarize the result, validation, and any follow-up or residual risk, and
+    quote the fork branch name and the pull request URL from step 6. Mark the
+    run complete in `STATE.md` only when the `Definition Of Done` above holds;
+    if it does not, state which of the two conditions is missing.
 
 ## Guardrails
 
@@ -119,7 +154,11 @@ the issue from the current conversation or ask the user before changing code.
   destination.
 - Do not merge, close an issue, force-push, delete a branch, or perform another
   consequential remote action unless the user's request or established
-  repository workflow authorizes it.
+  repository workflow authorizes it. This does not cover pushing the feature
+  branch to the designated fork or opening a pull request against that fork:
+  both are authorized by this workflow and are required by
+  `Definition Of Done`. It does cover every write to the community repository,
+  which stays forbidden regardless of authorization.
 - Never start implementation before reading the issue's comments and linked
   work in full. An issue whose discussion shows it is already fixed,
   duplicated, or resolved elsewhere is a bypass, not a coding task: record it
