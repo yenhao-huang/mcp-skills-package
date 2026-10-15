@@ -42,3 +42,8 @@ Latest user instruction supersedes PDF-only delivery: retain issue-disptach.html
 ## 2026-10-15 No cover
 
 Removed the cover from current HTML/PDF and the PM HTML template. Start with the index, followed by issue pages. Current batch has 11 pages for 10 candidates.
+
+
+## 2026-10-15 Bundle frontend-slides
+
+Bundled pinned upstream skill, rendering references, styles and scripts under references/frontend-slides with MIT license. PM explicitly loads the local skill and preserves no-cover, HTML/PDF and no-community-write overrides.

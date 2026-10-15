@@ -14,9 +14,13 @@ normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
 
 ## HTML-to-PDF presentation
 
-Use the user-requested [frontend-slides skill](https://github.com/zarazhangrui/frontend-slides).
-Read its SKILL.md and relevant HTML/viewport references before rendering; the
-initial template follows source commit 9906a34d640d2111f724544cbc50f7f130569ae1.
+Use the bundled [frontend-slides skill](references/frontend-slides/SKILL.md)
+for every HTML generation/update and PDF conversion. Read its
+[SOURCE.md](references/frontend-slides/SOURCE.md) for provenance and PM overrides,
+then its SKILL.md and relevant HTML/viewport references before rendering.
+The upstream source is https://github.com/zarazhangrui/frontend-slides, pinned
+to commit 9906a34d640d2111f724544cbc50f7f130569ae1. No separate installation or
+network fetch is required. PM output and community-silence rules take precedence.
 Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
 reading-first example, replacing sample content, counts and dates, and adding
 one issue slide per candidate. Keep the issue number, `(<scope>) <summary>`,
