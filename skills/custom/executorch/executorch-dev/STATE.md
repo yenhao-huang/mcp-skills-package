@@ -37,3 +37,8 @@ User changed delivery to HTML-to-PDF. Daily now publishes issue-disptach.pdf and
 ## 2026-10-15 Retain HTML
 
 Latest user instruction supersedes PDF-only delivery: retain issue-disptach.html alongside issue-disptach.pdf and Result.md in daily. Restored the same HTML source; candidates and progress remain unchanged.
+
+
+## 2026-10-15 No cover
+
+Removed the cover from current HTML/PDF and the PM HTML template. Start with the index, followed by issue pages. Current batch has 11 pages for 10 candidates.

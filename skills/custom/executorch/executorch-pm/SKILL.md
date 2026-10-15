@@ -20,7 +20,7 @@ initial template follows source commit 9906a34d640d2111f724544cbc50f7f130569ae1.
 Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
 reading-first example, replacing sample content, counts and dates, and adding
 one issue slide per candidate. Keep the issue number, `(<scope>) <summary>`,
-問題釐清, 可能解法 and all relevant redirect source links. Include an index and
+問題釐清, 可能解法 and all relevant redirect source links. Do not add a cover slide. Start with the index and include
 a link to Result.md. Preserve source facts when converting an existing batch;
 conversion alone does not authorize fresh selection or a shortlist refresh.
 
@@ -37,7 +37,7 @@ CSS must reveal every slide, disable animations and hide editing/navigation
 controls. Wait for document.fonts.ready and clear slide inert/aria-hidden state.
 Preserve selectable Chinese text and clickable redirect source links. Make the
 Result.md link an absolute URL to this batch in the personal daily repository.
-Verify PDF page count (cover + index + candidate count), extracted text, source
+Verify PDF page count (index + candidate count), extracted text, source
 links and rendered page bounds; visually inspect the PDF before publication.
 Publish issue-disptach.html, issue-disptach.pdf and Result.md together. Retain
 the generated HTML alongside its PDF, and keep the reusable template in the skill. PDF is static; do not describe keyboard
