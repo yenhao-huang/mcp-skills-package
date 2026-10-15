@@ -1,14 +1,37 @@
 ---
 name: executorch-pm
-description: Manage ExecuTorch weekly 10-issue selection, community drafts, and daily PR tracking through issue-dispatch.md and Result.md. Use for shortlist generation, user selection handoff to executorch-dev, templates, or read-only progress; never post to the community.
+description: Manage ExecuTorch weekly 10-issue selection, community drafts, and daily PR tracking through issue-disptach.html and Result.md. Use for shortlist generation, user selection handoff to executorch-dev, templates, or read-only progress; never post to the community.
 ---
 
 # ExecuTorch PM
 
 Read [references/project-policy.md](references/project-policy.md) for all runs.
 All user-facing reports use Traditional Chinese. The daily batch contains only
-`issue-dispatch.md` and `Result.md`, with exact spelling and capitalization.
+`issue-disptach.html` and `Result.md`, with exact spelling and capitalization.
 Templates and internal schedule/state files remain inside the skill.
+The exact output filename is `issue-disptach.html` (user spelling); do not
+normalize it to issue-dispatch.html or retain a Markdown dispatch in daily.
+
+## HTML presentation
+
+Use the user-requested [frontend-slides skill](https://github.com/zarazhangrui/frontend-slides).
+Read its SKILL.md and relevant HTML/viewport references before rendering; the
+initial template follows source commit 9906a34d640d2111f724544cbc50f7f130569ae1.
+Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
+reading-first example, replacing sample content, counts and dates, and adding
+one issue slide per candidate. Keep the issue number, `(<scope>) <summary>`,
+問題釐清, 可能解法 and all relevant redirect source links. Include an index and
+a link to Result.md. Preserve source facts when converting an existing batch;
+conversion alone does not authorize fresh selection or a shortlist refresh.
+
+Generate a single self-contained HTML with inline CSS/JS, fixed 1920×1080 stage
+scaling, keyboard/touch navigation, reduced-motion support and readable type.
+Embed required font glyphs for the final content (regenerate the font subset
+when text changes), preserve embedded font and upstream CSS license notices,
+and avoid runtime CDN dependencies. Local text editing must stay local, never
+write to GitHub, and provide HTML download. Validate rendered bounds and inspect
+desktop/phone screenshots before publication. GitHub file views show HTML source;
+do not claim a live website or enable hosting without a request.
 
 ## Focus part
 
@@ -53,8 +76,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 
 ## Workflow
 
-1. Read STATE.md, the project policy, and the existing batch's two Markdown
-   files. Use `references/template/STATE.template.md` for a new internal run.
+1. Read STATE.md, the project policy, and the existing batch's HTML dispatch
+   and Result.md. Use `references/template/STATE.template.md` for a new internal run.
    Determine shortlist, selection, draft maintenance, or PR-check mode.
    Verify source access and the personal output repository before mutation.
 2. For a shortlist, apply Focus part searches and relevance checks first,
@@ -64,8 +87,9 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Explain exceptions and coordination needs; exclude already resolved work.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
-3. Read [template/issue-dispatch.md](template/issue-dispatch.md) and write the
-   batch's `issue-dispatch.md`: 10 numbered `(<scope>) <summary>` entries,
+3. Read [template/issue-disptach.html](template/issue-disptach.html) and write the
+   batch's `issue-disptach.html`: up to 10 numbered issue slides with
+   `(<scope>) <summary>` headings,
    each with a redirect issue link, `問題釐清` and `可能解法`. Use only the active Focus part scopes: currently
    `build operator` or `quantization`. Do not include the word `title` or a
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as

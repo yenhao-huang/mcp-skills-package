@@ -24,3 +24,6 @@ Heading correction: use (<scope>): without literal title; 10 replacements verifi
 
 Focus/heading revision: validated; remove colon; PM focus = build operator + quantization; preserve existing selections and historical dispatch scope.
 Validation: 10 existing headings match parenthesized scope without colon; quick_validate, JSON parse and diff checks passed.
+
+HTML revision: validated; frontend-slides used; issue-disptach.html replaces Markdown dispatch; issue 45 / PR 46.
+HTML checks: 12 slides; 1280x720 and 390x844 bounds; keyboard/index navigation and local editing passed. Ten source descriptions and solutions preserved; only HTML + Result.md in daily.
