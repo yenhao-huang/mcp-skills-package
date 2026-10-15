@@ -6,8 +6,9 @@ description: Manage ExecuTorch weekly 10-issue selection, community drafts, and 
 # ExecuTorch PM
 
 Read [references/project-policy.md](references/project-policy.md) for all runs.
-All user-facing reports use Traditional Chinese. The daily batch contains only
+All user-facing reports use Traditional Chinese. A shortlist batch contains only
 `issue-disptach.html`, `issue-disptach.pdf` and `Result.md`, with exact spelling and capitalization.
+On progress-only days, publish only Result.md.
 Templates and internal schedule/state files remain inside the skill.
 The exact output filename is `issue-disptach.pdf` (user spelling); do not
 normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
@@ -96,11 +97,31 @@ tracking does not select a shortlist issue or authorize development. Deduplicate
 by repository and PR number; keep one row per PR and retain completed rows.
 For selected issues without a PR, use an issue row and replace/update it when the
 corresponding PR is verified. Read every batch's Result.md to discover existing
-tracked PRs and update their original rows, not just the newest shortlist.
+tracked PRs and carry them into today's snapshot under the daily rules below.
 On read failure retain the prior status and last successful check timestamp;
 mark the failed check/uncertainty in notes, never invent a fourth status or Done.
 Review approval and successful CI do not imply merge. Preserve the four-stage
 selected-issue table separately; do not infer its history from a supplied PR.
+
+## Daily Result snapshot
+
+Every Asia/Taipei calendar day must have a Result.md, even when all PR states
+are unchanged or no issues are selected. Run at the confirmed daily 04:00 time.
+Use executorch/YYYY-MM-DD_HHmmss/Result.md; reuse today's existing snapshot on
+reruns (choose the latest if multiple exist), otherwise create one at run time.
+Carry forward all tracked PRs, completed rows, actual selections and evidence
+from the latest snapshot; reconcile any older rows absent from it, deduplicating
+by repository/PR and preserving newer verified facts. Recheck current states.
+Never overwrite prior days to record today's progress. Record report date,
+check time, prior Result.md link and original shortlist link; relative links must
+resolve from the new directory. No-change days still publish today's snapshot.
+On API failure publish the snapshot with prior status/last successful check time
+and a clearly dated failed-check note. Do not fabricate checks or missing dates.
+Only same-day identical reruns may skip a commit. Unchanged results can remain
+silent in notifications; this never suppresses the daily file output.
+On shortlist days include the HTML/PDF plus Result.md; other days publish only
+Result.md, without duplicating slides. A new shortlist must preserve existing
+tracking/selected rows, while its new candidates remain unselected.
 
 ## Schedule
 
@@ -133,7 +154,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
 4. Initialize `Result.md` from [template/Result.md](template/Result.md) with an
-   empty selected-issue table and an explicit waiting-for-selection statement.
+   waiting-for-selection statement for new candidates. Preserve prior actual
+   selections and PR tracking rows; use an empty table only on the first run.
    Present the dispatch and wait. On actual selection, record the chosen issue,
    time and user evidence in Result.md, recheck its current state, and hand off
    only selected unresolved issues to `$executorch-dev` with the batch path.
@@ -144,7 +166,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 6. For daily tracking, update the three-status PR tracking summary above.
    Read selected issues and associated fork/community PRs
    from Result.md, including previously tracked PRs now closed or merged. Read
-   all relevant CI/review changes and update the same Result.md in place.
+   all relevant CI/review changes and publish today's Result.md snapshot,
+   even if no status changed. Preserve prior days.
    Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
    `該 PR 被 merge`. Treat fork PRs as development evidence only. Stage three
    requires a verified community PR submitted by the user; stage four requires
@@ -152,9 +175,9 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
    prior facts. Do not initiate development or perform any community writes.
-7. Validate the three output files, counts, headings, three-status tracking rows, four stage columns, actual
+7. Validate today's Result.md (and HTML/PDF on shortlist days), counts, headings, three-status tracking rows, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
-   batches; progress updates preserve the existing batch and selection history.
+   batches; progress updates preserve historical snapshots and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
    authorized by the user; do not create a daily PR. Never copy JSON snapshots, STATE.md, schedules, templates,
    progress.md or development logs to daily. Record publication evidence in

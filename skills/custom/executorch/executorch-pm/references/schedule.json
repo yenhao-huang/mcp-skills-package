@@ -5,12 +5,12 @@
     {
       "name": "ExecuTorch weekly shortlist",
       "rrule": "FREQ=WEEKLY;BYDAY=MO;BYHOUR=4;BYMINUTE=0;BYSECOND=0",
-      "prompt": "Use executorch-pm shortlist mode. Read the current Focus part in SKILL.md and collect up to 10 eligible issues within those scopes, reporting shortages without broadening focus, write only issue-disptach.html、issue-disptach.pdf and Result.md in yenhao-huang/daily executorch/<time>/, present to the user and wait for selection. Never start development or write to community repositories."
+      "prompt": "Use executorch-pm shortlist mode. Read the current Focus part in SKILL.md and collect up to 10 eligible issues within those scopes, reporting shortages without broadening focus, write only issue-disptach.html、issue-disptach.pdf and Result.md in yenhao-huang/daily executorch/<time>/, present to the user and wait for selection. Never start development or write to community repositories. Preserve existing selections and tracked PR rows in today's Result.md; coordinate with daily checking to avoid duplicate snapshots."
     },
     {
       "name": "ExecuTorch daily PR progress",
       "rrule": "FREQ=DAILY;BYHOUR=4;BYMINUTE=0;BYSECOND=0",
-      "prompt": "Use executorch-pm PR check mode. Discover tracked PR rows across all batch Result.md files in yenhao-huang/daily executorch/<time>/. Update each original Result.md PR summary using only 未發 PR, PR 未 merge, Done, preserving the four-stage selected-issue details. Verify merged state before Done, retain closed-unmerged PRs with notes, and preserve prior facts on API failure. Notify only on meaningful changes or required action, and stay quiet otherwise. Never write to community repositories or trigger development."
+      "prompt": "Use executorch-pm daily Result snapshot mode at 04:00 Asia/Taipei. Every day publish executorch/YYYY-MM-DD_HHmmss/Result.md in yenhao-huang/daily, even without status changes. Reuse today on reruns and preserve older dates. Carry forward all tracked PRs and selections, reconcile older missing rows, verify current states and use exactly 未發 PR, PR 未 merge, Done with the separate four-stage detail. Link previous snapshot and original shortlist. On API failure preserve prior status and mark check uncertainty. Progress-only days output Result.md alone. Notify only on meaningful changes; quiet notifications must not skip daily output. Never write to community repositories or trigger development."
     }
   ]
 }

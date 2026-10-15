@@ -27,10 +27,12 @@
 
 Use `yenhao-huang/daily`, directory `executorch/<time>/`, where `<time>` is a
 Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
-Create a new batch for a new shortlist. Update that batch's Result.md in place
-as work advances; preserve other batches and all actual user selections.
+Publish a Result.md snapshot every Asia/Taipei calendar day, even without status
+changes. Reuse today's directory on reruns or create YYYY-MM-DD_HHmmss at run
+time. Carry forward tracking and selections; preserve prior days unchanged.
+Follow PM's Daily Result snapshot rules for cross-batch reconciliation and links.
 
-The batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
+A shortlist batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
 
 - `issue-disptach.html`: the self-contained generated presentation used for PDF export.
 - `issue-disptach.pdf`: up to 10 issue pages exported from HTML using the PM skill's
@@ -38,8 +40,9 @@ The batch contains exactly three user-facing files (HTML source + PDF dispatch +
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 
-Before selection, Result.md explicitly says no issues have been selected and
-has no issue rows. Only real user selection creates a row, with time/evidence.
+Before any selection, Result.md explicitly says no issues have been selected and
+has no selected-issue rows. Later shortlists preserve existing selections and PR
+tracking; progress-only days contain Result.md alone. Only real user selection creates a row, with time/evidence.
 Never treat ranking, silence or elapsed time as selection.
 
 Development updates only the selected issue row and concise evidence in
@@ -61,8 +64,9 @@ authorizes direct commits and normal pushes to `main` in `yenhao-huang/daily`;
 no task branch or pull request is needed for this repository. Verify the remote
 repository, fetch main and preserve unrelated changes before publishing. Use
 an explicit destination (`git push origin HEAD:refs/heads/main`) and verify the
-remote commit and the three batch files afterward. If main advances, reconcile
-safely before retrying; never force-push. Do not publish unchanged records.
+remote commit and the expected daily files afterward. If main advances, reconcile
+safely before retrying; never force-push. Publish today's snapshot even when statuses are unchanged; skip only identical
+same-day reruns.
 
 This exception applies only to daily records. The skill-package repository
 still requires task-created branches and pull requests, and community writes

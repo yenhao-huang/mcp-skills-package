@@ -1,6 +1,9 @@
 # ExecuTorch Result
 
 批次：<YYYY-MM-DD_HHmmss>
+報告日期：<YYYY-MM-DD Asia/Taipei>
+前次紀錄：<首次執行填無，否則連結前次 Result.md>
+候選清單：<連結原始批次的 issue-disptach.pdf>
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
 選擇紀錄：尚未選擇；等待用戶從 issue-disptach.pdf 指定議題。
 
@@ -24,3 +27,5 @@
 | --- | --- | --- | --- | --- |
 
 進度只使用「未發 PR／PR 未 merge／Done」。Done 必須確認該社群 PR 已 merge；closed 未 merge 仍是 PR 未 merge，原因記在目前狀況。用戶指定追蹤的 PR 可以不在本批候選內，追蹤不代表選題或授權開發。
+
+每日建立當日快照，即使狀態未變。延續先前選題與追蹤列；同日重跑更新當日檔案，保留過往日期。

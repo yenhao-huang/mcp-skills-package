@@ -52,3 +52,8 @@ Bundled pinned upstream skill, rendering references, styles and scripts under re
 ## 2026-10-15 PR tracking summary
 
 Added three-status PR summary in Result.md. User requested tracking of ExecuTorch PRs 23871 and 21873; both verified open and unmerged. No shortlist selection or development initiated.
+
+
+## 2026-10-15 Daily Result snapshots
+
+User requires Result.md every day. Daily snapshots now preserve history and carry forward tracking even without status changes. Progress-only days publish Result.md alone; same-day reruns reuse today. Scheduler remains not_enabled because no automation API is available.
