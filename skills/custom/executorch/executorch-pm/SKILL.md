@@ -33,7 +33,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
 3. Read [template/issue-dispatch.md](template/issue-dispatch.md) and write the
-   batch's `issue-dispatch.md`: 10 numbered `title <scope>: <summary>` entries,
+   batch's `issue-dispatch.md`: 10 numbered `(<scope>): <summary>` entries,
    each with a redirect issue link, `問題釐清` and `可能解法`. Use scopes such as
    perf, inference, operator, export, runtime, memory, backend, build, ci or
    tooling. Ground the diagnosis in the discussion, mark proposed solutions as

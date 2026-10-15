@@ -33,7 +33,7 @@ as work advances; preserve other batches and all actual user selections.
 The batch contains exactly two user-facing files:
 
 - `issue-dispatch.md`: 10 candidate introductions using the PM skill's
-  `template/issue-dispatch.md`, each with title scope, 問題釐清 and 可能解法.
+  `template/issue-dispatch.md`, each with a `(<scope>): <summary>` heading, 問題釐清 and 可能解法.
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 

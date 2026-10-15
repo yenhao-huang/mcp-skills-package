@@ -7,7 +7,7 @@
 以下為候選，尚未代表用戶選擇；可能解法是待驗證方向，不是已完成修正。
 Note: scope 可使用 perf、inference、operator、export、runtime、memory、backend、build、ci、tooling，依問題選擇。
 
-## 1. title <scope>: <簡短問題標題>
+## 1. (<scope>): <簡短問題標題>
 
 Issue：[ExecuTorch #<number>](https://redirect.github.com/pytorch/executorch/issues/<number>)
 
