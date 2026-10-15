@@ -57,3 +57,8 @@ Added three-status PR summary in Result.md. User requested tracking of ExecuTorc
 ## 2026-10-15 Daily Result snapshots
 
 User requires Result.md every day. Daily snapshots now preserve history and carry forward tracking even without status changes. Progress-only days publish Result.md alone; same-day reruns reuse today. Scheduler remains not_enabled because no automation API is available.
+
+
+## 2026-10-15 Cron activated
+
+Daily Result cron enabled at UTC 20:00 / Asia/Taipei 04:00. Clean-environment real publication passed (b5565d8); weekly shortlist not enabled. Runtime and restart limitations documented in references/cron-operations.md. Source delivery tracked in issue 47.

@@ -128,7 +128,10 @@ tracking/selected rows, while its new candidates remain unselected.
 Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
 at 04:00 check PR progress. Monday performs both jobs once. Collection waits
 for user selection before development. Skill instructions do not activate a
-scheduler. Use the supported automation API when available, deduplicate jobs,
+scheduler. The user has explicitly authorized and enabled local cron for the
+daily Result job; see [cron operations](references/cron-operations.md) for current
+state, limitations and verification. Weekly shortlist remains disabled.
+Use the supported automation API when available, deduplicate jobs,
 and read back enabled state before claiming activation. Otherwise record
 `not_enabled` internally; never silently install cron. The confirmed intent is
 in [references/schedule.json](references/schedule.json), never copied to daily.
