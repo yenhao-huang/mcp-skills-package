@@ -55,8 +55,15 @@ without merge is not completion. Failed API reads are unknown, never success.
 Track blockers and next actions as notes, not extra stages.
 
 Before publishing, inspect the full diff and commit messages for unsafe
-references and secrets. Stage only the intended batch files. Push only to a
-verified task-created branch in `yenhao-huang/daily`, then create/update its
-PR; no direct default-branch pushes. Do not merge without user authorization.
-Verify the remote branch and PR. Report pending merge honestly; keep local
-files on failure and never force-push. Do not create a new PR on unchanged runs.
+references and secrets. Stage only the intended batch files. The user explicitly
+authorizes direct commits and normal pushes to `main` in `yenhao-huang/daily`;
+no task branch or pull request is needed for this repository. Verify the remote
+repository, fetch main and preserve unrelated changes before publishing. Use
+an explicit destination (`git push origin HEAD:refs/heads/main`) and verify the
+remote commit and the two batch files afterward. If main advances, reconcile
+safely before retrying; never force-push. Do not publish unchanged records.
+
+This exception applies only to daily records. The skill-package repository
+still requires task-created branches and pull requests, and community writes
+remain forbidden. Keep local files and report the exact blocker if publishing
+fails; never claim uploaded when only locally saved.

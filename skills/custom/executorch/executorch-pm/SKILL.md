@@ -60,8 +60,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 7. Validate the two output files, counts, headings, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
    batches; progress updates preserve the existing batch and selection history.
-   Publish only to the verified personal repository via an authorized task
-   branch and PR. Never copy JSON snapshots, STATE.md, schedules, templates,
+   Commit and push directly to verified `yenhao-huang/daily` main, as
+   authorized by the user; do not create a daily PR. Never copy JSON snapshots, STATE.md, schedules, templates,
    progress.md or development logs to daily. Record publication evidence in
    internal STATE.md. Notify only for meaningful changes or required action;
    keep unchanged daily checks quiet.
