@@ -76,6 +76,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `notion-mcp-ops` | `skills/custom/notion/notion-mcp-ops/SKILL.md` | 透過已連線的 Notion 工具安全讀寫及驗證頁面。 |
 | `notion-daily-learning` | `skills/custom/notion/notion-daily-learning/SKILL.md` | 將英文學習內容追加到 Notion 當日 MMDD 小節。 |
 | `daily-checkin-assistant` | `skills/custom/personal/daily-checkin-assistant/SKILL.md` | 整合今日任務、LeetCode 選題與習慣打卡。 |
+| `pretrieval-draft-reference-manager` | `skills/custom/wingene/pretrieval-draft-reference-manager/SKILL.md` | 管理 W78 draft-reference A/B、frontend、共用服務、版本與資料掛載生命週期。 |
 | `skill-create` | `skills/skill-create/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
 | `tailscale-in-container` | `skills/operations/tailscale-in-container/SKILL.md` | 在既有 container 內安裝、整合、驗證或安全卸載 Tailscale，同時避免宿主機加入 tailnet。 |
 | `vllm-embedding-server` | `skills/vllm-embedding-server/SKILL.md` | 啟動、除錯、驗證本機 vLLM embedding server，特別是 Qwen embedding models。 |
