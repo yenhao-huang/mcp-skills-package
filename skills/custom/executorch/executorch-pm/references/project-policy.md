@@ -30,8 +30,9 @@ Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
 Create a new batch for a new shortlist. Update that batch's Result.md in place
 as work advances; preserve other batches and all actual user selections.
 
-The batch contains exactly two user-facing files (PDF dispatch + Markdown results):
+The batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
 
+- `issue-disptach.html`: the self-contained generated presentation used for PDF export.
 - `issue-disptach.pdf`: up to 10 issue pages exported from HTML using the PM skill's
   `template/issue-disptach.html`, each with a `(<scope>) <summary>` heading, 問題釐清 and 可能解法.
 - `Result.md`: actual selected issues and the four stages from the PM skill's
@@ -45,7 +46,7 @@ Development updates only the selected issue row and concise evidence in
 Result.md. Keep reproduction logs, tests, reports and branch details in the
 code repository under its existing conventions; link when useful. Do not
 publish development directories, progress.md, JSON snapshots, schedule.json,
-STATE.md, intermediate HTML, or template files to daily. Templates and scheduling intent stay in
+STATE.md, or template files to daily. Templates and scheduling intent stay in
 the skill. Internal caches may be local but must not be staged to daily.
 
 Fork PRs are evidence for issue 開發 only. Community submission belongs to the
@@ -60,7 +61,7 @@ authorizes direct commits and normal pushes to `main` in `yenhao-huang/daily`;
 no task branch or pull request is needed for this repository. Verify the remote
 repository, fetch main and preserve unrelated changes before publishing. Use
 an explicit destination (`git push origin HEAD:refs/heads/main`) and verify the
-remote commit and the two batch files afterward. If main advances, reconcile
+remote commit and the three batch files afterward. If main advances, reconcile
 safely before retrying; never force-push. Do not publish unchanged records.
 
 This exception applies only to daily records. The skill-package repository

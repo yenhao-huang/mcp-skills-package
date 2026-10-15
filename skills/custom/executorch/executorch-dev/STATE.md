@@ -32,3 +32,8 @@ HTML checks: 12 slides; 1280x720 and 390x844 bounds; keyboard/index navigation a
 ## 2026-10-15 PDF delivery
 
 User changed delivery to HTML-to-PDF. Daily now publishes issue-disptach.pdf and Result.md only; HTML remains the PM template/local intermediate. Existing 10 candidates and selection state are preserved. Verified 12 pages, Chinese text, source hyperlinks and PDF rendering.
+
+
+## 2026-10-15 Retain HTML
+
+Latest user instruction supersedes PDF-only delivery: retain issue-disptach.html alongside issue-disptach.pdf and Result.md in daily. Restored the same HTML source; candidates and progress remain unchanged.

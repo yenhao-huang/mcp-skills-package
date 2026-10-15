@@ -1,16 +1,16 @@
 ---
 name: executorch-pm
-description: Manage ExecuTorch weekly 10-issue selection, community drafts, and daily PR tracking through issue-disptach.pdf and Result.md. Use for shortlist generation, user selection handoff to executorch-dev, templates, or read-only progress; never post to the community.
+description: Manage ExecuTorch weekly 10-issue selection, community drafts, and daily PR tracking through issue-disptach.html, issue-disptach.pdf and Result.md. Use for shortlist generation, user selection handoff to executorch-dev, templates, or read-only progress; never post to the community.
 ---
 
 # ExecuTorch PM
 
 Read [references/project-policy.md](references/project-policy.md) for all runs.
 All user-facing reports use Traditional Chinese. The daily batch contains only
-`issue-disptach.pdf` and `Result.md`, with exact spelling and capitalization.
+`issue-disptach.html`, `issue-disptach.pdf` and `Result.md`, with exact spelling and capitalization.
 Templates and internal schedule/state files remain inside the skill.
 The exact output filename is `issue-disptach.pdf` (user spelling); do not
-normalize it to issue-dispatch.pdf or retain HTML/Markdown dispatches in daily.
+normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
 
 ## HTML-to-PDF presentation
 
@@ -39,8 +39,8 @@ Preserve selectable Chinese text and clickable redirect source links. Make the
 Result.md link an absolute URL to this batch in the personal daily repository.
 Verify PDF page count (cover + index + candidate count), extracted text, source
 links and rendered page bounds; visually inspect the PDF before publication.
-Publish only issue-disptach.pdf and Result.md. Keep HTML as a skill template or
-local intermediate, outside daily. PDF is static; do not describe keyboard
+Publish issue-disptach.html, issue-disptach.pdf and Result.md together. Retain
+the generated HTML alongside its PDF, and keep the reusable template in the skill. PDF is static; do not describe keyboard
 navigation or local editing as PDF features. Do not enable hosting.
 
 ## Focus part
@@ -98,7 +98,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
 3. Read [template/issue-disptach.html](template/issue-disptach.html) and write the
-   local intermediate HTML, then export `issue-disptach.pdf`: up to 10 numbered issue slides with
+   batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10 numbered issue slides with
    `(<scope>) <summary>` headings,
    each with a redirect issue link, `問題釐清` and `可能解法`. Use only the active Focus part scopes: currently
    `build operator` or `quantization`. Do not include the word `title` or a
@@ -123,7 +123,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
    prior facts. Do not initiate development or perform any community writes.
-7. Validate the two output files, counts, headings, four stage columns, actual
+7. Validate the three output files, counts, headings, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
    batches; progress updates preserve the existing batch and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
