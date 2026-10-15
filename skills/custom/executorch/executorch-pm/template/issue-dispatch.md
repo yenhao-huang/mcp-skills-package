@@ -2,12 +2,13 @@
 
 批次：<YYYY-MM-DD_HHmmss>
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
-候選數：10
+候選數：<實際數量，目標 10>
+Focus part：build operator、quantization
 
 以下為候選，尚未代表用戶選擇；可能解法是待驗證方向，不是已完成修正。
-Note: scope 可使用 perf、inference、operator、export、runtime、memory、backend、build、ci、tooling，依問題選擇。
+Note: scope 必須來自目前 Focus part；每題選一個主要 scope。build operator 指算子／kernel 實作及建置整合，quantization 指量化。
 
-## 1. (<scope>): <簡短問題標題>
+## 1. (<scope>) <簡短問題標題>
 
 Issue：[ExecuTorch #<number>](https://redirect.github.com/pytorch/executorch/issues/<number>)
 

@@ -21,3 +21,6 @@ Daily publication policy revision: validated; issue 45; user authorized direct m
 Evidence: both quick_validate checks passed; shared policies match; daily main contains commit 3a7fa8b and exactly Result.md + issue-dispatch.md. Skill source update awaits its new PR merge.
 
 Heading correction: use (<scope>): without literal title; 10 replacements verified, quick_validate and diff checks passed.
+
+Focus/heading revision: validated; remove colon; PM focus = build operator + quantization; preserve existing selections and historical dispatch scope.
+Validation: 10 existing headings match parenthesized scope without colon; quick_validate, JSON parse and diff checks passed.

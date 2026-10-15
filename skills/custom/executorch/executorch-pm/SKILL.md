@@ -10,6 +10,37 @@ All user-facing reports use Traditional Chinese. The daily batch contains only
 `issue-dispatch.md` and `Result.md`, with exact spelling and capitalization.
 Templates and internal schedule/state files remain inside the skill.
 
+## Focus part
+
+Current focus scopes (editable here; this is the source of truth):
+
+- `build operator`: operator/kernel implementation, missing operator support,
+  registration, selective build, and operator-specific build/link integration.
+  This is one combined category, not separate build and operator scopes.
+- `quantization`: quantizers, calibration, quantized operators, precision/dtype
+  behavior, accuracy regressions, and quantized backend lowering.
+
+Focus controls candidate search and eligibility, not just the final heading.
+Search each category separately with several related terms; do not require the
+literal phrase "build operator". For example, use GitHub issue searches such as
+`repo:pytorch/executorch is:issue is:open kernel`, `... operator`,
+`... "selective build"`, `... quantization`, `... quantizer`,
+`... int8`, and `... calibration` (expand `...` to the same repo/type/state
+filters). Inspect actual labels first before using label filters. Read bodies,
+comments and linked work to confirm relevance; keyword hits alone do not qualify.
+
+Exclude general CI/dependency maintenance, unrelated packaging, generic memory
+planning and unrelated inference issues. An otherwise general issue qualifies
+only if its concrete unresolved work fits one of the two focus scopes; explain
+that relationship in 問題釐清. Search both scopes, deduplicate overlaps, choose
+one primary scope per item and rank by evidence and tractability. No fixed
+five/five quota is required. If fewer than 10 eligible issues remain, report the
+count and shortage; never fill with unrelated issues or silently broaden focus.
+
+When the user changes focus, update this section and the template's focus line.
+Existing dispatches remain historical snapshots unless a refresh is requested.
+Focus never removes selected issues from Result.md or stops their PR tracking.
+
 ## Schedule
 
 Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
@@ -26,17 +57,18 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    files. Use `references/template/STATE.template.md` for a new internal run.
    Determine shortlist, selection, draft maintenance, or PR-check mode.
    Verify source access and the personal output repository before mutation.
-2. For a shortlist, paginate open issues from `pytorch/executorch`, exclude PRs
+2. For a shortlist, apply Focus part searches and relevance checks first,
+   paginate open issues from `pytorch/executorch`, exclude PRs
    and duplicates, and read candidate bodies, all comments and linked work.
    Prefer actionable unresolved issues without an active assignee or fix PR.
    Explain exceptions and coordination needs; exclude already resolved work.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
 3. Read [template/issue-dispatch.md](template/issue-dispatch.md) and write the
-   batch's `issue-dispatch.md`: 10 numbered `(<scope>): <summary>` entries,
-   each with a redirect issue link, `問題釐清` and `可能解法`. Use scopes such as
-   perf, inference, operator, export, runtime, memory, backend, build, ci or
-   tooling. Ground the diagnosis in the discussion, mark proposed solutions as
+   batch's `issue-dispatch.md`: 10 numbered `(<scope>) <summary>` entries,
+   each with a redirect issue link, `問題釐清` and `可能解法`. Use only the active Focus part scopes: currently
+   `build operator` or `quantization`. Do not include the word `title` or a
+   colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
 4. Initialize `Result.md` from [template/Result.md](template/Result.md) with an
    empty selected-issue table and an explicit waiting-for-selection statement.
