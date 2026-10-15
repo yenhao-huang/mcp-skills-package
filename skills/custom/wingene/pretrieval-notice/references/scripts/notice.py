@@ -12,6 +12,7 @@ import tempfile
 import urllib.error
 import urllib.request
 from zoneinfo import ZoneInfo
+from string import Template
 
 BASE = 'http://192.168.1.76:3000'
 REPO = 'leo/PRetrieval'
@@ -112,16 +113,33 @@ def safe_title(title):
     return title
 
 
-def render(issues, priorities):
-    timestamp = datetime.now(ZoneInfo('Asia/Taipei')).strftime('%Y-%m-%d %H:%M %Z')
-    lines = [f'PRetrieval 未關閉 issue（{timestamp}）', f'負責人：{ASSIGNEE}；共 {len(issues)} 筆。', '']
-    if not issues:
-        lines.append('目前沒有指派給 howard 的未關閉 issue。')
-    for issue in ordered(issues, priorities):
-        number = issue['number']
-        marker = '【重要】' if number in priorities else ''
-        lines.append(f'- {marker}[#{number}]({BASE}/{REPO}/issues/{number}) {safe_title(issue["title"])}')
-    return '\n'.join(lines)
+def render(issues, priorities, *, queried_at=None, scheduled_at=None, error=None):
+    zone = ZoneInfo('Asia/Taipei')
+    queried_at = (queried_at or datetime.now(zone)).astimezone(zone)
+    stamp = lambda value: value.astimezone(zone).strftime('%Y-%m-%d %H:%M:%S Asia/Taipei')
+    ordered_issues = ordered(issues, priorities)
+    important = [x for x in ordered_issues if x['number'] in priorities]
+    remaining = [x for x in ordered_issues if x['number'] not in priorities]
+
+    def rows(items, mark=False):
+        return '\n'.join(
+            f"- {'【重要】' if mark else ''}[#{x['number']}]({BASE}/{REPO}/issues/{x['number']}) {safe_title(x['title'])}"
+            for x in items
+        )
+
+    template = Path(__file__).resolve().parents[1] / 'template/report.template.md'
+    return Template(template.read_text(encoding='utf-8')).substitute(
+        scheduled_at=stamp(scheduled_at) if scheduled_at else '手動執行',
+        queried_at=stamp(queried_at), source_url=f'{BASE}/{REPO}',
+        status='查詢失敗' if error else '成功',
+        total='無法確認' if error else f'共 {len(issues)} 筆',
+        priority_count='無法確認' if error else f'{len(important)} 筆',
+        important='未取得資料。' if error else (rows(important, True) or '目前沒有符合條件的重要議題。'),
+        remaining='未取得資料。' if error else (rows(remaining) or '無。'),
+        notes=(f'查詢未完成（{safe_title(error)}）；未使用舊資料，無法確認目前的未關閉 issue。'
+               if error else ('目前沒有指派給 howard 的未關閉 issue。' if not issues else
+                              '已完成分頁查詢，排除 PR、已關閉及其他負責人的 issue。')),
+    )
 
 
 def main():
@@ -145,10 +163,16 @@ def main():
         else:
             print(json.dumps({'priority_issues': priorities}, ensure_ascii=False))
     except urllib.error.HTTPError as error:
+        if args.command == 'report':
+            print(render([], [], error=f'HTTP {error.code}'))
+            return 1
         print(f'查詢失敗：Gitea HTTP {error.code}；未產生 issue 摘要。', file=sys.stderr)
         return 1
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError, urllib.error.URLError) as error:
         # Do not echo arbitrary remote error bodies, credential-helper output, or secrets.
+        if args.command == 'report':
+            print(render([], [], error=type(error).__name__))
+            return 1
         print(f'執行失敗（{type(error).__name__}）；請檢查連線、既有認證及優先順序設定。未產生摘要。', file=sys.stderr)
         return 1
     return 0

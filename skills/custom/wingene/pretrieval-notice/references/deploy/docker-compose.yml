@@ -1,0 +1,38 @@
+services:
+  notice:
+    build:
+      context: ../..
+      dockerfile: references/deploy/Dockerfile
+      args:
+        RUN_UID: ${RUN_UID:-1016}
+        RUN_GID: ${RUN_GID:-1016}
+    image: pretrieval-notice:issue-38
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: credential.helper
+      GIT_CONFIG_VALUE_0: store --file=/run/secrets/gitea-credentials
+      GIT_SSH_COMMAND: ssh -i /run/secrets/github-key -o UserKnownHostsFile=/run/secrets/known-hosts -o StrictHostKeyChecking=yes -o BatchMode=yes
+    volumes:
+      - ${NOTICE_STATE_DIR:?Set NOTICE_STATE_DIR}:/state
+      - ${NOTICE_PREFERENCES_DIR:?Set NOTICE_PREFERENCES_DIR}:/preferences:ro
+      - ${GITEA_CREDENTIAL_FILE:?Set GITEA_CREDENTIAL_FILE}:/run/secrets/gitea-credentials:ro
+      - ${GITHUB_SSH_KEY:?Set GITHUB_SSH_KEY}:/run/secrets/github-key:ro
+      - ${GITHUB_KNOWN_HOSTS:?Set GITHUB_KNOWN_HOSTS}:/run/secrets/known-hosts:ro
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    healthcheck:
+      test: [CMD, python3, /app/references/scripts/publish.py, health]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: "3"
