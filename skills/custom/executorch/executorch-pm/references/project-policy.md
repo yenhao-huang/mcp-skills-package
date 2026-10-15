@@ -27,18 +27,22 @@
 
 Use `yenhao-huang/daily`, directory `executorch/<time>/`, where `<time>` is a
 Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
-Create a new batch for a new shortlist. Update that batch's Result.md in place
-as work advances; preserve other batches and all actual user selections.
+Publish a Result.md snapshot every Asia/Taipei calendar day, even without status
+changes. Reuse today's directory on reruns or create YYYY-MM-DD_HHmmss at run
+time. Carry forward tracking and selections; preserve prior days unchanged.
+Follow PM's Daily Result snapshot rules for cross-batch reconciliation and links.
 
-The batch contains exactly two user-facing files:
+A shortlist batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
 
-- `issue-dispatch.md`: 10 candidate introductions using the PM skill's
-  `template/issue-dispatch.md`, each with title scope, 問題釐清 and 可能解法.
+- `issue-disptach.html`: the self-contained generated presentation used for PDF export.
+- `issue-disptach.pdf`: up to 10 issue pages exported from HTML using the PM skill's
+  `template/issue-disptach.html`, each with a `(<scope>) <summary>` heading, 問題釐清 and 可能解法.
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 
-Before selection, Result.md explicitly says no issues have been selected and
-has no issue rows. Only real user selection creates a row, with time/evidence.
+Before any selection, Result.md explicitly says no issues have been selected and
+has no selected-issue rows. Later shortlists preserve existing selections and PR
+tracking; progress-only days contain Result.md alone. Only real user selection creates a row, with time/evidence.
 Never treat ranking, silence or elapsed time as selection.
 
 Development updates only the selected issue row and concise evidence in
@@ -55,8 +59,24 @@ without merge is not completion. Failed API reads are unknown, never success.
 Track blockers and next actions as notes, not extra stages.
 
 Before publishing, inspect the full diff and commit messages for unsafe
-references and secrets. Stage only the intended batch files. Push only to a
-verified task-created branch in `yenhao-huang/daily`, then create/update its
-PR; no direct default-branch pushes. Do not merge without user authorization.
-Verify the remote branch and PR. Report pending merge honestly; keep local
-files on failure and never force-push. Do not create a new PR on unchanged runs.
+references and secrets. Stage only the intended batch files. The user explicitly
+authorizes direct commits and normal pushes to `main` in `yenhao-huang/daily`;
+no task branch or pull request is needed for this repository. Verify the remote
+repository, fetch main and preserve unrelated changes before publishing. Use
+an explicit destination (`git push origin HEAD:refs/heads/main`) and verify the
+remote commit and the expected daily files afterward. If main advances, reconcile
+safely before retrying; never force-push. Publish today's snapshot even when statuses are unchanged; skip only identical
+same-day reruns.
+
+This exception applies only to daily records. The skill-package repository
+still requires task-created branches and pull requests, and community writes
+remain forbidden. Keep local files and report the exact blocker if publishing
+fails; never claim uploaded when only locally saved.
+
+## PR summary tracking
+
+Result.md also contains a PR tracking table with exactly `未發 PR`, `PR 未 merge`,
+and `Done`. Done requires verified community merge; closed without merge remains
+PR 未 merge with a note. Track user-supplied PRs independently of shortlist selection
+and preserve the four-stage detail. Read failures retain prior status and mark
+uncertainty in notes. PM owns the summary format and cross-batch discovery rules.
