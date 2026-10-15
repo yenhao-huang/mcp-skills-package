@@ -1,0 +1,8 @@
+{
+  "timezone": "Asia/Taipei",
+  "activation_status": "not_enabled",
+  "jobs": [
+    {"name": "ExecuTorch weekly shortlist", "rrule": "FREQ=WEEKLY;BYDAY=MO;BYHOUR=4;BYMINUTE=0;BYSECOND=0", "prompt": "Use executorch-pm shortlist mode. Collect 20 eligible issues, archive in yenhao-huang/daily executorch/<time>/, present to the user and wait for selection. Never start development or write to community repositories."},
+    {"name": "ExecuTorch daily PR progress", "rrule": "FREQ=DAILY;BYHOUR=4;BYMINUTE=0;BYSECOND=0", "prompt": "Use executorch-pm PR check mode. Read tracked and authored ExecuTorch PR progress, save a dated snapshot in yenhao-huang/daily executorch/<time>/, and notify only on meaningful changes, completion, failure or required user action. Stay quiet on unchanged states. Never write to community repositories or trigger development."}
+  ]
+}
