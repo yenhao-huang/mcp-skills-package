@@ -60,6 +60,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `morning-exercise-reminder` | `skills/custom/cron/morning-exercise-reminder/SKILL.md` | 每日早晨運動與 LeetCode 打卡提醒。 |
 | `daily-tech-blogs-digest` | `skills/custom/cron/daily-tech-blogs-digest/SKILL.md` | 每日整理七個官方科技部落格，容錯寫檔後 commit、push。 |
 | `daily-dart-task-check` | `skills/custom/cron/daily-dart-task-check/SKILL.md` | 透過 Dart MCP 彙整五個指定專案或標籤的今日任務。 |
+| `pretrieval-notice` | `skills/custom/wingene/pretrieval-notice/SKILL.md` | 每日 04:00（台北）彙整 howard 的 PRetrieval 未關閉 issue，支援持久保存的重要議題排序；排程需另行啟用。 |
 | `weekly-huggingface-model-digest` | `skills/custom/cron/weekly-huggingface-model-digest/SKILL.md` | 每週依 likes 排列本月三類 Hugging Face 新模型 Top 5。 |
 | `daily-reuters-ai-digest` | `skills/custom/cron/daily-reuters-ai-digest/SKILL.md` | 每日建立有來源依據的 Reuters AI 繁中摘要。 |
 | `daily-journal-reminder` | `skills/custom/cron/daily-journal-reminder/SKILL.md` | 每晚 19:00 的日記提醒內容。 |
