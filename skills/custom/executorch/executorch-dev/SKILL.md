@@ -20,12 +20,15 @@ requirements until requested. Read [references/project-policy.md](references/pro
 before any action; these project constraints govern inherited instructions.
 
 - Start only for an issue explicitly selected by the user, either in this chat or
-  in the PM batch selection record. A candidate list is not selection.
+  in the PM batch Result.md. A candidate list is not selection.
 - Target `pytorch/executorch` for reads and `yenhao-huang/executorch` for fork PRs.
 - If the selected issue is resolved, report evidence and await another user
   selection; never substitute another backlog issue automatically.
 - Preserve code-repository reports required below and also archive progress,
-  evidence, branch and fork PR metadata under the PM run in the daily repository.
+  concise evidence in the selected issue row of the PM batch Result.md.
+  Keep detailed development reports in the code repository; never publish progress.md
+  or development logs to daily. Fork PR completion is only the issue 開發 stage;
+  community submission and merge are separate read-only PM tracking stages.
 - Community replies remain drafts. Daily PM checks do not authorize new code work.
 
 ## Notes

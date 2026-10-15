@@ -1,63 +1,67 @@
 ---
 name: executorch-pm
-description: Manage ExecuTorch weekly issue selection, community message drafts, and daily PR progress. Use for the weekly 20-issue shortlist, user selection handoff to executorch-dev, templates, or read-only PR tracking; never post to the community.
+description: Manage ExecuTorch weekly 10-issue selection, community drafts, and daily PR tracking through issue-dispatch.md and Result.md. Use for shortlist generation, user selection handoff to executorch-dev, templates, or read-only progress; never post to the community.
 ---
 
 # ExecuTorch PM
 
 Read [references/project-policy.md](references/project-policy.md) for all runs.
-Read [references/community-templates.md](references/community-templates.md)
-when drafting or maintaining templates. All user-facing reports use Traditional Chinese.
+All user-facing reports use Traditional Chinese. The daily batch contains only
+`issue-dispatch.md` and `Result.md`, with exact spelling and capitalization.
+Templates and internal schedule/state files remain inside the skill.
 
 ## Schedule
 
-Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 20 issue candidates.
-Every day at 04:00 check PR progress. On Monday perform both jobs once, with
-separate outputs. Weekly collection waits for user selection before development.
-Skill instructions do not activate a scheduler. Use the supported automation
-API only when available; inspect existing jobs and avoid duplicates. Never
-claim activation without reading back an enabled schedule. If unavailable,
-record `not_enabled` and report the limitation; do not silently install cron.
-See [references/schedule.json](references/schedule.json) for the confirmed intent.
+Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
+at 04:00 check PR progress. Monday performs both jobs once. Collection waits
+for user selection before development. Skill instructions do not activate a
+scheduler. Use the supported automation API when available, deduplicate jobs,
+and read back enabled state before claiming activation. Otherwise record
+`not_enabled` internally; never silently install cron. The confirmed intent is
+in [references/schedule.json](references/schedule.json), never copied to daily.
 
 ## Workflow
 
-1. Read `STATE.md`, the policy, and the latest daily records. For a new run use
-   `references/template/STATE.template.md`; preserve old evidence in its dated
-   archive. Determine the requested mode: shortlist, selection, templates, or
-   PR check. Verify read access and output repository before acting.
-2. For the weekly shortlist, query open issues in `pytorch/executorch` using
-   authenticated read-only GitHub tools. Paginate, exclude PR entries and
-   deduplicate. Inspect each candidate's body, full discussion and linked PRs
-   before recommending it. Prefer reproducible, actionable issues without an
-   active assignee or existing fix; explain exceptions, complexity, environment
-   requirements and uncertainty. Rank for tractability, relevance and activity.
-   Fetch additional candidates until 20 eligible issues are found or the source
-   is exhausted. If fewer are eligible, report the actual count and reason;
-   never pad with fabricated, closed, or already resolved issues.
-3. Save the 20-item snapshot and readable table with number, title, labels,
-   update time, evidence, rationale, estimated difficulty and redirect link.
-   Initialize the selection record per policy. Present the shortlist in this
-   chat and ask the user to select issues. End collection in
-   `awaiting_user_selection`; neither the schedule nor the ranking selects work.
-4. On an actual user selection, validate the numbers against the identified
-   batch, record selection time and evidence, and recheck current issue status.
-   Hand off only selected unresolved issues to `$executorch-dev` with batch
-   path, discussion evidence and acceptance context. Do not create new chats
-   unless asked. Do not select replacements for resolved issues automatically.
-5. For template maintenance, edit the referenced draft templates and archive a
-   copy in the dated daily run. Fill placeholders only with verified facts.
-   Never post, send or request a review from a community maintainer.
-6. For a daily PR check, inspect open PRs authored by `yenhao-huang` in
-   `pytorch/executorch` and `yenhao-huang/executorch`, plus every PR recorded in
-   prior progress files, including those now closed or merged. Paginate and
-   deduplicate. Read PR state, CI checks and full review feedback; compare to
-   the previous successful snapshot. Record changes, blockers and proposed
-   next actions. No code changes, reruns, comments, pushes, merges or new PRs
-   are authorized by this monitoring mode. Notify the user only about meaningful
-   changes, completion, failure or required action; keep unchanged runs quiet.
-7. Save and validate the mode's files under `executorch/<time>/` in the daily
-   checkout. Check data completeness, valid JSON, source timestamps and redirect
-   links. Publish only to the verified personal repository when authorized and
-   verify the remote result. Update STATE.md with paths, counts, commands,
-   selection state and publication evidence; report pending work honestly.
+1. Read STATE.md, the project policy, and the existing batch's two Markdown
+   files. Use `references/template/STATE.template.md` for a new internal run.
+   Determine shortlist, selection, draft maintenance, or PR-check mode.
+   Verify source access and the personal output repository before mutation.
+2. For a shortlist, paginate open issues from `pytorch/executorch`, exclude PRs
+   and duplicates, and read candidate bodies, all comments and linked work.
+   Prefer actionable unresolved issues without an active assignee or fix PR.
+   Explain exceptions and coordination needs; exclude already resolved work.
+   Fetch more candidates until 10 are found or eligible results are exhausted.
+   Report shortages honestly. Do not implement or select on the user's behalf.
+3. Read [template/issue-dispatch.md](template/issue-dispatch.md) and write the
+   batch's `issue-dispatch.md`: 10 numbered `title <scope>: <summary>` entries,
+   each with a redirect issue link, `問題釐清` and `可能解法`. Use scopes such as
+   perf, inference, operator, export, runtime, memory, backend, build, ci or
+   tooling. Ground the diagnosis in the discussion, mark proposed solutions as
+   hypotheses, and mention hardware, prior fixes and remaining uncertainty.
+4. Initialize `Result.md` from [template/Result.md](template/Result.md) with an
+   empty selected-issue table and an explicit waiting-for-selection statement.
+   Present the dispatch and wait. On actual selection, record the chosen issue,
+   time and user evidence in Result.md, recheck its current state, and hand off
+   only selected unresolved issues to `$executorch-dev` with the batch path.
+   Do not replace resolved selections without another user choice.
+5. For drafting, use [references/community-templates.md](references/community-templates.md).
+   Maintain templates inside the skill only. Never archive templates to daily,
+   send notices, request reviews or post community comments.
+6. For daily tracking, read selected issues and associated fork/community PRs
+   from Result.md, including previously tracked PRs now closed or merged. Read
+   all relevant CI/review changes and update the same Result.md in place.
+   Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
+   `該 PR 被 merge`. Treat fork PRs as development evidence only. Stage three
+   requires a verified community PR submitted by the user; stage four requires
+   that same PR's merged state. Neither a closed PR nor a merged fork PR counts.
+   If the user reports a new PR, verify its issue relationship and destination
+   read-only before recording it. Record unavailable checks as unknown; retain
+   prior facts. Do not initiate development or perform any community writes.
+7. Validate the two output files, counts, headings, four stage columns, actual
+   selection evidence and redirect links. New shortlists use new timestamped
+   batches; progress updates preserve the existing batch and selection history.
+   Publish only to the verified personal repository via an authorized task
+   branch and PR. Never copy JSON snapshots, STATE.md, schedules, templates,
+   progress.md or development logs to daily. Record publication evidence in
+   internal STATE.md. Notify only for meaningful changes or required action;
+   keep unchanged daily checks quiet.

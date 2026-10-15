@@ -12,3 +12,6 @@ Scope: Create local skills; no issue development started.
 | Daily archive | completed | yenhao-huang/daily commit 790f299; initialization records pushed |
 | Skill source publication | in_progress | Issue 41; branch codex/executorch-skills-20261015; awaiting PR and merge |
 | Scheduler activation | blocked | No automation_update tool available; schedule intent saved, not enabled |
+
+Format revision: validated — 10 candidates; two Markdown outputs; four progress stages; issue 41 / PR 42.
+Validation: quick_validate passed; 10 unique issues and four-stage Result table validated; local templates and shared policy links checked. Publication remains pending PR merge.

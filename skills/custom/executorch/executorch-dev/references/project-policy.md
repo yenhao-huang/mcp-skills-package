@@ -26,30 +26,37 @@
 ## Storage and handoff
 
 Use `yenhao-huang/daily`, directory `executorch/<time>/`, where `<time>` is a
-Taipei timestamp `YYYY-MM-DD_HHmmss` (append a short suffix on collision).
-Never overwrite a prior run. Record timezone `Asia/Taipei` and capture time.
-Use a persistent checkout selected from the environment; verify its origin.
+Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
+Create a new batch for a new shortlist. Update that batch's Result.md in place
+as work advances; preserve other batches and all actual user selections.
 
-Each weekly batch stores `issues.json`, `issues.md`, `selection.json`, and
-`progress.md`. Store source repository and issue number separately in JSON;
-use redirect links in Markdown. Preserve selection records across daily runs.
-`selection.json` starts with status `awaiting_user_selection`, empty `selected`,
-and null `selected_at` and `selection_evidence`. Record actual user selection,
-then status `selected`; never invent an answer or treat elapsed time as consent.
+The batch contains exactly two user-facing files:
 
-Each daily check stores `prs.json` and `pr-progress.md`, comparing with the latest
-successful snapshot across prior run directories. The first run is a baseline.
-Track repo, PR number, head SHA, state, draft status, CI conclusions, review
-state, actionable comments, updated time, blockers, and next action. Record
-permission/API failures as unavailable, not as an empty result or success.
+- `issue-dispatch.md`: 10 candidate introductions using the PM skill's
+  `template/issue-dispatch.md`, each with title scope, 問題釐清 and 可能解法.
+- `Result.md`: actual selected issues and the four stages from the PM skill's
+  `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 
-Development writes `development/<issue-number>/progress.md` in its original
-selected batch, including baseline, reproducer, acceptance criteria, tests,
-branch, fork PR and blockers. It may additionally create dated snapshots.
-Use the code repository's report conventions as required by the copied workflow.
+Before selection, Result.md explicitly says no issues have been selected and
+has no issue rows. Only real user selection creates a row, with time/evidence.
+Never treat ranking, silence or elapsed time as selection.
 
-For publishing daily records, inspect status, stage only this run's files,
-check for unsafe references and secrets, commit, and push only to the verified
-`yenhao-huang/daily` remote when publication is authorized. Read the remote
-commit back and record success; never claim uploaded if only locally saved.
-Keep local data and report the exact blocker after a failed push; do not force.
+Development updates only the selected issue row and concise evidence in
+Result.md. Keep reproduction logs, tests, reports and branch details in the
+code repository under its existing conventions; link when useful. Do not
+publish development directories, progress.md, JSON snapshots, schedule.json,
+STATE.md, or template files to daily. Templates and scheduling intent stay in
+the skill. Internal caches may be local but must not be staged to daily.
+
+Fork PRs are evidence for issue 開發 only. Community submission belongs to the
+user: read back the actual community PR before completing stage three, and
+verify that PR's mergedAt/merged state before completing stage four. Closed
+without merge is not completion. Failed API reads are unknown, never success.
+Track blockers and next actions as notes, not extra stages.
+
+Before publishing, inspect the full diff and commit messages for unsafe
+references and secrets. Stage only the intended batch files. Push only to a
+verified task-created branch in `yenhao-huang/daily`, then create/update its
+PR; no direct default-branch pushes. Do not merge without user authorization.
+Verify the remote branch and PR. Report pending merge honestly; keep local
+files on failure and never force-push. Do not create a new PR on unchanged runs.
