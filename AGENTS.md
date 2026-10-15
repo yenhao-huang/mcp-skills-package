@@ -81,8 +81,22 @@ docs: update documentation or reports
 chore: maintain repository or skill packaging
 ```
 
-Never push to `upstream`, `origin`, or any shared remote unless the user
-explicitly asks for a push.
+Pushes are allowed only to a non-default branch created by the agent for the
+current task in the user-designated repository. Creating that branch and
+pushing subsequent updates to the same branch are authorized as part of the
+requested work; do not ask for separate push approval each time.
+
+Before the first push, verify the destination repository and confirm that the
+remote branch name does not already exist. Before subsequent pushes, verify
+that the destination is the same task-created branch. Use an explicit refspec
+such as `git push origin HEAD:refs/heads/<task-branch>` so the destination
+cannot depend on implicit Git push settings.
+
+Never push directly to the default branch (including `main` or `master`),
+protected branches, or any branch not created for the current task. Do not
+force-push, delete remote branches, push tags, or use `--all` or `--mirror`.
+Submit changes through a pull request; this push permission does not authorize
+merging. Existing prohibitions on writes to community repositories still apply.
 
 ## Repository Safety
 
