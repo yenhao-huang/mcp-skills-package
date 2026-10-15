@@ -78,6 +78,30 @@ When the user changes focus, update this section and the template's focus line.
 Existing dispatches remain historical snapshots unless a refresh is requested.
 Focus never removes selected issues from Result.md or stops their PR tracking.
 
+## PR tracking summary
+
+Maintain a user-facing `PR 追蹤表` in Result.md, alongside the existing four-stage
+issue detail. Its progress column has exactly three values:
+
+- `未發 PR`: selected work has no verified community PR; a personal fork PR alone
+  remains in this state.
+- `PR 未 merge`: a community PR exists but merged is false, including drafts and
+  closed-unmerged PRs. Explain closure/blockers in notes; never call them Done.
+- `Done`: the same community PR has verified merged=true / mergedAt evidence.
+
+Columns: `追蹤項目 | 社群 PR | 進度 | 目前狀況／下一步 | 查核時間`.
+Record check timestamps in Asia/Taipei and use redirect links, including comment
+anchors. User-provided PRs are tracked even outside the current shortlist/focus;
+tracking does not select a shortlist issue or authorize development. Deduplicate
+by repository and PR number; keep one row per PR and retain completed rows.
+For selected issues without a PR, use an issue row and replace/update it when the
+corresponding PR is verified. Read every batch's Result.md to discover existing
+tracked PRs and update their original rows, not just the newest shortlist.
+On read failure retain the prior status and last successful check timestamp;
+mark the failed check/uncertainty in notes, never invent a fourth status or Done.
+Review approval and successful CI do not imply merge. Preserve the four-stage
+selected-issue table separately; do not infer its history from a supplied PR.
+
 ## Schedule
 
 Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
@@ -117,7 +141,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 5. For drafting, use [references/community-templates.md](references/community-templates.md).
    Maintain templates inside the skill only. Never archive templates to daily,
    send notices, request reviews or post community comments.
-6. For daily tracking, read selected issues and associated fork/community PRs
+6. For daily tracking, update the three-status PR tracking summary above.
+   Read selected issues and associated fork/community PRs
    from Result.md, including previously tracked PRs now closed or merged. Read
    all relevant CI/review changes and update the same Result.md in place.
    Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
@@ -127,7 +152,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
    prior facts. Do not initiate development or perform any community writes.
-7. Validate the three output files, counts, headings, four stage columns, actual
+7. Validate the three output files, counts, headings, three-status tracking rows, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
    batches; progress updates preserve the existing batch and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as

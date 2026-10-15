@@ -10,7 +10,7 @@
     {
       "name": "ExecuTorch daily PR progress",
       "rrule": "FREQ=DAILY;BYHOUR=4;BYMINUTE=0;BYSECOND=0",
-      "prompt": "Use executorch-pm PR check mode. Read tracked and authored ExecuTorch PR progress, update only the selected batch Result.md in yenhao-huang/daily executorch/<time>/ using exactly the four progress stages, and notify only on meaningful changes, completion, failure or required user action. Stay quiet on unchanged states. Never write to community repositories or trigger development."
+      "prompt": "Use executorch-pm PR check mode. Discover tracked PR rows across all batch Result.md files in yenhao-huang/daily executorch/<time>/. Update each original Result.md PR summary using only 未發 PR, PR 未 merge, Done, preserving the four-stage selected-issue details. Verify merged state before Done, retain closed-unmerged PRs with notes, and preserve prior facts on API failure. Notify only on meaningful changes or required action, and stay quiet otherwise. Never write to community repositories or trigger development."
     }
   ]
 }

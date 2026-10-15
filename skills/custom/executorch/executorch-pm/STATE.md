@@ -47,3 +47,8 @@ Removed the cover from current HTML/PDF and the PM HTML template. Start with the
 ## 2026-10-15 Bundle frontend-slides
 
 Bundled pinned upstream skill, rendering references, styles and scripts under references/frontend-slides with MIT license. PM explicitly loads the local skill and preserves no-cover, HTML/PDF and no-community-write overrides.
+
+
+## 2026-10-15 PR tracking summary
+
+Added three-status PR summary in Result.md. User requested tracking of ExecuTorch PRs 23871 and 21873; both verified open and unmerged. No shortlist selection or development initiated.

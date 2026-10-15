@@ -68,3 +68,11 @@ This exception applies only to daily records. The skill-package repository
 still requires task-created branches and pull requests, and community writes
 remain forbidden. Keep local files and report the exact blocker if publishing
 fails; never claim uploaded when only locally saved.
+
+## PR summary tracking
+
+Result.md also contains a PR tracking table with exactly `未發 PR`, `PR 未 merge`,
+and `Done`. Done requires verified community merge; closed without merge remains
+PR 未 merge with a note. Track user-supplied PRs independently of shortlist selection
+and preserve the four-stage detail. Read failures retain prior status and mark
+uncertainty in notes. PM owns the summary format and cross-batch discovery rules.
