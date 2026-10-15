@@ -13,7 +13,7 @@ Branch: agent/fix-43
 | Implementation | completed | Frontend-only Compose helper, topology/mount/version/lifecycle guides, required layout and README entry. |
 | Runtime validation | completed | A and B install → remove only frontend → reinstall passed; homepage, JS/CSS, proxied API health and nginx config verified. |
 | Local validation | completed | 12 stdlib unit tests, generic skill validator, required files and relative Markdown links passed. Independent four-scenario review findings fixed and re-review converged. |
-| Delivery | in_progress | Validated task branch agent/fix-43 prepared for linked PR; publication on main awaits merge authorization. |
+| Delivery | in_progress | [PR #44](https://github.com/yenhao-huang/mcp-skills-package/pull/44) opened from agent/fix-43 to main; publication on main awaits merge authorization. |
 
 ## Runtime evidence
 
