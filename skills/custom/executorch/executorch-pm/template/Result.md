@@ -2,7 +2,7 @@
 
 批次：<YYYY-MM-DD_HHmmss>
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
-選擇紀錄：尚未選擇；等待用戶從 issue-disptach.html 指定議題。
+選擇紀錄：尚未選擇；等待用戶從 issue-disptach.pdf 指定議題。
 
 | 選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前進度與依據 |
 | --- | --- | --- | --- | --- | --- |

@@ -30,9 +30,9 @@ Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
 Create a new batch for a new shortlist. Update that batch's Result.md in place
 as work advances; preserve other batches and all actual user selections.
 
-The batch contains exactly two user-facing files (HTML dispatch + Markdown results):
+The batch contains exactly two user-facing files (PDF dispatch + Markdown results):
 
-- `issue-disptach.html`: up to 10 HTML issue slides using the PM skill's
+- `issue-disptach.pdf`: up to 10 issue pages exported from HTML using the PM skill's
   `template/issue-disptach.html`, each with a `(<scope>) <summary>` heading, 問題釐清 and 可能解法.
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
@@ -45,7 +45,7 @@ Development updates only the selected issue row and concise evidence in
 Result.md. Keep reproduction logs, tests, reports and branch details in the
 code repository under its existing conventions; link when useful. Do not
 publish development directories, progress.md, JSON snapshots, schedule.json,
-STATE.md, or template files to daily. Templates and scheduling intent stay in
+STATE.md, intermediate HTML, or template files to daily. Templates and scheduling intent stay in
 the skill. Internal caches may be local but must not be staged to daily.
 
 Fork PRs are evidence for issue 開發 only. Community submission belongs to the

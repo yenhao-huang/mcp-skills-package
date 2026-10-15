@@ -27,3 +27,8 @@ Validation: 10 existing headings match parenthesized scope without colon; quick_
 
 HTML revision: validated; frontend-slides used; issue-disptach.html replaces Markdown dispatch; issue 45 / PR 46.
 HTML checks: 12 slides; 1280x720 and 390x844 bounds; keyboard/index navigation and local editing passed. Ten source descriptions and solutions preserved; only HTML + Result.md in daily.
+
+
+## 2026-10-15 PDF delivery
+
+User changed delivery to HTML-to-PDF. Daily now publishes issue-disptach.pdf and Result.md only; HTML remains the PM template/local intermediate. Existing 10 candidates and selection state are preserved. Verified 12 pages, Chinese text, source hyperlinks and PDF rendering.
