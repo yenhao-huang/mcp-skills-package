@@ -1,26 +1,99 @@
-# Daily schedule
+# W78 daily publication
 
-- Name: PRetrieval 未關閉 issue 提醒
-- Timezone: Asia/Taipei
-- Time: 04:00 every day
-- Local cron equivalent: `0 4 * * *` in Asia/Taipei (20:00 UTC previous day).
-- Delivery: the user's automation task/chat notification surface.
-- Runtime: a host that can reach the internal Gitea server and use the user's
-  existing Git credential helper and persistent preferences file.
+The user selected `w78_pretrieval_tailscale` and authorized publishing reports
+to `git@github.com:yenhao-huang/daily.git`, branch `main`, under
+`wingene/pretrieval/`. Cadence is **08:30 Asia/Taipei**, replacing 04:00.
+No Codex automation, ChatGPT desktop session or model API is needed to run it.
+The W78 sandbox and its Docker daemon must remain available.
 
-## Prompt
+## Deploy
 
-```text
-使用 $pretrieval-notice，查詢 leo/PRetrieval 指派給 howard 的所有未關閉 issue（排除 PR），以繁體中文通知我。讀取持久保存的優先順序，將我指定重要的 issue 依指定順序排最上面並標示「重要」，其餘依編號由新到舊。包含台北查詢時間、總數、每筆編號、標題及連結。每天都要回報，即使內容未變；沒有 issue 時明確說明。認證或連線失敗時回報原因，不得當作沒有 issue，也不得使用舊資料假裝成功。不修改 Gitea 資料。
+Use `references/deploy/docker-compose.yml` as the source of truth. Copy the
+reviewed skill to a stable deployment directory before using Compose; do not
+bind production to an ephemeral worktree. Record source commit/content hash.
+
+Prepare an operator-owned env file outside Git containing only absolute paths:
+
+```dotenv
+RUN_UID=1016
+RUN_GID=1016
+NOTICE_STATE_DIR=/data/deployments/pretrieval-notice/state
+NOTICE_PREFERENCES_DIR=/home/howard/.config/pretrieval-notice
+GITEA_CREDENTIAL_FILE=/home/howard/.git-credentials
+GITHUB_SSH_KEY=/home/howard/.ssh/id_ed25519
+GITHUB_KNOWN_HOSTS=/home/howard/.ssh/known_hosts
 ```
 
-Use the app's supported automation tools, searching for `automation_update`
-first. Inspect existing automations and reuse a matching task instead of
-creating duplicates. Use the tool schema's schedule and timezone fields;
-read back its ID, active status, next run, runtime, and prompt before claiming
-it is enabled. Record those values in local STATE.md.
+These values describe the verified W78 environment. On another host, inspect
+its UID/GID and existing authorized credential paths rather than assuming them.
+Create the state/preferences directories as the runtime UID. Do not reset an
+existing preferences file. The credential file must contain the existing Gitea
+Git credential; the SSH key must already have write access to daily and the
+known-hosts file must already trust github.com. Do not print or copy secrets
+into the image. The image build context is the skill directory only.
 
-If the tool is unavailable, report that scheduling is not enabled and provide
-this prepared prompt and time. Do not silently substitute a session-start
-hook (it does not guarantee 04:00 execution), OS cron, email, or a hosted task
-that cannot access the private LAN.
+For example, with the stable skill under `/data/deployments/pretrieval-notice/skill`:
+
+```bash
+docker compose --env-file /data/deployments/pretrieval-notice/compose.env -p pretrieval-notice -f /data/deployments/pretrieval-notice/skill/references/deploy/docker-compose.yml up -d --build
+```
+
+Compose uses `restart: unless-stopped`, a non-root user, a read-only root
+filesystem, dropped capabilities, a small temporary clone volume, bounded
+logs, and read-only credential/preferences mounts. It publishes no ports and
+does not install or change Tailscale on either the host or existing sandbox.
+
+## Verify and publish immediately
+
+Use the same Compose command prefix for these operations:
+
+- `ps`: expect `notice` running and healthy.
+- `logs --tail 30 notice`: publication paths or sanitized error classes only.
+- `exec -T notice python3 /app/references/scripts/notice.py --preferences /preferences/preferences.json report`:
+  preview and verify live Gitea connectivity.
+- `exec -T notice python3 /app/references/scripts/publish.py once`:
+  publish one report immediately without changing the daily scheduled slot.
+- Read `${NOTICE_STATE_DIR}/scheduler.json` for `next_run`, `heartbeat` and
+  `last_error`; `next_run` includes `+08:00`.
+- Read `last-published.json` for the verified published path, and open
+  `https://github.com/yenhao-huang/daily/blob/main/<path>`.
+
+The publisher verifies pushed file contents via a new clone before marking
+success. Updating priority preferences on the host takes effect next run.
+
+## Scheduling and failure semantics
+
+- First start chooses the next future 08:30; use `once` for an immediate sample.
+- Persist `next_run` and a heartbeat every minute. If stopped across one or
+  more slots, catch up the latest due slot instead of flooding historical days.
+- Save the rendered report and its filename to `pending.json` before pushing.
+  Push conflicts retry up to three times with fresh checkouts. Persistent
+  failures retain the pending report and retry on the next 60-second tick.
+- An existing identical file confirms a previously successful uncertain push;
+  different contents at the same path are never overwritten.
+- Query failure publishes the fixed failure-format report (exception type only),
+  with unknown counts. This is a delivered failure notification, not a successful
+  query. The next normal query is the next daily slot or an explicit manual run.
+- `run.lock` serializes publications; `scheduler.lock` prevents duplicate
+  schedulers sharing state. Health fails on a stale heartbeat or publish error.
+- Credentials remain externally managed. A failed publish cannot notify via
+  GitHub; inspect service health/logs and `pending.json` until access is restored.
+
+## Stop, rollback, and reinstall
+
+For the same named Compose project and file:
+
+- Pause: `stop notice`; resume: `start notice`.
+- Uninstall the service: `down --remove-orphans`. This removes only this project's
+  container/network and keeps bind-mounted state, priorities and credentials.
+- Restore a previous version by restoring its stable skill copy/image, then
+  `up -d --build`. Inspect health and next_run afterward.
+- Reinstall: `up -d --build` using the preserved paths. Published Markdown files
+  remain historical records; uninstall does not revert Git commits.
+- Do not remove credentials, preferences or report history during rollback.
+  Remove the dedicated image only after no service uses it.
+
+Validate `up -> down -> up` in a distinct Compose project and state directory.
+At each install verify running process, live query and scheduler next_run; after
+`down`, verify the test container/network are gone. For the second install use
+fresh test scheduler state to prove it does not depend on the first run.

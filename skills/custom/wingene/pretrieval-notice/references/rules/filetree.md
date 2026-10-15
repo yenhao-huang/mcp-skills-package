@@ -1,9 +1,11 @@
 # Filetree
 
-Place this skill at `skills/custom/wingene/pretrieval-notice/`.
+Skill root: skills/custom/wingene/pretrieval-notice/.
 Required: SKILL.md, STATE.md, references/rules/{env,filetree,state-rules}.md,
 and references/template/STATE.template.md.
-Scheduling metadata: references/schedule.md.
-Executable helpers and focused tests: references/scripts/.
-Keep runtime preferences outside the package. Do not commit credentials,
-API responses, reports, or __pycache__ directories.
+Fixed report format: references/template/report.template.md.
+Scheduling/deployment instructions: references/schedule.md.
+Executable query/publisher and focused tests: references/scripts/.
+Container service definition: references/deploy/{Dockerfile,docker-compose.yml}.
+Runtime state, env file, credentials and user preferences stay outside Git.
+Do not add report snapshots, secret files or __pycache__ to the skill package.

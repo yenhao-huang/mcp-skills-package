@@ -1,19 +1,13 @@
 # Create Skill State
 
-This file is a reusable per-run template. Copy it to `STATE.md` before starting
-a new execution.
-
-Run ID: pretrieval-notice-36-20261015
+Run ID: pretrieval-notice-38
 Instance: /root
 Started: 2026-10-15 Asia/Taipei
-Scope: Add pretrieval-notice for GitHub issue #36; scheduling remains a separate runtime action.
+Scope: Update pretrieval-notice for W78 daily publication; issue #38.
 
-Last updated: 2026-10-15 Asia/Taipei
-
-| Step | Status | Evidence | Notes |
-| --- | --- | --- | --- |
-| 0. Define Scope | completed | GitHub issue #36 created | User chose no priority issues |
-| 1. Read Relevant Context | completed | AGENTS.md and required skill rules | |
-| 2. Execute Workflow | completed | Added wingene/pretrieval-notice and README entry | |
-| 3. Validate Result | completed | 5 tests, generic validator, layout and live Gitea report passed | No new runtime dependencies |
-| 4. Handoff Summary | in_progress | Preparing PR for #36 | Merge and actual automation remain pending |
+| Step | Status | Evidence |
+| --- | --- | --- |
+| Context | completed | Read AGENTS.md, skill-create required rules and merged pretrieval-notice. |
+| Implementation | completed | Updated pretrieval-notice with fixed reports, Git publishing and W78 Compose scheduler; used repository-specific skill workflow. |
+| Validation | completed | 15 tests and generic validator passed; isolated install/uninstall/install verified; live report published. |
+| Delivery | in_progress | Issue #38 PR preparation; main merge remains pending. |
