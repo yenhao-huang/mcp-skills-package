@@ -9,3 +9,6 @@ open a desktop window. Never pick arbitrary IPC socket files from /tmp.
 Official references:
 - https://code.visualstudio.com/docs/remote/ssh
 - https://code.visualstudio.com/docs/configure/command-line
+
+For a separate Windows/macOS home desktop, follow ../home-desktop.md.
+Home access is not configured; do not infer it from the project SSH alias.

@@ -16,7 +16,10 @@ from urllib.parse import quote
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("project")
-    parser.add_argument("--path")
+    parser.add_argument(
+        "--path", required=True,
+        help="Absolute directory resolved from the current conversation",
+    )
     parser.add_argument("--host")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--launch", action="store_true")
@@ -24,7 +27,7 @@ def main():
     registry = json.loads((Path(__file__).parent.parent / "projects.json").read_text())
     defaults = registry.get(args.project.lower(), {})
     host = args.host or defaults.get("host")
-    path = args.path or defaults.get("path")
+    path = args.path
     if not host or not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", host):
         parser.error("Provide a valid desktop SSH host alias")
     if (
