@@ -1,9 +1,8 @@
 {
   "executorch": {
-    "host": "w78_sideproject_tailscale",
-    "path": "/workspace/executorch-worktrees/embedding-bag-review",
-    "branch": "fix/embedding-bag-review-20261016",
-    "updated": "2026-10-17",
-    "note": "Fallback only; prefer current chat target."
+    "host": "w78_sideproject_tailscale"
+  },
+  "pretrieval": {
+    "host": "w78_sideproject_pretrieval"
   }
 }
