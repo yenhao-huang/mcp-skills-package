@@ -78,7 +78,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `daily-checkin-assistant` | `skills/custom/personal/daily-checkin-assistant/SKILL.md` | 整合今日任務、LeetCode 選題與習慣打卡。 |
 | `pretrieval-draft-reference-manager` | `skills/custom/wingene/pretrieval-draft-reference-manager/SKILL.md` | 管理 W78 draft-reference A/B、frontend、共用服務、版本與資料掛載生命週期。 |
 | `skill-create` | `skills/skill-create/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
-| `tailscale-in-container` | `skills/operations/tailscale-in-container/SKILL.md` | 在既有 container 內安裝、整合、驗證或安全卸載 Tailscale，同時避免宿主機加入 tailnet。 |
+| `add-tailscale-node` | `skills/operations/add-tailscale-node/SKILL.md` | 在 Linux container 內新增或管理 Tailscale 節點，優先使用 kernel networking，支援 userspace 遷移、雙向連線驗證與安全卸載，同時避免宿主機加入 tailnet。 |
 | `vllm-embedding-server` | `skills/vllm-embedding-server/SKILL.md` | 啟動、除錯、驗證本機 vLLM embedding server，特別是 Qwen embedding models。 |
 
 ### 使用原則
@@ -178,7 +178,7 @@ model_auto_compact_token_limit_scope = "total"
 │   ├── notion/
 │   ├── operations/
 │   │   ├── lanfuse-install/
-│   │   └── tailscale-in-container/
+│   │   └── add-tailscale-node/
 │   ├── sandox-tutorial/
 │   ├── set-daily-cron/
 │   ├── skill-create/

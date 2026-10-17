@@ -3,7 +3,7 @@
 This skill uses the required repository-local layout:
 
 ```text
-tailscale-in-container/
+add-tailscale-node/
 ├── SKILL.md
 ├── STATE.md
 └── references/

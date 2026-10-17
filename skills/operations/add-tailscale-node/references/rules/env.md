@@ -21,4 +21,10 @@ Required services: Tailscale coordination service and the user's existing cluste
 - Treat Docker or orchestrator configuration as the source of truth for
   persistent integration. A manual daemon inside a running container is
   temporary unless the container already has a supervisor and persistent state.
+- Kernel mode needs an accessible `/dev/net/tun` character device and effective
+  `NET_ADMIN` in the application's network namespace. Verify `NET_RAW` for
+  ordinary ICMP tools; do not grant broad `--privileged` access as a shortcut.
+- `TS_USERSPACE=false` configures the official image's `containerboot` entrypoint.
+  For a directly managed daemon, change its actual arguments to `--tun=tailscale0`;
+  an environment variable alone does not reconfigure a running `tailscaled`.
 - Never expose secrets in command output, logs, committed files, or responses.
