@@ -9,6 +9,17 @@ Frameworks: Docker, Podman, LXC, or Kubernetes as detected
 Service manager: Existing init or supervisor; otherwise a clearly labeled temporary daemon process
 Required services: Tailscale coordination service and the user's existing cluster endpoint
 
+## Home Multi-Node Context
+
+- Home is an existing configurable SSH endpoint, currently defaulting to
+  `user@100.88.157.6` on Windows. Explicit user input overrides workspace inventory
+  fields, which override template defaults; verify identity before changes.
+- Windows home operations use native OpenSSH and administrator PowerShell for
+  protected key files, ACLs and firewall changes. Linux nodes use their existing
+  SSH server and package/service manager. Do not assume home always runs Windows.
+- Exchange only SSH public keys. Tailscale membership and keys do not replace
+  OpenSSH account authorization. Record both directional login results per node.
+
 ## Rules
 
 - Inspect `/etc/os-release`, PID 1, runtime metadata, networking devices, and

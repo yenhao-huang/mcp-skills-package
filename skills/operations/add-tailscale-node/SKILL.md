@@ -1,6 +1,6 @@
 ---
 name: add-tailscale-node
-description: Add or manage a Tailscale node inside a Linux container without enrolling its host. Use for Docker or LXC kernel networking, direct SSH and bidirectional tailnet connectivity, migration from userspace mode, or explicit userspace proxy setup and safe removal.
+description: Add or manage a Linux container Tailscale node and connect it bidirectionally to a configurable home machine. Use for home multi-node SSH, Docker or LXC kernel networking, public-key exchange, userspace migration, or explicit proxy setup and safe removal without enrolling the container host.
 ---
 
 # Add Tailscale Node
@@ -20,6 +20,11 @@ Read these files before acting:
 Reset `STATE.md` from `references/template/STATE.template.md` for a new run,
 then record concrete evidence as each phase progresses.
 
+For home multi-node setup, read `references/home-multi-node.md` and use
+`references/template/home-nodes.template.yaml` as the non-secret inventory.
+The current home default is `user@100.88.157.6`; it is an overridable connection
+setting, never a fixed identity or an instruction to alter that machine.
+
 ## Workflow
 
 1. Resolve the exact target container and runtime before mutation. If the user
@@ -27,6 +32,10 @@ then record concrete evidence as each phase progresses.
    boundary from an empty nested `docker ps` or create another container.
 2. Confirm the desired direction: cluster to container, container to cluster,
    or both. Identify only the required protocols and ports.
+   For home multi-node requests, resolve home from explicit user input, then
+   the selected inventory, then the default. Adding a node in this mode includes
+   both home -> node and node -> home SSH; follow the home reference to exchange
+   public keys, update exact peer allowlists and validate each direction.
 3. Inspect the container before mutation: distro, init system, installed
    binaries, daemon state, `/dev/net/tun`, Linux capabilities, state path, and
    current Tailscale identity.
@@ -66,9 +75,15 @@ then record concrete evidence as each phase progresses.
   tailnet machine record without explicit confirmation of complete removal.
 - Do not stop unrelated processes. Resolve the exact `tailscaled` PID or service
   unit before stopping it.
+- Tailnet membership or online status alone does not approve a peer for home SSH.
+  Preserve existing approved peers, restrict additions to the requested nodes,
+  and never transfer private keys or treat Tailscale node keys as SSH keys.
 
 ## Output
 
 Report the selected networking mode, commands or changes made, connectivity
 validation, host-isolation result, uninstall level if applicable, and any
 restart or persistence limitation.
+For home multi-node runs, also report the resolved home endpoint and a per-node
+matrix of both SSH directions, public-key fingerprints, pending/offline nodes,
+and the inventory and rollback paths.

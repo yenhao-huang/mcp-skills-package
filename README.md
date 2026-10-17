@@ -78,7 +78,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `daily-checkin-assistant` | `skills/custom/personal/daily-checkin-assistant/SKILL.md` | 整合今日任務、LeetCode 選題與習慣打卡。 |
 | `pretrieval-draft-reference-manager` | `skills/custom/wingene/pretrieval-draft-reference-manager/SKILL.md` | 管理 W78 draft-reference A/B、frontend、共用服務、版本與資料掛載生命週期。 |
 | `skill-create` | `skills/skill-create/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
-| `add-tailscale-node` | `skills/operations/add-tailscale-node/SKILL.md` | 在 Linux container 內新增或管理 Tailscale 節點，優先使用 kernel networking，支援 userspace 遷移、雙向連線驗證與安全卸載，同時避免宿主機加入 tailnet。 |
+| `add-tailscale-node` | `skills/operations/add-tailscale-node/SKILL.md` | 在 Linux container 內新增或管理 Tailscale 節點，優先使用 kernel networking，支援可設定 home 的多節點雙向 SSH、公鑰交換、userspace 遷移與安全卸載，同時避免宿主機加入 tailnet。 |
 | `vllm-embedding-server` | `skills/vllm-embedding-server/SKILL.md` | 啟動、除錯、驗證本機 vLLM embedding server，特別是 Qwen embedding models。 |
 
 ### 使用原則

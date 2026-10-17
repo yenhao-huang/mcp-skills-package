@@ -1,0 +1,29 @@
+# Copy to a user-selected private workspace inventory; never edit this shared
+# template to store a live peer list or credentials. No automatic reconciler
+# consumes this file: the skill reads, validates and applies it during a run.
+version: 1
+home:
+  host: '100.88.157.6'  # current default; may also be a verified MagicDNS name
+  user: 'user'
+  port: 22
+  os: windows
+  node_id: null  # verified Tailscale ID; fill after discovery
+  tailscale_ips: []  # verified IPv4/IPv6, not inferred from host text
+  ssh_public_key_fingerprints: []
+  ssh_host_key_fingerprints: []
+nodes: []
+# Each approved node entry records:
+# - name: a unique local name
+#   approved: true
+#   host: a verified Tailscale IP or MagicDNS name
+#   user: the verified SSH account (not the tailnet login name)
+#   port: 22
+#   node_id: the verified Tailscale ID
+#   tailscale_ips: [verified IPv4, verified IPv6 if present]
+#   networking: kernel  # userspace only if explicitly accepted
+#   ssh_public_key_fingerprints: []
+#   ssh_host_key_fingerprints: []
+#   home_to_node: pending  # pending, verified, failed, offline
+#   node_to_home: pending
+#   verified_at: null  # timestamp only after authenticated application tests
+# Record changed files/rules, previous values and rollback paths in STATE.md.
