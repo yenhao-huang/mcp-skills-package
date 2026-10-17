@@ -1,9 +1,9 @@
 ---
-name: code-review
-description: Open the project or worktree currently discussed in VS Code over Remote SSH. Use for "code review executorch", "打開 vscode review", or requests to open the current project for review. Opening alone does not request an automated code audit or code changes.
+name: start-code-review-env
+description: Open the project or worktree currently discussed in VS Code over Remote SSH. Use for "start-code-review-env executorch", "打開 vscode review", or requests to open the current project for review. Opening alone does not request an automated code audit or code changes.
 ---
 
-# Code review workspace
+# Start code review environment
 
 Default SSH host alias: `w78_sideproject_tailscale` (resolved by the user's desktop SSH config).
 Use the user's desktop VS Code with Remote - SSH, not a GUI installed on the remote server.
@@ -13,7 +13,7 @@ Use the user's desktop VS Code with Remote - SSH, not a GUI installed on the rem
 1. Resolve the project and absolute worktree path from the latest explicit user
    target, then the current chat's PR/worktree, then references/projects.json.
    The registry is a fallback, never override newer conversation context. For
-   `code review executorch` in this conversation the target is
+   `start-code-review-env executorch` in this conversation the target is
    `/workspace/executorch-worktrees/embedding-bag-review`. Inspect `git status
    --short --branch` if the same remote filesystem is accessible. Do not switch
    branches or reset changes. Ask only if multiple targets remain ambiguous.
