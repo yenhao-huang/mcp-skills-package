@@ -1,16 +1,19 @@
 # Add Tailscale Node State
 
-Run ID: 20261017-add-tailscale-node
+Run ID: 20261017-home-multi-node
 Instance: skills/operations/add-tailscale-node
 Started: 2026-10-17 Asia/Taipei
-Scope: Issue #55; rename the container skill and expand kernel networking instructions. Documentation authoring only; no live node installation or migration is authorized by this task.
+Scope: Issue #57; home multi-node skill documentation and inventory template only. No live endpoint configuration changes.
+Inventory path: references/template/home-nodes.template.yaml (reusable template, not a live inventory)
+Resolved home endpoint and configuration source: user@100.88.157.6:22 is the current user-provided default; future explicit input and selected inventory override it.
 
 Last updated: 2026-10-17 Asia/Taipei
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | https://github.com/yenhao-huang/mcp-skills-package/issues/55 | Rename to add-tailscale-node and add a complete kernel networking path. |
-| 1. Inspect Environment | completed | Read AGENTS.md, skill-create and required rules, existing skill references, official Docker parameters and userspace networking docs. | Isolated checkout on feat/add-tailscale-node; operations category retained. |
-| 2. Create Or Update Skill | completed | Renamed skill directory, metadata, filetree and state template; updated AGENTS.md and README.md. | Added kernel prerequisites, Docker configuration, daemon mode selection, identity-preserving migration, rollback and direct bidirectional application checks. |
-| 3. Validate Skill | blocked | quick_validate.py returned Skill is valid!; required-layout, YAML example parsing, reference-target and repository rename checks passed; git diff --check passed. | Static checks only. Required install/configure -> rollback -> install/configure runtime lifecycle is unrun: no disposable authenticated tailnet target was supplied, and live nodes must not be migrated solely to test this documentation. Runtime validity is not claimed. |
-| 4. Handoff | pending | Draft PR https://github.com/yenhao-huang/mcp-skills-package/pull/56 targets main from feat/add-tailscale-node; no checks reported at creation. | Await runtime lifecycle evidence and PR review/merge; verify merged main before reporting full completion. |
+| 0. Define Scope | completed | https://github.com/yenhao-huang/mcp-skills-package/issues/57 | Each approved node requires home -> node and node -> home SSH. |
+| 1. Inspect Environment | completed | Read skill-create, required rules, existing container workflow and official Windows key-management/Tailscale CLI documentation. | PR #56 is merged; new branch feat/tailscale-home-multi-node starts from main 6d3b620. |
+| 2. Create Or Update Skill | completed | Added references/home-multi-node.md and references/template/home-nodes.template.yaml; updated skill routing, env/filetree/state template and catalog. | Home override precedence, approved inventory, public-key exchange, per-peer firewall limits, host-key verification, migration and scoped rollback documented. |
+| 3. Static Validation | completed | quick_validate.py: Skill is valid!; Python/PyYAML required-layout, reference-target, YAML-example and non-secret inventory-template checks passed; git diff --check passed after state normalization. | No helper scripts or additional dependencies added. |
+| 4. Runtime Validation | blocked | No disposable authenticated home/node fixture supplied. | Required add -> rollback -> add lifecycle unrun. Existing live-node login successes from this chat do not substitute for lifecycle or migration tests. No runtime completeness claimed. |
+| 5. Handoff | pending | Draft PR will link #57. | Await runtime validation and PR review/merge; verify merged main before claiming completion. |

@@ -44,6 +44,7 @@ skills/operations/add-tailscale-node/SKILL.md
 ```
 
 Use this workflow for container-to-cluster connectivity, kernel networking,
+configurable home multi-node SSH and bidirectional public-key authorization,
 userspace-to-kernel migration, explicit userspace proxy networking,
 `/dev/net/tun` and capability checks, Tailscale Serve or proxy configuration,
 and safe package or identity removal while keeping the host out of the tailnet.
