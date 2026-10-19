@@ -20,7 +20,7 @@ existing job, manually copy its cron file and runner outside /etc/cron.d.
 To roll back, restore those exact files; on a first installation remove only
 /etc/cron.d/executorch-daily. Preserve unrelated jobs and report artifacts.
 This host-specific installer assumes installed Codex, credentials, checkout and
-rendering tools; it does not provision them or fix the sandbox limitation below.
+rendering tools; it does not provision them or provision GitHub/model access.
 
 UTC daily 20:00 = Taipei daily 04:00; UTC Sunday 20:00 = Taipei Monday 04:00.
 Both jobs acquire one flock (wait up to two hours), each with a 90-minute run
@@ -30,14 +30,17 @@ EXECUTORCH_CRON_STATE. Logs: logs/DATE-MODE.log; output: MODE-last-message.txt.
 No chat notification channel is configured. The old last-success file is
 historical and is not updated by this launcher.
 
-Codex runs with workspace-write and approval_policy=never: it cannot escalate
-permissions unattended. It still needs a working sandbox, GitHub/model access
-and rendering dependencies. On this container the sandbox probe failed because
-bubblewrap could not create namespaces; the successful retry required approval.
-Therefore this launcher is NOT verified end to end here. Do not replace the
-working deterministic daily job until the execution environment supports these
-restrictions. This PR delivers an installer and reviewable configuration; the
-active system cron is unchanged by preparing this PR.
+Codex now uses the user's explicitly authorized `danger-full-access`,
+`approval_policy="never"`, `--ephemeral` and `--skip-git-repo-check`, with
+checkout `/workspace/executorch-worktrees/daily`. The daily launcher was tested
+under a minimal cron environment on 2026-10-20 and published verified remote
+commit `2ead54b26dc26b1e8ec94c4989b7759b945d411f`. Weekly was not rerun.
+The previous workspace-write namespace failure describes the old configuration.
+For a minimal direct-Codex alternative, use
+[the four-line timer template](../../../../operations/set-daily-cron/references/template/codex.cron).
+Replace the existing entries when installing it; do not install both versions.
+The template writes mode-specific logs but does not use the launcher's timeout
+or last-message files. Preparing the template does not change active cron.
 
 Cron's container has sleep infinity as PID 1; restart persistence/backfill is
 not guaranteed. Installing a cron file does not fix the container lifecycle.
