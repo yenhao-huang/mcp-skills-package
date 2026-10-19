@@ -175,6 +175,8 @@ tracking/selected rows, while its new candidates remain unselected.
 
 ## Schedule
 
+設定定時器使用 [set-daily-cron](../../../operations/set-daily-cron/SKILL.md) 的 [4 行 Codex cron 範本](../../../operations/set-daily-cron/references/template/codex.cron)。任務內容以本 skill 為準；範本與現有 launcher 擇一安裝，避免重複執行。
+
 Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
 at 04:00 check PR progress. Monday performs both jobs once. Collection waits
 for user selection before development. Skill instructions do not activate a
