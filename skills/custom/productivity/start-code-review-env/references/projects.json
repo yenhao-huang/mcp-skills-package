@@ -3,6 +3,6 @@
     "host": "w78_sideproject_tailscale"
   },
   "pretrieval": {
-    "host": "w78_sideproject_pretrieval"
+    "host": "w78_pretrieval_tailscale"
   }
 }
