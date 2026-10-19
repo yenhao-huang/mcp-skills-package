@@ -130,7 +130,9 @@ at 04:00 check PR progress. Monday performs both jobs once. Collection waits
 for user selection before development. Skill instructions do not activate a
 scheduler. The user has explicitly authorized and enabled local cron for the
 daily Result job; see [cron operations](references/cron-operations.md) for current
-state, limitations and verification. Weekly shortlist remains disabled.
+state, limitations and verification. Cron directly calls the 14-line
+`references/scripts/run-daily-result.sh`; report logic lives in daily_result.py.
+Weekly shortlist remains disabled.
 Use the supported automation API when available, deduplicate jobs,
 and read back enabled state before claiming activation. Otherwise record
 `not_enabled` internally; never silently install cron. The confirmed intent is
