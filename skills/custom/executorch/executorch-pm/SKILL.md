@@ -130,7 +130,10 @@ at 04:00 check PR progress. Monday performs both jobs once. Collection waits
 for user selection before development. Skill instructions do not activate a
 scheduler. The user has explicitly authorized and enabled local cron for the
 daily Result job; see [cron operations](references/cron-operations.md) for current
-state, limitations and verification. Weekly shortlist remains disabled.
+state, limitations and verification. `references/scripts/add-cron.sh` installs the daily and Monday entries.
+`references/scripts/run-cron.sh` is a nine-line Codex launcher, not the report
+implementation. Task logic is specified in this skill. Installation does not
+prove execution or notification delivery; see cron operations for actual status.
 Use the supported automation API when available, deduplicate jobs,
 and read back enabled state before claiming activation. Otherwise record
 `not_enabled` internally; never silently install cron. The confirmed intent is
@@ -186,3 +189,24 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    progress.md or development logs to daily. Record publication evidence in
    internal STATE.md. Notify only for meaningful changes or required action;
    keep unchanged daily checks quiet.
+
+## Scheduled execution
+
+The user requested daily progress and Monday shortlist scheduling. For `daily`,
+execute Daily Result snapshot and workflow steps 6–7; for `weekly`, execute
+Focus part and workflow steps 1–4 and 7, including bundled frontend-slides.
+Use the current Asia/Taipei date. The launcher holds the checkout lock: do not
+call it again. Both modes preserve the latest same-day selections and artifacts;
+if today's validated shortlist is already published, return its links without
+generating another batch. Weekly always waits for the user's selection.
+
+Verify this checkout's origin is https://github.com/yenhao-huang/daily.git,
+branch main and no unrelated local changes. Publish only permitted daily
+artifacts using HEAD:refs/heads/main; reconcile concurrent changes without reset
+or force push. Never write to a community repo, initiate development, alter
+cron/skills/credentials, or bypass sandbox restrictions. Missing access or tools
+is a blocker, not permission to change security settings.
+
+End with Traditional Chinese verified links or the exact blocker. Cron records
+this in MODE-last-message.txt. It does not deliver a message to this chat; neither
+exit 0 nor a saved final response is sufficient evidence of publication.

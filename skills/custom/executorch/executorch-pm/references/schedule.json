@@ -20,5 +20,7 @@
       "scope": "PR open/closed/draft/merged status and daily Result snapshot",
       "persistence": "current container lifetime; restart cron after container restart"
     }
-  ]
+  ],
+  "proposed_installer": "references/scripts/add-cron.sh",
+  "deployment_status": "prepared_not_installed"
 }
