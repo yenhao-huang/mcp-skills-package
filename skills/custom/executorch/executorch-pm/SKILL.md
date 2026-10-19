@@ -155,6 +155,15 @@ selected-issue table separately; do not infer its history from a supplied PR.
 
 ## Daily Result snapshot
 
+Result.md contains only current actual selections, the four-stage issue progress,
+and PR tracking with check times, blockers, next steps and supporting evidence.
+Do not include historical candidate lists, original shortlist/history sections,
+previous-report navigation, cron/sandbox diagnostics, manual-backfill narratives
+or execution logs. Keep these in internal STATE.md and cron logs; issues.json
+remains the exclusion registry. When carrying forward a report, remove these
+legacy sections rather than copying them. API read failures relevant to a tracked
+PR still belong briefly in that row, with its last successful check time.
+
 Every Asia/Taipei calendar day must have a Result.md, even when all PR states
 are unchanged or no issues are selected. Run at the confirmed daily 04:00 time.
 Use executorch/YYYY-MM-DD_HHmmss/Result.md; reuse today's existing snapshot on
@@ -162,9 +171,9 @@ reruns (choose the latest if multiple exist), otherwise create one at run time.
 Carry forward all tracked PRs, completed rows, actual selections and evidence
 from the latest snapshot; reconcile any older rows absent from it, deduplicating
 by repository/PR and preserving newer verified facts. Recheck current states.
-Never overwrite prior days to record today's progress. Record report date,
-check time, prior Result.md link and original shortlist link; relative links must
-resolve from the new directory. No-change days still publish today's snapshot.
+Never overwrite prior days to record today's progress. Record report date and check time. Keep prior snapshot and original shortlist
+links in internal STATE.md; relative evidence links in Result.md must resolve
+from the new directory. No-change days still publish today's snapshot.
 On API failure publish the snapshot with prior status/last successful check time
 and a clearly dated failed-check note. Do not fabricate checks or missing dates.
 Only same-day identical reruns may skip a commit. Unchanged results can remain
