@@ -1,15 +1,14 @@
-# Single-file cron migration
+# PM cron installer
 
-Run: 2026-10-19, issue 61
-Implementation: completed. One Bash executable run-cron.sh; old Python and shell
-runner removed. No embedded Python and no other custom job implementation.
-Validation: bash -n, isolated snapshot tests, real GitHub dry-run passed.
-Fixture evidence: next-day creation, same-day reuse, historical immutability,
-older missing PR reconciliation, merged vs closed, API failure retention,
-selected/unissued rows, source-relative links, dirty checkout and push failures.
-Deployment: completed. Cron readback points directly to installed run-cron.sh;
-cron is running; installed outer --dry-run succeeded against real GitHub data.
-Old Python, old shell and state/run.sh removed after backup. Executable
-install/remove/reinstall and outer failure/logging/last-success tests passed.
-Weekly automation/notifications remain disabled.
-Publication: pending PR merge.
+Run: 2026-10-19, issue 66
+Implementation: completed. add-cron.sh installs/removes two system entries;
+run-cron.sh is explicitly a nine-line Codex launcher, not report code.
+Validation: shell syntax, skill validation and /tmp/test-add-cron.py passed.
+Isolated evidence: install/reinstall/remove/reinstall, restoration of original
+cron, no duplicate entries, unrelated-file preservation, no-prior cleanup.
+Deployment: prepared only; active system cron and installed 95-line daily runner
+unchanged. Codex workspace-write without escalation cannot run tools in this
+container (bubblewrap namespace failure). No end-to-end activation claimed.
+Security: no approve-for-me, danger-full-access or sandbox bypass. Launcher
+explicitly denies unattended escalation; missing access is reported as blocked.
+Publication: new PR pending review and merge; supersedes earlier approaches.
