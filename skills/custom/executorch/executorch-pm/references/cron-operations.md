@@ -5,7 +5,7 @@ Daily job is enabled; weekly shortlist remains not_enabled.
 
 - Service: Debian cron, `/etc/cron.d/executorch-daily`.
 - Host timezone: Etc/UTC. `0 20 * * *` equals 04:00 Asia/Taipei next day.
-- Runner: `/home/howard/.local/state/executorch-cron/run.sh` (copy of references/scripts/run-daily-result.sh).
+- Runner: `/home/howard/.codex/skills/executorch-pm/references/scripts/run-daily-result.sh` (14 lines; cron invokes the skill file directly).
 - Script: installed PM references/scripts/daily_result.py.
 - Isolated checkout: `/home/howard/.local/state/executorch-cron/daily`.
 - Logs: `/home/howard/.local/state/executorch-cron/logs/YYYY-MM-DD.log`.
@@ -52,3 +52,17 @@ to PR 未 merge; merged maps to Done; original shortlist links remain absolute.
 Cron daemon trigger verified at 2026-10-15T08:19:01Z using a temporary minute
 probe, then removed. Simulated next-day tests passed: new Result-only directory,
 prior-day immutability, previous snapshot link, and API-failure status retention.
+
+## 2026-10-19 concise entrypoint
+
+Cron now references the skill-owned shell directly instead of a separate copy.
+The shell handles Taipei time, private logs, flock, timeout, exit logging and
+last-success; daily_result.py owns report generation/publication. Cron supplies
+HOME and PATH. EXECUTORCH_CRON_STATE optionally selects an isolated state directory.
+The old state/run.sh is a compatibility wrapper to the skill script.
+Weekly shortlist and chat notification are not enabled by this change.
+
+Before migration, back up /etc/cron.d/executorch-daily and state/run.sh.
+Rollback restores those exact backups and the prior installed shell; leave daily
+reports, logs and unrelated cron jobs intact. Validate migration and rollback
+in a disposable copy before installing and read back the active cron target.
