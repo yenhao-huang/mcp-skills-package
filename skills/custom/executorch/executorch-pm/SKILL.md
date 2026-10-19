@@ -79,6 +79,56 @@ When the user changes focus, update this section and the template's focus line.
 Existing dispatches remain historical snapshots unless a refresh is requested.
 Focus never removes selected issues from Result.md or stops their PR tracking.
 
+## Issue recommendation history
+
+Read root [issues.json](issues.json) before every shortlist search, ranking,
+same-day reuse, and final publication. This is persistent recommendation state,
+not a report or a replacement for Result.md. Keep it inside the installed skill;
+never publish it to daily. Its repository is pytorch/executorch and issue keys
+are decimal issue numbers, not PR numbers. Entries contain status, title, reason,
+updated_at (Asia/Taipei ISO timestamp), evidence and append-only history.
+
+Statuses:
+- `in_progress`: user selected or development underway; exclude from new issues.
+- `handled`: existing development/processed work; exclude. This does not mean
+  upstream merged, fixed or Done; retain normal PR tracking separately.
+- `excluded`: user explicitly rejected the issue; exclude until user restores it.
+- `eligible`: explicitly restored by the user; still verify unresolved status,
+  current focus and competing work before recommending it.
+Absent entries are eligible for investigation, never automatically selected.
+
+Filter in_progress, handled and excluded before ranking and recheck the final
+candidate IDs against the registry. Fetch replacement candidates rather than
+silently returning a repeated issue; report a shortage if necessary. Existing
+fork work is also a duplicate even when it was not yet recorded. Do not assume
+silence, a low ranking, an old recommendation, a closed fork PR or elapsed time
+means exclusion or restoration. Never label a user-rejected issue without user
+evidence. Record the user's actual rejection/re-enable wording and time in history.
+
+On user selection set in_progress; on verified completed processing set handled;
+on explicit rejection set excluded; re-enable only on explicit user request.
+Preserve earlier reasons/evidence/history, especially excluded decisions, during
+updates. Background discovery must not undo an existing exclusion. Registry
+updates do not select new issues, start development, or stop PR tracking.
+An explicit request to revisit an issue may be handled as follow-up; it does not
+silently re-enable weekly recommendations.
+
+Maintain this JSON as a data-only exception to the scheduled skill-edit ban.
+Use the shared state/run.lock for interactive updates; scheduled jobs already
+hold it and must not acquire it recursively. Validate and atomically replace
+only issues.json. If sandbox denies access, report the pending registry update;
+do not escalate or bypass security. A missing, malformed, unsupported-version,
+wrong-repository or unknown-status registry blocks shortlist publication; never
+treat read failure as an empty exclusion list. Do not reset it from STATE.md.
+On skill upgrades, preserve the installed registry; merge new seed IDs without
+overwriting existing entries/history. Record evidence rather than fabricate dates.
+
+Historical reports remain snapshots. If today's saved shortlist includes a now
+excluded entry, do not present it unchanged as the current plan: regenerate the
+candidate artifacts under the usual validation rules and preserve Result.md's
+actual selections/tracking. In this conversation, the earlier October 19 issue
+7718 recommendation predates this registry and is now excluded from new plans.
+
 ## PR tracking summary
 
 Maintain a user-facing `PR 追蹤表` in Result.md, alongside the existing four-stage
@@ -145,7 +195,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    and Result.md. Use `references/template/STATE.template.md` for a new internal run.
    Determine shortlist, selection, draft maintenance, or PR-check mode.
    Verify source access and the personal output repository before mutation.
-2. For a shortlist, apply Focus part searches and relevance checks first,
+2. For a shortlist, load issues.json and apply its exclusions, then apply Focus part searches and relevance checks first,
    paginate open issues from `pytorch/executorch`, exclude PRs
    and duplicates, and read candidate bodies, all comments and linked work.
    Prefer actionable unresolved issues without an active assignee or fix PR.
@@ -197,14 +247,14 @@ execute Daily Result snapshot and workflow steps 6–7; for `weekly`, execute
 Focus part and workflow steps 1–4 and 7, including bundled frontend-slides.
 Use the current Asia/Taipei date. The launcher holds the checkout lock: do not
 call it again. Both modes preserve the latest same-day selections and artifacts;
-if today's validated shortlist is already published, return its links without
+if today's validated shortlist is already published and still passes issues.json exclusions, return its links without
 generating another batch. Weekly always waits for the user's selection.
 
 Verify this checkout's origin is https://github.com/yenhao-huang/daily.git,
 branch main and no unrelated local changes. Publish only permitted daily
 artifacts using HEAD:refs/heads/main; reconcile concurrent changes without reset
 or force push. Never write to a community repo, initiate development, alter
-cron/skills/credentials, or bypass sandbox restrictions. Missing access or tools
+cron/skill instructions/credentials (issues.json updates above are permitted), or bypass sandbox restrictions. Missing access or tools
 is a blocker, not permission to change security settings.
 
 End with Traditional Chinese verified links or the exact blocker. Cron records

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "repository": "pytorch/executorch",
+  "issues": {
+    "11323": {
+      "status": "in_progress",
+      "title": "_embedding_bag.out 審查修正",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/39"
+      ],
+      "history": [
+        {
+          "status": "in_progress",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    },
+    "11331": {
+      "status": "handled",
+      "title": "sort.values portable kernel",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/4"
+      ],
+      "history": [
+        {
+          "status": "handled",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    },
+    "13490": {
+      "status": "handled",
+      "title": "5D convolution portable kernel",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/5"
+      ],
+      "history": [
+        {
+          "status": "handled",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    },
+    "7718": {
+      "status": "handled",
+      "title": "quantizer summary",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/14"
+      ],
+      "history": [
+        {
+          "status": "handled",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    },
+    "8237": {
+      "status": "handled",
+      "title": "tensor rank limit",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/15"
+      ],
+      "history": [
+        {
+          "status": "handled",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    },
+    "9649": {
+      "status": "handled",
+      "title": "CoreML 4-bit PT2E quantization",
+      "reason": "已有個人 fork 開發紀錄；不再作為全新候選推薦，未表示社群已合併。",
+      "updated_at": "2026-10-19T16:15:23+08:00",
+      "evidence": [
+        "https://github.com/yenhao-huang/executorch/pull/18"
+      ],
+      "history": [
+        {
+          "status": "handled",
+          "at": "2026-10-19T16:15:23+08:00",
+          "reason": "依已查核的既有開發 PR 初始化。"
+        }
+      ]
+    }
+  }
+}
