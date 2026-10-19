@@ -1,54 +1,44 @@
-# Local daily Result cron
+# Daily Result cron
 
-Installed on 2026-10-15 in the Debian container for user howard.
-Daily job is enabled; weekly shortlist remains not_enabled.
+The only job executable is `references/scripts/run-cron.sh`. It contains the
+complete daily workflow in Bash and uses git, gh, jq, awk and GNU coreutils.
+It does not embed Python or invoke another custom executable. It re-enters itself
+under timeout; this is the same file, not a hidden second script.
 
-- Service: Debian cron, `/etc/cron.d/executorch-daily`.
-- Host timezone: Etc/UTC. `0 20 * * *` equals 04:00 Asia/Taipei next day.
-- Runner: `/home/howard/.local/state/executorch-cron/run.sh` (copy of references/scripts/run-daily-result.sh).
-- Script: installed PM references/scripts/daily_result.py.
-- Isolated checkout: `/home/howard/.local/state/executorch-cron/daily`.
-- Logs: `/home/howard/.local/state/executorch-cron/logs/YYYY-MM-DD.log`.
-- Last success: `/home/howard/.local/state/executorch-cron/last-success`.
-- Uses existing gh credentials; no tokens are copied into cron files.
-- Uses a lock and 15-minute timeout. API calls are GET only. The sole Git write
-  destination is yenhao-huang/daily main, and staged files are limited to Result.md.
-- Reconciles tracked PRs across reports, preserves previous dates and source links,
-  and keeps status/check time on API failure. Previous CI/review details are dated
-  history; this deterministic job checks PR open/closed/draft/merged state only.
-- Detailed CI/review investigation is a separate PM run; the daily script sends
-  no notifications or community messages and never starts issue development.
+- `/etc/cron.d/executorch-daily` calls the installed skill file directly.
+- `0 20 * * *` on this UTC host is daily 04:00 Asia/Taipei.
+- State: `/home/howard/.local/state/executorch-cron`; override with
+  EXECUTORCH_CRON_STATE for an isolated checkout/log directory.
+- Checkout: state/daily, verified yenhao-huang/daily main only.
+- Logs: state/logs/YYYY-MM-DD.log; successful published run: state/last-success.
+- Lock: state/run.lock; total timeout 15 minutes. Cron supplies PATH and HOME.
+- Run without arguments to publish. `run-cron.sh --dry-run` fetches Git/API data
+  and writes the proposed report to the private log, without report writes,
+  commits or pushes. --worker is internal to the timeout invocation.
+- Reconcile tracking rows from all dates, preserve selections and original
+  relative link destinations, reuse today's latest snapshot, and preserve older
+  days. Failed PR lookups keep prior state/check time with a failure note.
+- Done requires merged=true. Closed-unmerged remains PR 未 merge. No-change
+  states still produce today's snapshot. Only Result.md may be staged/pushed.
+- Dirty/diverged checkouts stop without reset. A rejected push remains a local
+  commit; later runs verify pending file paths/references before retrying.
+- Weekly candidate generation and chat delivery are NOT enabled by this file.
+  This deterministic job checks PR state, not detailed CI or review changes.
 
-## Validate and operate
+## Install / rollback
 
-`sudo service cron status` checks the daemon. Run the runner to publish today,
-or run `python3 <installed-PM>/references/scripts/daily_result.py --repo
-/home/howard/.local/state/executorch-cron/daily` without --publish for a read-only
-remote dry run (it may clone/fetch locally). Inspect logs on failure; an uncommitted
-dirty checkout is intentionally not reset. A committed push failure is retried
-on the next run. Diverged branches require manual reconciliation, never force push.
+Back up the installed runner and /etc/cron.d/executorch-daily outside active
+skill scripts before migration. Install run-cron.sh mode 0755 and
+references/daily-result.cron as root-owned /etc/cron.d/executorch-daily mode 0644.
+Remove legacy job executables only after backing them up. Validate shell syntax,
+a dry run, cron readback and service status. Do not modify other jobs.
+Rollback restores the exact backed-up runner(s) and cron file and removes only
+the newly installed run-cron.sh; preserve reports/logs and unrelated state.
+The 2026-10-19 migration backup is state/backup-single-file-20261019.
 
-To disable only this job, move /etc/cron.d/executorch-daily outside /etc/cron.d.
-Restore references/daily-result.cron as root-owned mode 0644 and start cron to
-re-enable. Do not stop the shared daemon or remove other jobs. The user authorized
-cron installation; use this only for the documented daily job.
+## Lifetime
 
-## Container lifetime
-
-PID 1 is `sleep infinity`; there is no init/service manager. Cron is running now
-but is not guaranteed to start after this container stops/restarts. The container
-startup configuration is outside this workspace. After restart run `sudo service
-cron start`, or have the container owner add that command to the existing startup
-sequence. Cron cannot execute while the container is off and does not backfill
-missed days. A new/recreated container needs the package and job installed again.
-Do not claim host reboot persistence or weekly shortlist activation.
-
-## Validation evidence
-
-A clean-environment runner invocation successfully published Result.md on
-2026-10-15, commit b5565d89d92ff0fffbdb0abeedea9850e4925ab8. Closed-unmerged maps
-to PR 未 merge; merged maps to Done; original shortlist links remain absolute.
-
-Cron daemon trigger verified at 2026-10-15T08:19:01Z using a temporary minute
-probe, then removed. Simulated next-day tests passed: new Result-only directory,
-prior-day immutability, previous snapshot link, and API-failure status retention.
+Cron runs in a container whose PID 1 is sleep infinity. It does not survive a
+stopped/recreated container automatically. After restart the owner must start
+cron or add it to the container startup configuration. No backfill or reboot
+persistence is claimed. Verify with `sudo service cron status`.
