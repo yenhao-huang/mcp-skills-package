@@ -12,3 +12,5 @@ container (bubblewrap namespace failure). No end-to-end activation claimed.
 Security: no approve-for-me, danger-full-access or sandbox bypass. Launcher
 explicitly denies unattended escalation; missing access is reported as blocked.
 Publication: new PR pending review and merge; supersedes earlier approaches.
+
+User refinement: add-cron.sh reduced to exactly ten lines; removed preview/remove and automatic backup behavior. Source-only update; system cron unchanged. Validation passed: sh -n, quick_validate.py and /tmp/test-short-add-cron.py (line count, both schedules, repeat install, manual restore/reinstall, temp cleanup, failure propagation).

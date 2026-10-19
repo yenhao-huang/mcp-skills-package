@@ -4,20 +4,23 @@
 Codex to execute the skill; it contains no deterministic daily/weekly report
 implementation. No Python job file is used.
 
-On the existing UTC Debian host with user howard, install the skill under
-/home/howard/.codex/skills/executorch-pm first, then run:
+On the existing UTC Debian host with user howard, first install the complete
+skill (including its matching run-cron.sh) under /home/howard/.codex/skills.
+Then run the ten-line installer with no arguments:
 
 ```sh
-/home/howard/.codex/skills/executorch-pm/references/scripts/add-cron.sh --print
-/home/howard/.codex/skills/executorch-pm/references/scripts/add-cron.sh --install
+/home/howard/.codex/skills/executorch-pm/references/scripts/add-cron.sh
 ```
 
-The installer requires an executable sibling run-cron.sh, Codex on PATH, the
-existing state/daily checkout and running cron. It uses sudo for the system
-file, replaces only /etc/cron.d/executorch-daily atomically, and preserves the
-original in /etc/cron.d/.executorch-daily.before-add-cron. Reinstalling replaces
-the same two entries, not appends duplicates. --remove restores that backup,
-or removes only this job when no prior file existed. Preserve unrelated jobs.
+It checks the executable and UTC host, writes both entries to one temporary file,
+installs /etc/cron.d/executorch-daily root-owned mode 0644, and starts cron.
+Re-running replaces this dedicated file rather than appending duplicate jobs.
+There are no preview/remove options or automatic backups. Before replacing an
+existing job, manually copy its cron file and runner outside /etc/cron.d.
+To roll back, restore those exact files; on a first installation remove only
+/etc/cron.d/executorch-daily. Preserve unrelated jobs and report artifacts.
+This host-specific installer assumes installed Codex, credentials, checkout and
+rendering tools; it does not provision them or fix the sandbox limitation below.
 
 UTC daily 20:00 = Taipei daily 04:00; UTC Sunday 20:00 = Taipei Monday 04:00.
 Both jobs acquire one flock (wait up to two hours), each with a 90-minute run
