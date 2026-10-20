@@ -24,8 +24,9 @@ to commit 9906a34d640d2111f724544cbc50f7f130569ae1. No separate installation or
 network fetch is required. PM output and community-silence rules take precedence.
 Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
 reading-first example, replacing sample content, counts and dates, and adding
-one issue slide per candidate. Keep the issue number, `(<scope>) <summary>`,
-問題釐清, 可能解法 and all relevant redirect source links. Do not add a cover slide. Start with the index and include
+exactly two consecutive issue slides per candidate, following the two-page
+contract below. Keep the same issue number, `(<scope>) <summary>` and relevant
+redirect source links on both pages. Do not add a cover slide. Start with the index and include
 a link to Result.md. Preserve source facts when converting an existing batch;
 conversion alone does not authorize fresh selection or a shortlist refresh.
 
@@ -42,11 +43,36 @@ CSS must reveal every slide, disable animations and hide editing/navigation
 controls. Wait for document.fonts.ready and clear slide inert/aria-hidden state.
 Preserve selectable Chinese text and clickable redirect source links. Make the
 Result.md link an absolute URL to this batch in the personal daily repository.
-Verify PDF page count (index + candidate count), extracted text, source
+Verify PDF page count (1 index + 2 × candidate count; 21 pages for 10 candidates), extracted text, source
 links and rendered page bounds; visually inspect the PDF before publication.
 Publish issue-disptach.html, issue-disptach.pdf and Result.md together. Retain
 the generated HTML alongside its PDF, and keep the reusable template in the skill. PDF is static; do not describe keyboard
 navigation or local editing as PDF features. Do not enable hosting.
+
+## Two-page issue introduction
+
+Every shortlisted issue/topic has exactly two consecutive pages, in this order:
+
+1. **背景與解法**: four clearly labeled sections: `問題釐清` (trigger,
+   observed problem and impact), `可能解法` (evidence-backed options and
+   explicitly marked hypotheses), `應用場景` (who encounters it and in which
+   workflow/hardware), and `專有名詞介紹` (brief plain-language definitions of
+   the technical terms used for this topic). Keep each section concise.
+2. **需求**: choose the structure from the actual requested behavior, using
+   the issue body/discussion as evidence rather than guessing from its label:
+   - **bug**: `修正前` describes the current observable failure and trigger;
+     `修正後（預期）` describes the expected observable behavior for the same
+     scenario. A proposed fix is not evidence that it already works.
+   - **feat**: only `重點功能`, `Input`, and `Output`; explain the core capability,
+     the input it accepts, and the output/result it produces. Omit secondary
+     functions and implementation detail.
+
+If the type or a required fact is unclear, label it `待釐清` and state the
+missing evidence; never invent behavior, inputs, outputs or reproduction data.
+Keep both pages about the same issue, retaining issue identity and source links.
+The index has one entry per topic and jumps to its first page; navigation must
+include both pages. Page count is `1 + 2N` for N candidates; no cover or extra
+topic pages. Keep existing dispatches historical unless a refresh is requested.
 
 ## Focus part
 
@@ -214,9 +240,10 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
 3. Read [template/issue-disptach.html](template/issue-disptach.html) and write the
-   batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10 numbered issue slides with
-   `(<scope>) <summary>` headings,
-   each with a redirect issue link, `問題釐清` and `可能解法`. Use only the active Focus part scopes: currently
+   batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10
+   numbered topics, exactly two consecutive slides each, following the two-page
+   issue introduction above. Both pages retain `(<scope>) <summary>` headings
+   and a redirect issue link. Use only the active Focus part scopes: currently
    `build operator` or `quantization`. Do not include the word `title` or a
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
@@ -242,7 +269,9 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
    prior facts. Do not initiate development or perform any community writes.
-7. Validate today's Result.md (and HTML/PDF on shortlist days), counts, headings, three-status tracking rows, four stage columns, actual
+7. Validate today's Result.md (and HTML/PDF on shortlist days), exactly two
+   consecutive pages per topic, all four first-page sections, the appropriate
+   bug/feat requirements on page two, `1 + 2N` total pages, index targets, headings, three-status tracking rows, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
    batches; progress updates preserve historical snapshots and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
