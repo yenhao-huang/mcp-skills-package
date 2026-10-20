@@ -44,6 +44,9 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `codex-sandbox` | `skills/codex-sandbox/SKILL.md` | 建立、更新或執行 Codex sandbox；以 bundled `src/` 為 Dockerfile 與腳本來源。 |
 | `dev` | `skills/dev/SKILL.md` | 軟體開發、除錯、測試、重構、benchmark 或實驗工作；要求先讀 `references/convention.md`。 |
 | `design-system` | `skills/engineer/design-system/SKILL.md` | 建立與檢查前端 design tokens、排版、資料呈現、載入穩定性及動態規則。 |
+| `humanizer` | `skills/content-producer/humanizer/SKILL.md` | 修正制式或生硬口吻，保留技術事實、來源、固定格式與資料欄位。 |
+| `frontend-slides` | `skills/content-producer/frontend-slides/SKILL.md` | 製作獨立 HTML 簡報並輸出 PDF；共用既有設計與渲染參考。 |
+| `executorch-pm` | `skills/custom/executorch/executorch-pm/SKILL.md` | 整理候選議題與 PR 進度，透過 Humanizer 修訂文字、frontend-slides 製作簡報。 |
 | `find-skills` | `skills/custom/productivity/find-skills/SKILL.md` | 優先從受管理的 skill libraries 搜尋與驗證候選，再提供推薦或安裝指引。 |
 | `git-commit` | `skills/engineer/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
 | `github-issues` | `skills/engineer/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
@@ -60,7 +63,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `morning-exercise-reminder` | `skills/custom/cron/morning-exercise-reminder/SKILL.md` | 每日早晨運動與 LeetCode 打卡提醒。 |
 | `daily-tech-blogs-digest` | `skills/custom/cron/daily-tech-blogs-digest/SKILL.md` | 每日整理七個官方科技部落格，容錯寫檔後 commit、push。 |
 | `daily-dart-task-check` | `skills/custom/cron/daily-dart-task-check/SKILL.md` | 透過 Dart MCP 彙整五個指定專案或標籤的今日任務。 |
-| `pretrieval-notice` | `skills/custom/wingene/pretrieval-notice/SKILL.md` | 每日 08:30（台北）由 W78 發布固定格式 PRetrieval issue 報告至 daily，支援重要議題排序與 Docker Compose 排程。 |
+| `pretrieval-pm` | `skills/custom/wingene/pretrieval-pm/SKILL.md` | 每日 08:30（台北）由 W78 發布固定格式 PRetrieval issue 報告至 daily，支援重要議題排序與 Docker Compose 排程。 |
 | `weekly-huggingface-model-digest` | `skills/custom/cron/weekly-huggingface-model-digest/SKILL.md` | 每週依 likes 排列本月三類 Hugging Face 新模型 Top 5。 |
 | `daily-reuters-ai-digest` | `skills/custom/cron/daily-reuters-ai-digest/SKILL.md` | 每日建立有來源依據的 Reuters AI 繁中摘要。 |
 | `daily-journal-reminder` | `skills/custom/cron/daily-journal-reminder/SKILL.md` | 每晚 19:00 的日記提醒內容。 |
@@ -80,6 +83,13 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `skill-create` | `skills/skill-create/SKILL.md` | 建立新 Codex skill 時使用的模板與工作流程。 |
 | `add-tailscale-node` | `skills/operations/add-tailscale-node/SKILL.md` | 在 Linux container 內新增或管理 Tailscale 節點，優先使用 kernel networking，支援可設定 home 的多節點雙向 SSH、公鑰交換、userspace 遷移與安全卸載，同時避免宿主機加入 tailnet。 |
 | `vllm-embedding-server` | `skills/vllm-embedding-server/SKILL.md` | 啟動、除錯、驗證本機 vLLM embedding server，特別是 Qwen embedding models。 |
+
+ExecuTorch PM 需要同時安裝 `humanizer` 與 `frontend-slides`；PRetrieval PM 的
+人工產文與模板維護需要 `humanizer`。完整 package 安裝保留分類目錄；若逐一安裝到
+扁平 skills 目錄，將相依 skill 放在同一層並依名稱解析。既有扁平 PM 安裝需一併更新
+相依 skill；保留 ExecuTorch `issues.json` 與所有排程、優先順序等外部狀態。
+`pretrieval-pm` 取代 skill 名稱 `pretrieval-notice`，部署及偏好路徑仍沿用舊名稱。
+PRetrieval 的固定模板排程使用經修訂的文案，不會逐次呼叫模型。
 
 ### 使用原則
 

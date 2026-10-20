@@ -13,15 +13,30 @@ Templates and internal schedule/state files remain inside the skill.
 The exact output filename is `issue-disptach.pdf` (user spelling); do not
 normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
 
+## Prose review with Humanizer
+
+Before rendering any HTML/PDF or finalizing Result.md and community draft prose,
+apply the shared [Humanizer skill](../../../content-producer/humanizer/SKILL.md)
+in embedded mode. In flat installations resolve `$humanizer` by name beside this
+skill. Read its writing guide, draft the revision, compare facts and save only
+the final prose. Make subjects/actions clear and remove redundant framing.
+
+Keep issue identity/order, examples, numbers, dates, code, URLs, citations,
+uncertainty and proposed-versus-verified status. Preserve all required headings,
+topic/page pairs, tables, selection evidence and tracking statuses. Rebuild the
+font subset after text changes, then run the HTML/PDF checks below. A wording
+preview preserves historical files and does not refresh or select candidates.
+
 ## HTML-to-PDF presentation
 
-Use the bundled [frontend-slides skill](references/frontend-slides/SKILL.md)
-for every HTML generation/update and PDF conversion. Read its
-[SOURCE.md](references/frontend-slides/SOURCE.md) for provenance and PM overrides,
-then its SKILL.md and relevant HTML/viewport references before rendering.
-The upstream source is https://github.com/zarazhangrui/frontend-slides, pinned
-to commit 9906a34d640d2111f724544cbc50f7f130569ae1. No separate installation or
-network fetch is required. PM output and community-silence rules take precedence.
+Use the shared [frontend-slides skill](../../../content-producer/frontend-slides/SKILL.md)
+for every HTML generation/update and PDF conversion. Read its provenance and
+relevant rendering references. For flat installations resolve `$frontend-slides`
+by name beside this skill; provision it together with `$humanizer` before a PM
+run. If either dependency is missing, report the missing dependency instead of
+silently skipping it. PM output and community-silence rules take precedence.
+Use the existing approved design, do not repeat style questions, and do not
+execute the upstream hosting/deployment helpers.
 Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
 reading-first example, replacing sample content, counts and dates, and adding
 exactly two consecutive issue slides per candidate, following the two-page
@@ -284,7 +299,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 
 The user requested daily progress and Monday shortlist scheduling. For `daily`,
 execute Daily Result snapshot and workflow steps 6–7; for `weekly`, execute
-Focus part and workflow steps 1–4 and 7, including bundled frontend-slides.
+Focus part and workflow steps 1–4 and 7, including shared Humanizer and frontend-slides.
 Use the current Asia/Taipei date. The launcher holds the checkout lock: do not
 call it again. Both modes preserve the latest same-day selections and artifacts;
 if today's validated shortlist is already published and still passes issues.json exclusions, return its links without

@@ -1,9 +1,9 @@
 ---
-name: pretrieval-notice
+name: pretrieval-pm
 description: Produce and publish fixed-format Traditional Chinese briefings of open PRetrieval Gitea issues assigned to howard. Use for the daily 08:30 Asia/Taipei W78 reminder, publishing reports to yenhao-huang/daily, manual briefings, or changing persistent issue priorities.
 ---
 
-# PRetrieval Notice
+# PRetrieval PM
 
 Source: `http://192.168.1.76:3000/leo/PRetrieval`.
 Scope: open issues assigned to `howard`, excluding pull requests.
@@ -11,6 +11,28 @@ Schedule: daily **08:30 Asia/Taipei** on `w78_pretrieval_tailscale`.
 Delivery: a Git commit to `yenhao-huang/daily`, branch `main`, at
 `wingene/pretrieval/YYYY-MM-DD_HHMMSS.md` (Taipei time).
 This delivery does not create a separate ChatGPT push notification.
+
+The skill name is `pretrieval-pm`. Existing deployment, Compose project and
+preferences paths keep `pretrieval-notice` for compatibility. Renaming this
+skill does not migrate runtime state or change an installed scheduler.
+
+## Prose review with Humanizer
+
+Require the shared [Humanizer skill](../../../content-producer/humanizer/SKILL.md)
+for explanatory prose before delivering a manual briefing or maintaining report
+wording. Read it and its writing guide, use embedded mode, and compare the final
+prose with the source. In flat installations resolve `$humanizer` by name beside
+this skill; provision it before agent-led prose work. Report a missing dependency
+instead of silently skipping review. Do not rewrite source issue titles or add
+progress/recommendations unsupported by issue evidence.
+
+Preserve fixed headings, metadata, original issue titles/IDs/URLs, every issue
+row, priority order, counts, timestamps and query/failure status. Keep the exact
+report contract below. For scheduled reports, notice.py/publish.py are deterministic:
+apply Humanizer to static wording in the template and notice.render during
+maintenance, then validate success, empty and failure output. Scheduled runs use
+that reviewed wording; they do not call an LLM. Do not introduce a model service
+or claim per-run rewriting. This Markdown-only report does not require slides.
 
 ## Workflow
 
@@ -24,6 +46,7 @@ This delivery does not create a separate ChatGPT push notification.
 3. Use the exact headings, metadata and ordering in
    `references/template/report.template.md` for **every** reminder, including
    manual output and published files. `notice.render` fills this template.
+   Apply the Humanizer prose review above before finalizing agent-written text.
    List all eligible issues with number, title and source link; never truncate
    to a top-N summary. Do not invent progress or suggested actions from titles.
 4. Only when the user changes importance, read existing preferences with
