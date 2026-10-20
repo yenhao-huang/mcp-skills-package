@@ -14,4 +14,4 @@ Preferences path:
 | Schedule (if requested) | skipped | Live service, schedule and preferences unchanged. |
 
 Local browser smoke could not run: Chromium lacks libglib-2.0.so.0. No template/rendering asset changed. Remote export was rejected by automatic review; no upload performed. No live deployment changed.
-Pending delivery: issue 76; task branch codex/76-content-producer-pm; PR/merge pending.
+Pending delivery: issue 76; task branch codex/76-content-producer-pm; PR https://github.com/yenhao-huang/mcp-skills-package/pull/77 open; merge pending.
