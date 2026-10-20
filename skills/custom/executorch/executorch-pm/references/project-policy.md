@@ -35,8 +35,12 @@ Follow PM's Daily Result snapshot rules for cross-batch reconciliation and links
 A shortlist batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
 
 - `issue-disptach.html`: the self-contained generated presentation used for PDF export.
-- `issue-disptach.pdf`: up to 10 issue pages exported from HTML using the PM skill's
-  `template/issue-disptach.html`, each with a `(<scope>) <summary>` heading, 問題釐清 and 可能解法.
+- `issue-disptach.pdf`: one index plus exactly two pages per issue/topic (up to
+  10 topics, 21 pages total), exported from the PM skill's
+  `template/issue-disptach.html`. Both pages retain `(<scope>) <summary>` and
+  redirect source links. Page one covers 問題釐清、可能解法、應用場景、專有名詞介紹;
+  page two covers 需求: bugs compare 修正前 and 修正後（預期）, while features
+  explain only 重點功能、Input、Output. Follow PM's two-page contract.
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 

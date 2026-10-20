@@ -1,13 +1,14 @@
 # Create Skill State
 
-Run ID: pretrieval-notice-38
-Instance: /root
-Started: 2026-10-15 Asia/Taipei
-Scope: Update pretrieval-notice for W78 daily publication; issue #38.
+Run ID: executorch-pm-two-slides-20261020
+Instance: skills/custom/executorch/executorch-pm
+Started: 2026-10-20
+Scope: Two slides per issue topic; issue 74.
 
-| Step | Status | Evidence |
-| --- | --- | --- |
-| Context | completed | Read AGENTS.md, skill-create required rules and merged pretrieval-notice. |
-| Implementation | completed | Updated pretrieval-notice with fixed reports, Git publishing and W78 Compose scheduler; used repository-specific skill workflow. |
-| Validation | completed | 15 tests and generic validator passed; isolated install/uninstall/install verified; live report published. |
-| Delivery | in_progress | Issue #38 PR preparation; main merge remains pending. |
+| Step | Status | Evidence | Notes |
+| --- | --- | --- | --- |
+| 0. Define Scope | completed | User specified first-page context and second-page bug/feat requirements. | No historical dispatch refresh. |
+| 1. Read Relevant Context | completed | Read AGENTS.md, skill-create workflow/rules, PM skill/policy/template, bundled frontend-slides. | Isolated clone of main. |
+| 2. Execute Workflow | completed | Issue 74; PM SKILL.md, shared policy, frontend override and five-page paired bug/feat template updated. | Embedded Noto Sans TC subsets regenerated for 245 characters. |
+| 3. Validate Result | completed | quick_validate.py passed with UTF-8; required layout and git diff --check passed; Playwright passed 5 slides, pairing, section headings, index/jump/keyboard and desktop/phone bounds. | Screenshots visually inspected; no existing daily dispatch or PDF regenerated. |
+| 4. Handoff Summary | in_progress | Preparing focused commit and issue-linked PR. | Await merge; no automatic merge authorization. |
