@@ -136,9 +136,9 @@ def render(issues, priorities, *, queried_at=None, scheduled_at=None, error=None
         priority_count='無法確認' if error else f'{len(important)} 筆',
         important='未取得資料。' if error else (rows(important, True) or '目前沒有符合條件的重要議題。'),
         remaining='未取得資料。' if error else (rows(remaining) or '無。'),
-        notes=(f'查詢未完成（{safe_title(error)}）；未使用舊資料，無法確認目前的未關閉 issue。'
+        notes=(f'查詢失敗（{safe_title(error)}），無法確認目前有哪些未關閉議題。此報告未使用舊資料。'
                if error else ('目前沒有指派給 howard 的未關閉 issue。' if not issues else
-                              '已完成分頁查詢，排除 PR、已關閉及其他負責人的 issue。')),
+                              '已讀取所有分頁，只列出指派給 howard 的未關閉議題，不含 PR。')),
     )
 
 

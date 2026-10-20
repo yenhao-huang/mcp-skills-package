@@ -1,5 +1,21 @@
-# Issue recommendation history
+# ExecuTorch PM State
 
-2026-10-19 issue 68. Added and installed six verified prior-development entries; no invented user exclusions. JSON schema/version/repository/status/evidence/timestamps validated. Existing entries preserved with setdefault under shared cron lock; JSON atomically replaced. Skill validator and diff checks passed. PR merge pending. No historical dispatch modified; issue 7718 in the October 19 snapshot predates this exclusion policy. PR tracking remains independent.
+Run ID: issue-76-content-producer
+Instance: repository skill maintenance
+Started:
+Scope: shared Humanizer and frontend-slides integration; no live deployment.
+Mode: skill maintenance
+Archive path:
+Selection status:
+Publication status: PR pending; merge not authorized
 
-2026-10-20 issue 72: Result.md output contract now excludes historical shortlist copies and scheduler logs. Installed STATE.md retains archived report context; issues.json retains exclusions. Both installed/source skill validators and diff checks passed; report diff preserves selected issue and both PR rows. PR publication pending; merge not authorized.
+| Step | Status | Evidence |
+| --- | --- | --- |
+| Read context | completed | User request, source revisions and PM contract inspected. |
+| Collect or process selection | skipped | No shortlist refresh or selection requested. |
+| Save records | completed | Shared dependencies, guide and prose-review instructions. |
+| Validate and publish | in_progress | Four generic validators and required-layout/link checks passed; 80 moved frontend vendor files and the Humanizer guide match source bytes; flat dependency resolution and success/empty/failure report checks passed; 15 PRetrieval tests passed; shell/JS syntax checks passed. PR pending. |
+| Handoff | pending | Awaiting PR and authorized merge. |
+
+Local browser smoke could not run: Chromium lacks libglib-2.0.so.0. No template/rendering asset changed. Remote export was rejected by automatic review; no upload performed. No live deployment changed.
+Pending delivery: issue 76; task branch codex/76-content-producer-pm; PR/merge pending.

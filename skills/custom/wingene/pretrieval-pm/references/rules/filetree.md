@@ -1,6 +1,6 @@
 # Filetree
 
-Skill root: skills/custom/wingene/pretrieval-notice/.
+Skill root: skills/custom/wingene/pretrieval-pm/.
 Required: SKILL.md, STATE.md, references/rules/{env,filetree,state-rules}.md,
 and references/template/STATE.template.md.
 Fixed report format: references/template/report.template.md.
