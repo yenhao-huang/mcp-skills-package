@@ -52,3 +52,5 @@ Added three-status PR summary in Result.md. User requested tracking of ExecuTorc
 ## 2026-10-15 Daily Result snapshots
 
 User requires Result.md every day. Daily snapshots now preserve history and carry forward tracking even without status changes. Progress-only days publish Result.md alone; same-day reruns reuse today. Scheduler remains not_enabled because no automation API is available.
+
+2026-10-22: User required separate PRs for different issues. Added one-issue-per-branch/PR rule, independent acceptance and Result tracking, and explicit stacked-PR dependency handling. Workflow update only; existing PRs unchanged. Source issue 78; installed/source quick_validate.py and git diff --check passed. Source PR review/merge pending.
