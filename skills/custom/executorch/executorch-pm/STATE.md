@@ -19,3 +19,7 @@ Publication status: PR 77 open; merge not authorized
 
 Local browser smoke could not run: Chromium lacks libglib-2.0.so.0. No template/rendering asset changed. Remote export was rejected by automatic review; no upload performed. No live deployment changed.
 Pending delivery: issue 76; task branch codex/76-content-producer-pm; PR https://github.com/yenhao-huang/mcp-skills-package/pull/77 open; merge pending.
+
+## Issue 80: tracking identity alignment
+
+Implementation and validation: completed. Selected-issue labels and order now match PR tracking; independent tracking rows remain. Generic validation passed for source and installed PM skills; the current report has three exact cell matches and all four original tracking payloads/check timestamps. Publication: pending skill PR merge.

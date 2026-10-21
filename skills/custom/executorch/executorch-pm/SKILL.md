@@ -182,6 +182,11 @@ issue detail. Its progress column has exactly three values:
 - `Done`: the same community PR has verified merged=true / mergedAt evidence.
 
 Columns: `追蹤項目 | 社群 PR | 進度 | 目前狀況／下一步 | 查核時間`.
+For each selected issue, copy its `選擇的 issue` cell exactly into `追蹤項目`,
+including the label, issue number and redirect URL. Keep selected issues in the
+same order in both tables; place independently tracked PRs afterward. Never
+invent a selection or drop a tracked PR to align the tables. Validate this
+identity and ordering before publishing.
 Record check timestamps in Asia/Taipei and use redirect links, including comment
 anchors. User-provided PRs are tracked even outside the current shortlist/focus;
 tracking does not select a shortlist issue or authorize development. Deduplicate
