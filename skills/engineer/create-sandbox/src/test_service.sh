@@ -8,7 +8,7 @@ CONTAINER_DATA_DIR="${CONTAINER_DATA_DIR:-/data}"
 DIND_DOCKER_SOCK="${DIND_DOCKER_SOCK:-/var/run/docker.sock}"
 DIND_DATA_DIR="${DIND_DATA_DIR:-/mnt/share_data_78/howard/docker}"
 DIND_DATA_ROOT="${DIND_DATA_ROOT:-/var/lib/docker}"
-ENABLE_HOST_DOCKER="${ENABLE_HOST_DOCKER:-0}"
+ENABLE_HOST_DOCKER="${ENABLE_HOST_DOCKER:-1}"
 CONTAINER_HOST_DOCKER_SOCK="${CONTAINER_HOST_DOCKER_SOCK:-/var/run/host-docker.sock}"
 RESTART_POLICY="${RESTART_POLICY:-unless-stopped}"
 RUN_AGENT_PACKAGE_INIT="${RUN_AGENT_PACKAGE_INIT:-0}"
@@ -146,7 +146,7 @@ check_docker() {
     docker exec "${CONTAINER_NAME}" test -S "${CONTAINER_HOST_DOCKER_SOCK}"
     docker exec "${CONTAINER_NAME}" \
       docker -H "unix://${CONTAINER_HOST_DOCKER_SOCK}" info >/dev/null
-    pass "host Docker daemon is available through the opt-in socket"
+    pass "host Docker daemon is available through the separate host socket"
   else
     skip "host Docker disabled"
   fi

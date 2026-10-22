@@ -31,8 +31,9 @@ which work belongs before vs. after container creation.
 The outer sandbox container runs with `--privileged`. The internal daemon
 stores its state in the confirmed host directory bind-mounted at
 `/var/lib/docker`, so bind-mount source paths used by inner containers resolve
-in the sandbox filesystem. Host Docker remains disabled by default; when
-explicitly enabled, expose it separately at `/var/run/host-docker.sock`.
+in the sandbox filesystem. Host Docker is also exposed by default at
+`/var/run/host-docker.sock`; set `ENABLE_HOST_DOCKER=0` to disable this mount.
+The default Docker client still targets the internal daemon.
 
 ## After Create-Container
 

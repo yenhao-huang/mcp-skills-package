@@ -72,8 +72,9 @@ openssh-server
 ## Docker Engine
 
 Tools for the privileged Docker-in-Docker daemon and its clients. The daemon
-uses an internal Unix socket by default. Optional host Docker access uses a
-separate socket and does not replace the internal daemon.
+uses an internal Unix socket by default. Host Docker access is also enabled
+by default through a separate socket; set `ENABLE_HOST_DOCKER=0` to disable
+that access. The default Docker client still targets the internal daemon.
 
 ```text
 docker-ce
