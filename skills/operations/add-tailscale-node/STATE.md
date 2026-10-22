@@ -1,25 +1,19 @@
 # Add Tailscale Node State
 
-Run ID: issue-86-home-public-key
-Instance: documentation change
-Started: 2026-10-22
-Scope: Embed approved default home SSH public key; issue #86.
-Inventory path:
-Resolved home endpoint and configuration source:
+Run ID: 20261022-home-lifecycle-validation
+Instance: skills/operations/add-tailscale-node
+Started: 2026-10-22 Asia/Taipei
+Scope: Issue #94; add explicit @home authorization lifecycle, scoped firewall reconciliation, and at least three validation rounds after any unexpected directional failure. Skill documentation only.
+Inventory path: references/template/home-nodes.template.yaml (template only)
+Resolved home endpoint and configuration source: Resolved at runtime; no live endpoint changes in this skill-edit task.
 
-Last updated: 1970-01-01T00:00:00Z
+Last updated: 2026-10-22 Asia/Taipei
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | Issue #86; explicit user approval | |
-| 1. Inspect Environment | completed | Existing skill, references, layout and repository instructions reviewed | |
-| 2. Install Or Uninstall | skipped | Documentation-only change | No live lifecycle mutation |
-| 3. Configure Connectivity | completed | Embedded approved public key, fingerprint, override rules, verified source restriction and scoped rollback | Instructions only |
-| 4. Validate Result | blocked | Generic quick_validate.py passed; required layout checked; key fingerprint verified | Disposable SSH add -> rollback -> add and real-source login not run |
-| 5. Handoff | pending | PR for issue #86 | Awaiting review and merge |
-
-For home multi-node runs, add one row per approved node. Keep each direction
-pending until tested from its actual source; an offline node is not a success.
-
-| Node / Tailscale ID | SSH key fingerprints | Home -> node | Node -> home | Verified at | Managed changes / rollback |
-| --- | --- | --- | --- | --- | --- |
+| 0. Define Scope | completed | https://github.com/yenhao-huang/mcp-skills-package/issues/94 | User requested @home add/remove authorization, firewall synchronization and current bidirectional status after at least three rounds on failure. |
+| 1. Inspect Environment | completed | Read AGENTS.md, skill-create rules, current main skill and references; PR #58 merged. | Clean task branch feat/tailscale-home-lifecycle-validation created from GitHub main. |
+| 2. Create Or Update Skill | completed | Updated entry point, @home add/remove lifecycle, three-round failure protocol, current-status reporting and inventory/state fields. | Shared-key removal preserves other peers; revoked access is not reauthorized; unreachable sources remain untested. |
+| 3. Static Validation | completed | quick_validate.py passed; required layout/category and entry-point references passed; YAML inventory and commented node example parsed; 10 documentation contract checks passed; git diff --check passed. | Static evidence only, not execution of an agent or live retry/revocation lifecycle. |
+| 4. Runtime Validation | blocked | No disposable authenticated home/node pair supplied for add -> rollback -> add or failure/revocation scenarios. | Earlier five-node successful login checks are not a lifecycle test. No production authorization was revoked or network changed solely to test documentation. |
+| 5. Handoff | pending | Draft PR https://github.com/yenhao-huang/mcp-skills-package/pull/97 links issue #94; base main, head feat/tailscale-home-lifecycle-validation. | Await runtime lifecycle validation and review/merge; main verification required before completion. |
