@@ -26,6 +26,7 @@ navigation.
 ```text
 vim
 nano
+tmux
 less
 jq
 ripgrep          # rg

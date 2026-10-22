@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsof \
     vim \
     nano \
+    tmux \
     less \
     jq \
     rsync \
