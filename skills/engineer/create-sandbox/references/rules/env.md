@@ -50,6 +50,12 @@ Build with:
 
 ## Agent Package Bootstrap
 
+The image uses `node:22-bookworm-slim` and installs
+`@openai/codex@latest` and `@anthropic-ai/claude-code@latest` via npm.
+Both CLIs use npm's latest release when the installation layer runs.
+Invalidate Docker's cached npm installation layer when refreshing versions;
+reusing that layer retains the previously installed versions.
+
 Agent package initialization defaults:
 
 ```text
