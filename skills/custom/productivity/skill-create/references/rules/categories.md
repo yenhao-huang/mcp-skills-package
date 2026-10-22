@@ -39,18 +39,18 @@ Current examples:
 - `code-summary`
 - `debug`
 - `dev`
-- `github-issues`
-- `github-pr-workflow`
 - `repo-create`
 
 ### git
 
-Skills matching `git-*` for Git commit and local repository workflows.
-Keep GitHub-specific `github-*` skills under `engineer`.
+Skills matching `git-*` or `github-*` for local Git repository workflows,
+GitHub issues, and pull requests.
 
 Current examples:
 
 - `git-commit`
+- `github-issues`
+- `github-pr-workflow`
 
 ### openspec
 
