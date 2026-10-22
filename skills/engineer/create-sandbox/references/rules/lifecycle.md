@@ -41,6 +41,13 @@ Run `src/after_create_container.sh` against the running
 container. This phase performs workspace-level bootstrap:
 
 - Confirm the container is running.
+- Apply the one-line global templates from `reference/template/` to the
+  container user's `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`.
+  The latter imports `@../.codex/AGENTS.md`, relative to `~/.claude/`.
+  Preserve existing content and append only missing exact template lines.
+  This runs even when `RUN_AGENT_PACKAGE_INIT=0`; these templates do not
+  create project-root instruction files. To undo this setup, remove only
+  the template lines added to these two global files, preserving other content.
 - Add the following exact lines to the container user's `~/.bashrc` when
   absent, preserving existing content and avoiding duplicates on reruns:
 
