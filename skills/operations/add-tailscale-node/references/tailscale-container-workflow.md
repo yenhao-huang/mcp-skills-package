@@ -145,7 +145,49 @@ configure the daemon arguments instead; `TS_USERSPACE=false` alone has no effect
 Persist `/var/lib/tailscale` with the existing named volume or bind mount before
 recreation. Do not copy the same identity into two simultaneously running nodes.
 Do not use host networking or `--privileged`. A separate Tailscale container
-does not give the application kernel r…573 tokens truncated… direct traffic in both directions before retiring old proxy/Serve
+does not give the application kernel routes unless they explicitly share a
+network namespace; do not introduce a sidecar architecture without authorization.
+
+For LXC, use the host's runtime-specific device passthrough and device-cgroup
+rules for TUN (character device 10:200), plus effective network administration
+capability inside the container. Do not apply Docker flags to LXC or change host
+runtime configuration without the necessary access and authorization. Inspect
+the actual LXC/Proxmox configuration before proposing edits.
+
+For a container with no supervisor and no running daemon, a temporary start is:
+
+```bash
+sudo mkdir -p /var/lib/tailscale /var/run/tailscale
+sudo nohup tailscaled \
+  --tun=tailscale0 \
+  --state=/var/lib/tailscale/tailscaled.state \
+  --socket=/var/run/tailscale/tailscaled.sock \
+  >/tmp/tailscaled.log 2>&1 &
+```
+
+This manual daemon is not persistent service configuration. If startup reports
+a missing TUN device or insufficient permission, inspect the exact failure and
+report the runtime requirement. Do not replace requested kernel mode with a
+userspace proxy merely to make status appear healthy. A normal tailnet endpoint
+does not require host IP forwarding, subnet advertisements or an exit node.
+
+### Migrate An Existing Userspace Node
+
+1. Verify an independent management path, such as runtime console access. If
+   the current SSH session is the only access path, do not stop its daemon until
+   a recovery channel is available.
+2. Record the existing node ID/IPs, state directory, socket, userspace flags,
+   Serve configuration and supervisor/runtime definition. Preserve the state
+   directory with restricted permissions and make a protected consistent backup
+   during the maintenance window. Never commit or display it.
+3. Prepare the TUN/capability changes above and the daemon's kernel arguments.
+   For the official image set `TS_USERSPACE=false`; for a direct daemon replace
+   its userspace TUN argument. Keep the same persistent state and socket.
+4. Stop only the verified old daemon through its supervisor and start its
+   replacement. Avoid `tailscale logout`, state deletion or a second concurrent
+   daemon. Check node ID/IP continuity; authenticate only if the preserved
+   identity actually requires it.
+5. Validate direct traffic in both directions before retiring old proxy/Serve
    configuration. A userspace TCP Serve listener on port 22 may forward to
    loopback; kernel OpenSSH must listen on the Tailscale address or a permitted
    wildcard address. Inspect `ss -lntp`, host firewall and tailnet policy. Treat
