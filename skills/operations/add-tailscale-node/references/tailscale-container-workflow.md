@@ -378,6 +378,17 @@ application connectivity as separate results; do not stop at tailnet membership.
 For each direction, record source and destination, account, port, command,
 exit status, expected/returned identity and a redacted error. Diagnose in order:
 
+For `@home`, follow the add/remove authorization lifecycle in
+`home-multi-node.md`. If either required direction fails unexpectedly, run at
+least three complete validation rounds for that node, including the first;
+retest both directions each round, even after a round-2 recovery. Record
+unexecutable tests as untested with their blocked prerequisites and actual
+attempt count. Three prerequisite reviews are not three executed SSH tests.
+Use bounded timeouts and scoped fixes; preserve key trust and recovery access.
+Expected denial after explicit removal is a revocation check, not a reason to
+restore access. Investigate unexpected retained access or another peer's
+regression using the same minimum rounds.
+
 1. Check peer identity and online state. An offline peer leaves its direction
    pending; do not remove it from approved inventories.
 2. Check network mode, `tailscale0`, policy routes and daemon-level reachability.
@@ -401,6 +412,10 @@ connectivity and overall addition complete after every required direction passes
 If a direction cannot be tested from its real source, explain why and leave it
 untested even if the reverse direction or its TCP port works. Record partial
 results and blockers in STATE.md and the private inventory.
+The user reply must show the current final-round results, validation rounds,
+actual test counts, last-check timestamp, cause and remaining action. Follow
+the response table in `home-multi-node.md`; never replace latest results with
+an older successful login or call a configuration-only removal verified denial.
 
 ## 7. Stop Or Uninstall
 
