@@ -27,10 +27,13 @@ placement, agent package settings, or Docker execution behavior.
   `/models`; explicitly set `MODEL_DIR=` to disable it.
 
 The sandbox runs with `--privileged` so the internal daemon can manage nested
-containers. Host Docker is disabled by default with `ENABLE_HOST_DOCKER=0`;
-when explicitly enabled, mount it at `/var/run/host-docker.sock`, separate
-from the inner daemon at `/var/run/docker.sock`. Inner Docker bind paths must
-resolve against the sandbox filesystem.
+containers. Host Docker is enabled by default with `ENABLE_HOST_DOCKER=1`
+and mounted at `/var/run/host-docker.sock`, separate from the inner daemon at
+`/var/run/docker.sock`. Set `ENABLE_HOST_DOCKER=0` to disable the host socket
+mount. `DOCKER_HOST` continues to select the internal daemon; use
+`docker -H unix:///var/run/host-docker.sock` to target the host daemon.
+Inner Docker bind paths must resolve against the sandbox filesystem; host
+Docker bind paths must resolve against the host filesystem.
 
 `REPO_SLUG` is derived from the confirmed repo directory, lowercased, stripped
 of a trailing `_forked` or `-forked`, and normalized to alphanumeric plus

@@ -32,9 +32,9 @@ Before writing, updating, validating, or running a sandbox script, ask for:
 - Docker data: host directory for the internal daemon's persistent state.
   Default host path: `/mnt/share_data_78/howard/docker`. It is bind-mounted at
   the fixed container data root `/var/lib/docker`.
-- Host Docker: whether to additionally expose the host daemon. It is disabled
-  by default; when enabled, mount host `/var/run/docker.sock` to container
-  `/var/run/host-docker.sock`.
+- Host Docker: enabled by default with `ENABLE_HOST_DOCKER=1`; mount host
+  `/var/run/docker.sock` to container `/var/run/host-docker.sock`.
+  Confirm whether to keep this default or disable it with `ENABLE_HOST_DOCKER=0`.
 - Extra mounts: any additional `host_path:container_path` or
   `host_path:container_path:ro` entries.
 
@@ -49,7 +49,7 @@ mount answers:
 3. SSH 要掛嗎？使用 host `~/.ssh` 複製必要 key 到 `.runtime/.ssh` 可以嗎？
 4. data 要掛嗎？host path 預設 `/mnt/share_data_78/howard/data`，container 內路徑要用 `/data` 嗎？
 5. Docker-in-Docker 資料要存在哪個 host path？預設 `/mnt/share_data_78/howard/docker`，container 內固定掛到 `/var/lib/docker`
-6. 是否還要額外啟用 host Docker？若啟用，host `/var/run/docker.sock` 會掛到 container `/var/run/host-docker.sock`
+6. host Docker 預設啟用，host `/var/run/docker.sock` 會掛到 container `/var/run/host-docker.sock`；要保留預設，還是設 `ENABLE_HOST_DOCKER=0` 關閉？
 7. 還有其他 extra mounts 嗎？格式：`/host/path:/container/path` 或 `/host/path:/container/path:ro`
 ```
 
@@ -87,8 +87,9 @@ script fail until `WORKSPACE_DIR` is set.
   executable/searchable; also check writability for every read-write mount.
 - Run the sandbox with `--privileged` and bind-mount the confirmed
   `DIND_DATA_DIR` at `/var/lib/docker` for the internal daemon.
-- Bind-mount the host Docker socket only when explicitly enabled, and expose
-  it at `/var/run/host-docker.sock` rather than replacing the DinD socket.
+- Bind-mount the host Docker socket when `ENABLE_HOST_DOCKER=1` (the default),
+  and expose it at `/var/run/host-docker.sock` rather than replacing the DinD
+  socket. Skip this mount when `ENABLE_HOST_DOCKER=0`.
 - Keep `DIND_DOCKER_SOCK` inside the sandbox; default it to
   `/var/run/docker.sock` and set `DOCKER_HOST` to that internal Unix socket.
 - If a path is missing, ask a correction question in this form:

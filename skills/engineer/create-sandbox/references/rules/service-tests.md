@@ -31,8 +31,9 @@ The service test should verify:
   `docker info`, and its data root is `/var/lib/docker`.
 - `/var/lib/docker` is a mount point backed by the confirmed Docker host
   directory.
-- When host Docker is explicitly enabled, its separate socket responds to
-  `docker info` without replacing the default DinD socket.
+- With host Docker enabled by default (`ENABLE_HOST_DOCKER=1`), its separate
+  socket responds to `docker info` without replacing the default DinD socket.
+  Skip this check when explicitly disabled with `ENABLE_HOST_DOCKER=0`.
 
 When `RUN_AGENT_PACKAGE_INIT=1`, the service test should verify:
 
