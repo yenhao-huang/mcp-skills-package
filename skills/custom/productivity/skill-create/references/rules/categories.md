@@ -8,6 +8,8 @@ Use this reference before creating, moving, or reclassifying skills under
 ```text
 sales
 engineer
+git
+openspec
 operations
 finance
 legal
@@ -37,11 +39,31 @@ Current examples:
 - `code-summary`
 - `debug`
 - `dev`
+- `repo-create`
+
+### git
+
+Skills matching `git-*` or `github-*` for local Git repository workflows,
+GitHub issues, and pull requests.
+
+Current examples:
+
 - `git-commit`
 - `github-issues`
 - `github-pr-workflow`
-- `openspec-*`
-- `repo-create`
+
+### openspec
+
+OpenSpec change planning, exploration, implementation, synchronization, and
+archival workflows. Keep the existing `openspec-*` skill names.
+
+Current examples:
+
+- `openspec-apply-change`
+- `openspec-archive-change`
+- `openspec-explore`
+- `openspec-propose`
+- `openspec-sync-specs`
 
 ### operations
 

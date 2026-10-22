@@ -1,16 +1,16 @@
 # Create Skill State
 
-Run ID: 20261022-latest-agent-cli
-Instance: /home/howard/mcp-skills-package/skills/custom/productivity/skill-create
-Started: 2026-10-22T07:15:44.857Z
-Scope: Split PR #85 into four focused feature commits and add a fifth removing vLLM/llama-server installation.
+Run ID: 20261022-group-openspec-git
+Instance: /home/howard/mcp-skills-package
+Started: 2026-10-22T08:21:48.825Z
+Scope: Group openspec-* into skills/openspec and both git-* and github-* into skills/git; update PR #91 linked to issue #89.
 
-Last updated: 2026-10-22T07:15:44.857Z
+Last updated: 2026-10-22T08:21:48.825Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested latest Codex/Claude installation in the Dockerfile within existing PR #85; updated issue #84 acceptance criteria. | Same task-created PR branch; preserve aliases. |
-| 1. Read Relevant Context | completed | Read skill workflow, Dockerfile, environment/tool rules, state rules, and PR #85. Prior build observed Claude requires Node >=22. | Codex already used latest; Claude pinned to 2.1.199. |
-| 2. Execute Workflow | completed | Recreated aliases, latest CLIs, tmux, and global instructions as four commits; git diff against original HEAD e80581f returned empty. Fifth commit removes vLLM installation and llama-server clone/build/install; synchronized tooling reference. | Original published branch preserved. |
-| 3. Validate Result | completed | bash -n, system-Python quick_validate.py, git diff --check, and absence checks for inference-server install/build references passed; latest CLI and tmux declarations retained. | No Docker rebuild or live-container changes. |
-| 4. Handoff Summary | pending | Prepared on feat/create-sandbox-split-commits in an isolated worktree. | Updating published PR #85 requires explicit authorization to rewrite its branch under AGENTS.md. |
+| 0. Define Scope | completed | User clarified both git-* and github-* belong in skills/git; issue #89 now records eight skill moves. | OpenSpec skills remain grouped in skills/openspec. |
+| 1. Read Relevant Context | completed | Read AGENTS.md, skill-create workflow/category/layout/environment/state rules, README, installer discovery, and moved skill file lists. | Existing installer recursively discovers SKILL.md. |
+| 2. Execute Workflow | completed | Moved github-issues and github-pr-workflow into skills/git; corrected README links/tree and category rules. | All 15 newly relocated files are byte-identical to their originals. |
+| 3. Validate Result | completed | Eight skill validators, moved-file hash checks, active-reference search, and git diff --check passed. Isolated first install and rerun verified all eight skills at new paths for both .codex and .claude. | No installed user directories changed. |
+| 4. Handoff Summary | completed | Commit c799f1d published on refactor/group-openspec-git-skills; created and read back https://github.com/yenhao-huang/mcp-skills-package/pull/91 targeting main, linked to issue #89. | PR open; review/merge and main verification remain pending. |
