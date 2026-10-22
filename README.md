@@ -48,14 +48,14 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `frontend-slides` | `skills/content-producer/frontend-slides/SKILL.md` | 製作獨立 HTML 簡報並輸出 PDF；共用既有設計與渲染參考。 |
 | `executorch-pm` | `skills/custom/executorch/executorch-pm/SKILL.md` | 整理候選議題與 PR 進度，透過 Humanizer 修訂文字、frontend-slides 製作簡報。 |
 | `find-skills` | `skills/custom/productivity/find-skills/SKILL.md` | 優先從受管理的 skill libraries 搜尋與驗證候選，再提供推薦或安裝指引。 |
-| `git-commit` | `skills/git/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
-| `github-issues` | `skills/git/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
-| `github-pr-workflow` | `skills/git/github-pr-workflow/SKILL.md` | 依 repository contribution 規則準備 branch、commit、push、建立及驗證 GitHub PR。 |
-| `openspec-apply-change` | `skills/openspec/openspec-apply-change/SKILL.md` | 實作 OpenSpec change 的工作項目。 |
-| `openspec-archive-change` | `skills/openspec/openspec-archive-change/SKILL.md` | 封存已完成的 OpenSpec change。 |
-| `openspec-explore` | `skills/openspec/openspec-explore/SKILL.md` | 探索需求、問題與設計選項。 |
-| `openspec-propose` | `skills/openspec/openspec-propose/SKILL.md` | 建立 OpenSpec proposal、設計、規格與工作項目。 |
-| `openspec-sync-specs` | `skills/openspec/openspec-sync-specs/SKILL.md` | 將 change 的規格同步到主要規格。 |
+| `git-commit` | `skills/engineer/git/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
+| `github-issues` | `skills/engineer/git/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
+| `github-pr-workflow` | `skills/engineer/git/github-pr-workflow/SKILL.md` | 依 repository contribution 規則準備 branch、commit、push、建立及驗證 GitHub PR。 |
+| `openspec-apply-change` | `skills/engineer/openspec/openspec-apply-change/SKILL.md` | 實作 OpenSpec change 的工作項目。 |
+| `openspec-archive-change` | `skills/engineer/openspec/openspec-archive-change/SKILL.md` | 封存已完成的 OpenSpec change。 |
+| `openspec-explore` | `skills/engineer/openspec/openspec-explore/SKILL.md` | 探索需求、問題與設計選項。 |
+| `openspec-propose` | `skills/engineer/openspec/openspec-propose/SKILL.md` | 建立 OpenSpec proposal、設計、規格與工作項目。 |
+| `openspec-sync-specs` | `skills/engineer/openspec/openspec-sync-specs/SKILL.md` | 將 change 的規格同步到主要規格。 |
 | `solve-issue` | `skills/engineer/solve-issue/SKILL.md` | 從讀取 GitHub issue、實作與測試，到 commit、PR、CI 與 review 的完整問題解決流程。 |
 | `ui-ux-pro-max` | `skills/engineer/ui-ux-pro-max/SKILL.md` | 搜尋可落地的 UI/UX 風格、色彩、排版、元件與技術棧建議。 |
 | `loop-analysis` | `skills/loop-analysis/SKILL.md` | 針對 ESG contest agent-loop runs 產出固定格式的繁中 markdown 分析。 |
@@ -154,17 +154,17 @@ model_auto_compact_token_limit_scope = "total"
 │   ├── codex-sandbox/
 │   ├── dev/
 │   ├── engineer/
+│   │   ├── git/
+│   │   │   ├── git-commit/
+│   │   │   ├── github-issues/
+│   │   │   └── github-pr-workflow/
+│   │   ├── openspec/
+│   │   │   ├── openspec-apply-change/
+│   │   │   ├── openspec-archive-change/
+│   │   │   ├── openspec-explore/
+│   │   │   ├── openspec-propose/
+│   │   │   └── openspec-sync-specs/
 │   │   └── solve-issue/
-│   ├── git/
-│   │   ├── git-commit/
-│   │   ├── github-issues/
-│   │   └── github-pr-workflow/
-│   ├── openspec/
-│   │   ├── openspec-apply-change/
-│   │   ├── openspec-archive-change/
-│   │   ├── openspec-explore/
-│   │   ├── openspec-propose/
-│   │   └── openspec-sync-specs/
 │   ├── custom/
 │   │   ├── ai-models/
 │   │   │   ├── download-models/
