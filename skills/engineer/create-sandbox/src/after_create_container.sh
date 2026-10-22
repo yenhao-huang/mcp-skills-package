@@ -19,6 +19,19 @@ if [[ "${running}" != "true" ]]; then
   exit 1
 fi
 
+docker exec -i "${CONTAINER_NAME}" bash -s <<'BASH'
+set -euo pipefail
+
+touch "${HOME}/.bashrc"
+for alias_line in \
+  'alias codex-bypass="codex --dangerously-bypass-approvals-and-sandbox"' \
+  'alias claude-bypass="claude --allow-dangerously-skip-permissions"'; do
+  if ! grep -qxF -- "${alias_line}" "${HOME}/.bashrc"; then
+    printf '\n%s\n' "${alias_line}" >> "${HOME}/.bashrc"
+  fi
+done
+BASH
+
 if [[ "${RUN_AGENT_PACKAGE_INIT}" != "1" ]]; then
   exit 0
 fi
