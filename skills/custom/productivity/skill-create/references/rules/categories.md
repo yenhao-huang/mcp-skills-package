@@ -8,8 +8,6 @@ Use this reference before creating, moving, or reclassifying skills under
 ```text
 sales
 engineer
-git
-openspec
 operations
 finance
 legal
@@ -41,10 +39,10 @@ Current examples:
 - `dev`
 - `repo-create`
 
-### git
+#### engineer/git
 
 Skills matching `git-*` or `github-*` for local Git repository workflows,
-GitHub issues, and pull requests.
+GitHub issues, and pull requests. Store these under `skills/engineer/git/`.
 
 Current examples:
 
@@ -52,10 +50,11 @@ Current examples:
 - `github-issues`
 - `github-pr-workflow`
 
-### openspec
+#### engineer/openspec
 
 OpenSpec change planning, exploration, implementation, synchronization, and
-archival workflows. Keep the existing `openspec-*` skill names.
+archival workflows. Keep the existing `openspec-*` skill names under
+`skills/engineer/openspec/`.
 
 Current examples:
 
@@ -143,6 +142,8 @@ Current examples:
 ## Placement Rules
 
 - Prefer a business-function category over `others`.
+- Use `engineer/git/<skill-name>` for Git/GitHub skills and
+  `engineer/openspec/<skill-name>` for OpenSpec skills.
 - Use `custom` when the skill is tied to a specific company, project, user, or
   local environment.
 - Use `custom/<subcategory>` when multiple internal skills share the same owner
