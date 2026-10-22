@@ -12,6 +12,38 @@ Official references:
 - https://tailscale.com/docs/reference/tailscale-cli
 - https://tailscale.com/docs/concepts/userspace-networking
 
+## User-Authorized Default Home Public Key
+
+The user explicitly approved embedding this public key in the shared skill.
+Use it for home -> new node SSH when adding a node, unless the user or selected
+inventory explicitly supplies another home key. Never copy or request its
+private key.
+
+- Home account/endpoint default: `user@100.88.157.6`
+- Verified home Tailscale node ID: `n5J7aYPDc411CNTRL`
+- Home hostname: `DESKTOP-54U632L` (tailnet display name may be `acer`)
+- SSH public-key fingerprint: `SHA256:tV56r4tqeYPFCshn4I5ih1dCmpxOfm3MbkS2CCkTBwk`
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGxIOAp1+gIeM1buiPwbtjPJTr4Rknzp2sQPCnkYNMg2 user@DESKTOP-54U632L
+```
+
+Before installation, verify the selected home is the same Tailscale node and
+resolve its current IPv4/IPv6 from status. Historical addresses were
+`100.88.157.6` and `fd7a:115c:a1e0::403b:9d07`; do not use stale addresses
+without discovery. If home identity differs or an explicit home override has no
+confirmed key, obtain that home's public key instead of installing this one.
+Append/deduplicate this key in the selected new node account's effective
+`authorized_keys`, using `from="<verified-home-addresses>"`, a protected backup,
+and the permissions specified below. Preserve unrelated keys. Verify login
+from home with its matching private key; if no authorized home management
+channel exists, ask the user to run the login and keep verification pending.
+For rollback, remove only the entry added by this run, or restore only its
+previous options if this run changed them. Preserve other entries and changes.
+For a home multi-node request, continue with the existing node -> home key
+exchange and scoped firewall workflow below; this embedded key handles only
+home -> node authentication.
+
 ## 1. Resolve Home And The Approved Inventory
 
 Resolve the home host, SSH account and port from explicit user instructions,
@@ -59,8 +91,9 @@ assume a password, copy a private key, or enable agent forwarding to bootstrap i
 
 ## 3. Establish Home -> Node Public-Key Login
 
-1. Read the selected home account's existing SSH public key and its fingerprint
-   locally. If it has no suitable key pair, create a dedicated pair on home,
+1. For the verified default home, use the approved embedded public key and
+   fingerprint above. For an explicit key override or another home, read the
+   selected home account's existing SSH public key and fingerprint locally. If it has no suitable key pair, create a dedicated pair on home,
    preserving existing files and following the user's passphrase/agent policy.
    Do not create an unencrypted replacement merely to make a test pass.
 2. Install only the public key into the node account's effective authorized_keys

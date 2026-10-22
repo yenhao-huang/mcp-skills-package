@@ -22,6 +22,11 @@ then record concrete evidence as each phase progresses.
 
 For home multi-node setup, read `references/home-multi-node.md` and use
 `references/template/home-nodes.template.yaml` as the non-secret inventory.
+For home -> new node SSH, use the user-authorized default home public key
+embedded in `references/home-multi-node.md`, unless explicitly overridden.
+A request to add a new node includes installing this key for the selected node
+account after verifying home identity and source addresses. For home multi-node
+requests, retain both SSH directions required by the workflow below.
 The current home default is `user@100.88.157.6`; it is an overridable connection
 setting, never a fixed identity or an instruction to alter that machine.
 
