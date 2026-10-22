@@ -23,3 +23,17 @@ pending until tested from its actual source; an offline node is not a success.
 
 | Node / Tailscale ID | SSH key fingerprints | Home -> node | Node -> home | Verified at | Managed changes / rollback |
 | --- | --- | --- | --- | --- | --- |
+
+## Required connectivity evidence
+
+Enrollment result / node ID / addresses:
+Resolved peer and configuration source:
+Required application, accounts and ports:
+
+| Direction | Source -> destination / account / port | Result (passed / failed / untested) | Command, exit status and identity evidence | Observed cause or unknown | Next action / missing access |
+| --- | --- | --- | --- | --- | --- |
+| Peer -> node | | untested | | | |
+| Node -> peer | | untested | | | |
+
+Keep overall connectivity incomplete until all required directions pass.
+Never store secrets or credential-bearing login URLs here.

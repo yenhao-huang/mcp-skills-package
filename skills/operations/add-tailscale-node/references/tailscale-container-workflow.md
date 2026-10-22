@@ -367,6 +367,41 @@ skill's documentation. If a suitable authenticated test target is unavailable,
 mark lifecycle validation blocked and distinguish static checks from runtime
 evidence.
 
+### Bidirectional Completion And Failure Reporting
+
+A default add-node request includes authenticated SSH in both directions with
+its resolved home/peer. Use `home-multi-node.md` for public-key setup and real
+source-side tests. If the user explicitly selects another application or a
+single direction, validate that exact scope instead. Keep enrollment and
+application connectivity as separate results; do not stop at tailnet membership.
+
+For each direction, record source and destination, account, port, command,
+exit status, expected/returned identity and a redacted error. Diagnose in order:
+
+1. Check peer identity and online state. An offline peer leaves its direction
+   pending; do not remove it from approved inventories.
+2. Check network mode, `tailscale0`, policy routes and daemon-level reachability.
+   A ping succeeds at a different layer than application authentication.
+3. Test the actual TCP port and inspect the destination listener, bind address,
+   firewall and tailnet policy through an authorized management channel.
+   A timeout alone does not prove which firewall or policy blocked it; report
+   that uncertainty. Connection refusal requires checking the listener.
+4. For SSH, verify trusted host keys, the selected user/key, effective
+   authorized_keys path, permissions and source restrictions. Distinguish
+   authentication failure, a locked key, host-key mismatch and missing server.
+5. Apply fixes within the authorized scope, preserving recovery access and
+   unrelated peers. If missing management access, a user-side agent unlock,
+   offline machine or external policy change prevents completion, state the
+   exact dependency. Never disable host-key verification or broaden access
+   merely to make validation pass.
+
+Report each direction as passed, failed or untested, with evidence and the next
+concrete action. State unknown causes as unknown instead of guessing. Only mark
+connectivity and overall addition complete after every required direction passes.
+If a direction cannot be tested from its real source, explain why and leave it
+untested even if the reverse direction or its TCP port works. Record partial
+results and blockers in STATE.md and the private inventory.
+
 ## 7. Stop Or Uninstall
 
 Determine the requested removal level first.

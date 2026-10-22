@@ -1,6 +1,6 @@
 ---
 name: add-tailscale-node
-description: Add or manage a Linux container Tailscale node and connect it bidirectionally to a configurable home machine. Use for home multi-node SSH, Docker or LXC kernel networking, public-key exchange, userspace migration, or explicit proxy setup and safe removal without enrolling the container host.
+description: Add or manage a Linux container Tailscale node and connect it bidirectionally to a configurable home machine. Use for add-node-in-tailscale requests, home multi-node SSH, Docker or LXC kernel networking, public-key exchange, userspace migration, or explicit proxy setup and safe removal without enrolling the container host.
 ---
 
 # Add Tailscale Node
@@ -35,8 +35,10 @@ setting, never a fixed identity or an instruction to alter that machine.
 1. Resolve the exact target container and runtime before mutation. If the user
    means the current container, inspect that environment; do not infer its
    boundary from an empty nested `docker ps` or create another container.
-2. Confirm the desired direction: cluster to container, container to cluster,
-   or both. Identify only the required protocols and ports.
+2. Adding a node defaults to both directions between the node and the resolved
+   home/peer, including authenticated SSH. Honor an explicit narrower user scope.
+   Resolve the peer from user input, then inventory, then the documented home
+   default; identify the actual accounts, protocols and ports.
    For home multi-node requests, resolve home from explicit user input, then
    the selected inventory, then the default. Adding a node in this mode includes
    both home -> node and node -> home SSH; follow the home reference to exchange
@@ -57,7 +59,13 @@ setting, never a fixed identity or an instruction to alter that machine.
 6. For removal, first determine whether the user wants a disconnect, package
    uninstall with identity preserved, or complete removal. Treat state deletion
    and tailnet device deletion as separate destructive actions.
-7. Validate both requested traffic directions with real application clients.
+7. Validate both directions with real application clients from each actual source.
+   For a default node addition, follow `references/home-multi-node.md` to
+   establish and test authenticated SSH both ways. Enrollment, ping, an open
+   TCP port or an SSH banner alone never completes the addition. If either
+   direction fails, diagnose it using the failure-reporting section of the
+   workflow reference, record evidence and remaining requirements, and report
+   the addition as partial with connectivity incomplete.
    For kernel mode, prove that `tailscale0` and policy routing exist in the
    application container and normal SSH works without a proxy. Confirm the
    host itself was not enrolled or exposed, and record evidence and limitations
@@ -85,6 +93,12 @@ setting, never a fixed identity or an instruction to alter that machine.
   and never transfer private keys or treat Tailscale node keys as SSH keys.
 
 ## Output
+
+Always report a per-direction result (passed, failed, or untested), the actual
+source/destination and account, and evidence. For each failure or untested
+direction, explain the observed cause or explicitly state that it is unknown,
+the checks performed, and the next concrete action or missing access needed.
+Do not describe untested authenticated SSH as successful connectivity.
 
 Report the selected networking mode, commands or changes made, connectivity
 validation, host-isolation result, uninstall level if applicable, and any
