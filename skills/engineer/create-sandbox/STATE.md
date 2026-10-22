@@ -1,16 +1,16 @@
 # Create Sandbox State
 
-Run ID: 20261022-latest-agent-cli
+Run ID: 20261022-sandbox-template-references
 Instance: /home/howard/mcp-skills-package/skills/engineer/create-sandbox
-Started: 2026-10-22T07:15:44.544Z
-Scope: Split PR #85 into four focused feature commits and add a fifth removing vLLM/llama-server installation.
+Started: 2026-10-22T08:43:11.678Z
+Scope: Normalize create-sandbox templates under references/template and add a second AGENTS.md line requiring dev and Git skills.
 
-Last updated: 2026-10-22T07:15:44.544Z
+Last updated: 2026-10-22T08:43:11.678Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested latest Codex/Claude installation in the Dockerfile within existing PR #85; updated issue #84 acceptance criteria. | Same task-created PR branch; preserve aliases. |
-| 1. Read Relevant Context | completed | Read skill workflow, Dockerfile, environment/tool rules, state rules, and PR #85. Prior build observed Claude requires Node >=22. | Codex already used latest; Claude pinned to 2.1.199. |
-| 2. Execute Workflow | completed | Recreated aliases, latest CLIs, tmux, and global instructions as four commits; git diff against original HEAD e80581f returned empty. Fifth commit removes vLLM installation and llama-server clone/build/install; synchronized tooling reference. | Original published branch preserved. |
-| 3. Validate Result | completed | bash -n, system-Python quick_validate.py, git diff --check, and absence checks for inference-server install/build references passed; latest CLI and tmux declarations retained. | No Docker rebuild or live-container changes. |
-| 4. Handoff Summary | pending | Prepared on feat/create-sandbox-split-commits in an isolated worktree. | Updating published PR #85 requires explicit authorization to rewrite its branch under AGENTS.md. |
+| 0. Define Scope | completed | User requested plural references/template path and a second agent instruction line. | Keep existing global-only configuration. |
+| 1. Read Relevant Context | completed | Read skill-create workflow/layout/state rules, create-sandbox workflow/lifecycle/layout/state rules, current templates, and bootstrap template lookup. | Existing installer already supports multiline templates. |
+| 2. Execute Workflow | completed | Moved AGENTS.md/CLAUDE.md into references/template, updated bootstrap TEMPLATE_DIR, skill/lifecycle/filetree references, and appended the second dev/Git guidance line. | Original repository-reading line and global-only setup preserved. |
+| 3. Validate Result | completed | Mocked-Docker fresh install, rerun, existing-global upgrade preservation, exact two/one template lines, and install/remove/reinstall passed. Shell syntax, generic skill validation, old active-path search, and git diff --check passed. | No actual Docker build or running-container mutation. |
+| 4. Handoff Summary | in_progress | Preparing focused PR linked to issue #95 from fix/create-sandbox-template-path. | Review/merge and main verification pending. |
