@@ -3,7 +3,7 @@
 Run ID: 20261022-latest-agent-cli
 Instance: /home/howard/mcp-skills-package/skills/engineer/create-sandbox
 Started: 2026-10-22T07:15:44.544Z
-Scope: Configure container-user global instructions only: ~/.codex/AGENTS.md and ~/.claude/CLAUDE.md.
+Scope: Split PR #85 into four focused feature commits and add a fifth removing vLLM/llama-server installation.
 
 Last updated: 2026-10-22T07:15:44.544Z
 
@@ -11,6 +11,6 @@ Last updated: 2026-10-22T07:15:44.544Z
 | --- | --- | --- | --- |
 | 0. Define Scope | completed | User requested latest Codex/Claude installation in the Dockerfile within existing PR #85; updated issue #84 acceptance criteria. | Same task-created PR branch; preserve aliases. |
 | 1. Read Relevant Context | completed | Read skill workflow, Dockerfile, environment/tool rules, state rules, and PR #85. Prior build observed Claude requires Node >=22. | Codex already used latest; Claude pinned to 2.1.199. |
-| 2. Execute Workflow | completed | Bootstrap applies templates only to ~/.codex/AGENTS.md and ~/.claude/CLAUDE.md; Claude imports @../.codex/AGENTS.md. Updated skill, layout, and lifecycle documentation. | Existing global instructions preserved; no project-root setup. |
-| 3. Validate Result | completed | Mocked-Docker fixture passed global locations, relative import resolution, one-line fresh files, idempotency, append/preserve behavior, no root files, and install/remove/reinstall. bash -n, quick_validate.py, and git diff --check passed. | No actual Docker or live-container changes. |
-| 4. Handoff Summary | completed | Prepared update to existing PR #85, linked issue #84, on the same task-created branch. | Awaiting review/merge; existing container unchanged. |
+| 2. Execute Workflow | completed | Recreated aliases, latest CLIs, tmux, and global instructions as four commits; git diff against original HEAD e80581f returned empty. Fifth commit removes vLLM installation and llama-server clone/build/install; synchronized tooling reference. | Original published branch preserved. |
+| 3. Validate Result | completed | bash -n, system-Python quick_validate.py, git diff --check, and absence checks for inference-server install/build references passed; latest CLI and tmux declarations retained. | No Docker rebuild or live-container changes. |
+| 4. Handoff Summary | pending | Prepared on feat/create-sandbox-split-commits in an isolated worktree. | Updating published PR #85 requires explicit authorization to rewrite its branch under AGENTS.md. |

@@ -48,7 +48,7 @@ zip
 ## Python And Native Builds
 
 Tools for Python virtual environments, package installation, and compiling
-native dependencies such as `llama.cpp`.
+native project dependencies.
 
 ```text
 python3
@@ -120,8 +120,6 @@ These are installed through language/package tooling rather than apt.
 @openai/codex
 @anthropic-ai/claude-code
 uv
-vllm
-llama-server
 ```
 
 ## Notes
