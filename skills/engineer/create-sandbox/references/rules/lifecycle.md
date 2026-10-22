@@ -41,8 +41,10 @@ Run `src/after_create_container.sh` against the running
 container. This phase performs workspace-level bootstrap:
 
 - Confirm the container is running.
-- Apply the one-line global templates from `reference/template/` to the
+- Apply the global templates from `references/template/` to the
   container user's `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`.
+  `AGENTS.md` contains the repository-reading instruction and a second line
+  requiring the dev skill for development and `skills/engineer/git` for Git.
   The latter imports `@../.codex/AGENTS.md`, relative to `~/.claude/`.
   Preserve existing content and append only missing exact template lines.
   This runs even when `RUN_AGENT_PACKAGE_INIT=0`; these templates do not

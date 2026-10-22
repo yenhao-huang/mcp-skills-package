@@ -70,8 +70,8 @@ Do not use this skill when:
 
 ## References
 
-- Use `reference/template/AGENTS.md` and `reference/template/CLAUDE.md` as
-  one-line global-instruction templates. Post-create bootstrap installs them
+- Use `references/template/AGENTS.md` and `references/template/CLAUDE.md` as
+  global-instruction templates. Post-create bootstrap installs them
   at the container user's `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`,
   preserving existing content and avoiding duplicate lines.
 - Read `references/rules/lifecycle.md` before changing build/run/post-create

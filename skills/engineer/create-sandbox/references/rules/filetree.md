@@ -9,10 +9,6 @@ Use this reference before adding, moving, or removing files in the
 create-sandbox/
 ├── SKILL.md
 ├── STATE.md
-├── reference/
-│   └── template/
-│       ├── AGENTS.md
-│       └── CLAUDE.md
 ├── references/
 │   ├── tools.md
 │   ├── rules/
@@ -24,6 +20,8 @@ create-sandbox/
 │   │   ├── service-tests.md
 │   │   └── state-rules.md
 │   └── template/
+│       ├── AGENTS.md
+│       ├── CLAUDE.md
 │       └── STATE.template.md
 └── src/
     ├── Dockerfile
@@ -37,11 +35,11 @@ create-sandbox/
 - `SKILL.md`: Required entry point. Keep trigger conditions, core workflow, and
   short rules here.
 - `STATE.md`: Per-run working state.
-- `reference/template/`: One-line container-user global instruction templates;
+- `references/rules/`: Detailed operating rules loaded only when relevant.
+- `references/template/`: Copyable state and container-user global instruction
+  templates. `AGENTS.md` contains repository and development/Git guidance;
   `CLAUDE.md` imports `@../.codex/AGENTS.md` from its installed
   `~/.claude/CLAUDE.md` location.
-- `references/rules/`: Detailed operating rules loaded only when relevant.
-- `references/template/`: Copyable templates.
 - `src/`: Deterministic executable templates and scripts used by
   the workflow.
 
