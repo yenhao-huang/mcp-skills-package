@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM node:20-slim
+FROM node:22-bookworm-slim
 
 ENV VIRTUAL_ENV=/opt/python \
     PATH="/opt/python/bin:${PATH}" \
@@ -93,7 +93,7 @@ RUN git clone --depth 1 --branch "${LLAMA_CPP_REF}" https://github.com/ggml-org/
 
 RUN npm install -g \
     @openai/codex@latest \
-    @anthropic-ai/claude-code@2.1.199
+    @anthropic-ai/claude-code@latest
 
 ARG UID=1000
 ARG GID=1000
