@@ -1,19 +1,14 @@
 # Create Skill State
 
-This file is a reusable per-run template. Copy it to `STATE.md` before starting
-a new execution.
-
-Run ID: open-home-vscode-98
-Instance: Codex temporary checkout
-Started: 2026-10-23
-Scope: issue #98; rename skill, @open-vs trigger and home resolution
-
-Last updated: 1970-01-01T00:00:00Z
+Run ID: executorch-reproduce-100
+Instance: skill-reproduce-100
+Started: 2026-10-23T17:25:59.358203+00:00
+Scope: Require tool-native reproduction commands in executorch-dev docs. Issue: https://github.com/yenhao-huang/mcp-skills-package/issues/100
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | GitHub issue #98 | |
-| 1. Read Relevant Context | completed | Required skill and category/layout/workflow/state rules read | |
-| 2. Execute Workflow | completed | Renamed open-home-vscode; @open-vs and Tailscale home resolution | |
-| 3. Validate Result | completed | Generic validator, layout, dependency link and workspace lifecycle passed | GUI launch untested |
-| 4. Handoff Summary | in_progress | Issue #98; preparing PR | Awaiting merge |
+| 0. Define Scope | completed | User requested git worktree, make, ctest commands instead of custom harnesses. | No runtime code changes. |
+| 1. Read Relevant Context | completed | Read package AGENTS.md, skill-create rules, executorch-dev entrypoint and report template. | Existing layout retained. |
+| 2. Execute Workflow | completed | Updated reproduce rules in SKILL.md and references/report_template.md on agent/fix-100. | No new executable harness. |
+| 3. Validate Result | completed | quick_validate.py: Skill is valid!; git diff --check passed; required layout and command template reviewed. | Documentation-only policy change; no runtime lifecycle introduced. |
+| 4. Handoff Summary | in_progress | Preparing PR linked to issue 100. | Await PR merge before completion. |
