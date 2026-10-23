@@ -1,16 +1,19 @@
 # Create Skill State
 
-Run ID: 20261022-sandbox-template-references
-Instance: /home/howard/mcp-skills-package/skills/custom/productivity/skill-create
-Started: 2026-10-22T08:43:12.068Z
-Scope: Normalize create-sandbox templates under references/template and add a second AGENTS.md line requiring dev and Git skills.
+This file is a reusable per-run template. Copy it to `STATE.md` before starting
+a new execution.
 
-Last updated: 2026-10-22T08:43:12.068Z
+Run ID: open-home-vscode-98
+Instance: Codex temporary checkout
+Started: 2026-10-23
+Scope: issue #98; rename skill, @open-vs trigger and home resolution
+
+Last updated: 1970-01-01T00:00:00Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested plural references/template path and a second agent instruction line. | Keep existing global-only configuration. |
-| 1. Read Relevant Context | completed | Read skill-create workflow/layout/state rules, create-sandbox workflow/lifecycle/layout/state rules, current templates, and bootstrap template lookup. | Existing installer already supports multiline templates. |
-| 2. Execute Workflow | completed | Moved AGENTS.md/CLAUDE.md into references/template, updated bootstrap TEMPLATE_DIR, skill/lifecycle/filetree references, and appended the second dev/Git guidance line. | Original repository-reading line and global-only setup preserved. |
-| 3. Validate Result | completed | Mocked-Docker fresh install, rerun, existing-global upgrade preservation, exact two/one template lines, and install/remove/reinstall passed. Shell syntax, generic skill validation, old active-path search, and git diff --check passed. | No actual Docker build or running-container mutation. |
-| 4. Handoff Summary | completed | Published cd6f009 and created/read back https://github.com/yenhao-huang/mcp-skills-package/pull/96, linked to issue #95. | PR open; review/merge and main verification pending. |
+| 0. Define Scope | completed | GitHub issue #98 | |
+| 1. Read Relevant Context | completed | Required skill and category/layout/workflow/state rules read | |
+| 2. Execute Workflow | completed | Renamed open-home-vscode; @open-vs and Tailscale home resolution | |
+| 3. Validate Result | completed | Generic validator, layout, dependency link and workspace lifecycle passed | GUI launch untested |
+| 4. Handoff Summary | in_progress | Issue #98; preparing PR | Awaiting merge |
