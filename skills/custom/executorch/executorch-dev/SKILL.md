@@ -165,6 +165,17 @@ existing remote history.
       behavior, exit code, and relevant output. If reproduction is blocked or
       unsuccessful, record the limitation and investigate before claiming a
       reproduced bug; never invent baseline evidence.
+      The docs reproduction steps must use repository-supported external tools
+      directly: explicit `git worktree` setup at a verified revision, dependency
+      initialization, standard configuration/build, and the registered test runner
+      (for C++ pooling tests, CMake, make, and CTest). Show the actual commands and
+      required arguments in order, not a call to an agent-written Python/shell
+      validation harness. Do not replace this flow with manual compiler/linker
+      commands or linking cached runtime objects. Run the documented commands in
+      that checkout; identify existing worktrees and commands that are one-time
+      setup. If a standard step cannot run, mark it blocked rather than substituting
+      a custom harness. Keep paths, revisions, options, and test filters specific
+      to the selected issue; see the report template for the command layout.
    2. **dev**: Diagnose the root cause and implement the smallest complete fix.
       Explain the changed behavior and map the changes to acceptance criteria
       in the report. Review the diff and resolve actionable findings.
