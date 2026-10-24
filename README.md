@@ -48,6 +48,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `frontend-slides` | `skills/content-producer/frontend-slides/SKILL.md` | 製作獨立 HTML 簡報並輸出 PDF；共用既有設計與渲染參考。 |
 | `executorch-pm` | `skills/custom/executorch/executorch-pm/SKILL.md` | 整理候選議題與 PR 進度，透過 Humanizer 修訂文字、frontend-slides 製作簡報。 |
 | `find-skills` | `skills/custom/productivity/find-skills/SKILL.md` | 優先從受管理的 skill libraries 搜尋與驗證候選，再提供推薦或安裝指引。 |
+| `start-deer` | `skills/custom/productivity/start-deer/SKILL.md` | 透過 DeerFlow 整理單篇或多篇 PDF，支援 Codex 授權、逐頁引用、比較分析與獨立研究結果。 |
 | `git-commit` | `skills/engineer/git/git-commit/SKILL.md` | 分析 diff、智慧 staging，並依 Conventional Commits 建立安全且聚焦的 Git commit。 |
 | `github-issues` | `skills/engineer/git/github-issues/SKILL.md` | 使用 GitHub MCP 與 `gh` CLI 查詢、建立及維護 GitHub issues。 |
 | `github-pr-workflow` | `skills/engineer/git/github-pr-workflow/SKILL.md` | 依 repository contribution 規則準備 branch、commit、push、建立及驗證 GitHub PR。 |
