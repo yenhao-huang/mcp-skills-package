@@ -20,7 +20,7 @@
 保留使用者指定的 `CI sucess` 拼字。
 
 ```text
-<YYYY/MM/DD>; CI fail: <count>; CI sucess: <count>; Require fix: <yes/no>; Evidence: <失敗 job／log 連結、關鍵錯誤與是否由本次 fix 造成的證據>
+<YYYY/MM/DD>; CI fail: <count>; CI sucess: <count>; Require fix: <P(true)>% (true|false); Evidence: <一句原因／限制＋1–2 個證據連結>
 ```
 
 統計單位為 workflow：同一社群 PR 的目前 head，每個 workflow/event 只計最新
@@ -28,12 +28,13 @@ run／attempt；不可混入舊 head、過期重跑或把 matrix job 再重複�
 尚未完成、skipped、cancelled、action_required 等不算 success，必要時在 Evidence
 簡述。每個失敗 workflow 仍須查到實際失敗 job 才能判斷根因。
 
-- `yes`：至少一個失敗有證據顯示與我們的 fix 有關，列出應修正之處。
-- `no`：已確認目前無失敗，或所有失敗都有證據顯示與 fix 無關；列出根據。
-- 證據不足、仍在執行、缺 log／權限時，例外填 `unknown` 並寫明限制；不可硬填 no。
+- 百分比是 executorch-dev 估計「我們的修改需要修正」為 true 的機率；不是 CI 通過率或實測統計。例：`Require fix: 20% (false)`。
+- 大於 50% 傾向 true，小於 50% 傾向 false；不能填 unknown 或 50%。證據接近平衡時選 51%／49%，並註明低信心及缺口。
+- 缺日誌或等待核准也要有暫定傾向，不能描述為已確認無關或 CI 通過。
+- Evidence 只留一句主要原因／限制與 1–2 個連結；詳細三輪查核、反證與下一步留在內部記錄。
 - 尚無社群 PR 時 counts 與 Require fix 填 `n/a`；Evidence 說明未提交，不拿 fork CI 代替。
 
-新出現或尚未檢查的失敗，依 skill 的 `references/ci-triage.md` 唯讀調查並記錄。
+新出現或尚未檢查的失敗，由 PM 交給 executorch-dev，依 `references/ci-triage.md` 執行至少三輪查核、反思與深入探索並記錄。
 已查過且身份與錯誤未變者沿用有日期的證據；新 head、attempt 或錯誤須重新核對。
 同一 PR 也在下方追蹤表時，摘要與判斷必須一致，不在此欄重複貼開發歷史。
 社群 issue／PR 連結一律用 redirect.github.com。讀取失敗標示待確認，不清除既有事實。

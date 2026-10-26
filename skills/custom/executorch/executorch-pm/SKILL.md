@@ -255,8 +255,11 @@ The selected-issue table's last column is `目前社群 CI 情況`, replacing
 `目前進度與依據`. Use the exact dated field order from
 [template/Result.md](template/Result.md): `CI fail`, `CI sucess`, `Require fix`,
 then `Evidence`. Follow [references/ci-triage.md](references/ci-triage.md) to
-count the complete current community-PR CI set and investigate previously
-unreviewed failures read-only. Preserve the existing four stages and PR rows;
+count the complete current community-PR CI set and delegate previously
+unreviewed failure diagnosis to `executorch-dev` in read-only CI review mode.
+Require at least three investigate/reflect/deepen rounds and a directional
+`Require fix: <P(true)>% (true|false)` assessment; do not publish unknown for
+that verdict. Evidence stays one concise sentence with 1–2 links. Preserve the existing four stages and PR rows;
 this is not authorization to implement fixes, rerun CI or post community messages.
 Persist reviewed failure identities and evidence in
 [ci-investigations.json](ci-investigations.json), never in daily. Preserve this

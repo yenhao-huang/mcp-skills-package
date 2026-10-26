@@ -102,8 +102,10 @@ The selected-issue table's last column is `目前社群 CI 情況`: a dated curr
 community-CI summary with workflow fail/success counts, a fix-relevance verdict
 and linked evidence, following ci-triage.md. Keep development history in internal
 records and the code report; do not fill this cell with old fork/test narratives.
-New or unreviewed failures authorize read-only investigation only. Missing logs
-or permissions require an unknown verdict, not an unsupported claim of no fix.
+New or unreviewed failures go to executorch-dev for read-only diagnosis with
+at least three investigate/reflect/deepen rounds. Return a directional true/false
+judgment and subjective P(true), including a concise evidence limitation when
+logs or permissions are missing; never substitute a confirmed clean verdict.
 Preserve investigation records across daily runs and synchronize any duplicated
 CI conclusion in the PR tracking table.
 

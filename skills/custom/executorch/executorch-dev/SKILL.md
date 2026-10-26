@@ -31,6 +31,16 @@ before any action; these project constraints govern inherited instructions.
   community submission and merge are separate read-only PM tracking stages.
 - Community replies remain drafts. Daily PM checks do not authorize new code work.
 
+## Read-only CI review mode
+
+When PM or the user hands off community CI failures, use
+[references/ci-review.md](references/ci-review.md). This diagnostic mode applies
+before the issue-implementation workflow: perform at least three substantive
+investigate/reflect/deepen rounds, return a directional P(require fix=true)
+estimate and concise evidence to PM, and keep detailed notes internal. It does
+not authorize code fixes, new PRs, CI reruns or community writes. The fork-PR
+Definition Of Done below applies to implementation, not this diagnostic handoff.
+
 ## Notes
 
 1. Never write anything to the upstream/public community repository (社群
