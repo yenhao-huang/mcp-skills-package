@@ -25,12 +25,49 @@
 
 ## Storage and handoff
 
-Use `yenhao-huang/daily`, directory `executorch/<time>/`, where `<time>` is a
-Taipei timestamp `YYYY-MM-DD_HHmmss` (append a suffix on collision).
+Use `yenhao-huang/daily`, directory `executorch/<id>_<time>/`, where `<id>` is
+exactly six decimal digits and `<time>` is an Asia/Taipei timestamp
+`YYYY-MM-DD_HHmmss`. GitHub's ascending filename order must show newer batches
+first. Apply these allocation rules under the existing shared run lock (do not
+acquire it recursively when the launcher already holds it):
+
+- Seed an empty archive at `999999`. For a user-authorized migration of existing
+  timestamp-only directories, sort them by timestamp from oldest to newest and
+  assign `999999`, `999998`, etc. once. Never renumber already prefixed batches.
+  If prefixed and legacy directories coexist, do not seed a second sequence;
+  require an explicit migration mapping before allocating or moving old IDs.
+- For each new batch, allocate `min(existing prefixed IDs) - 1`, formatted with
+  six digits; use all existing prefixed directories to avoid collisions. For
+  example, `999997_2026-10-17_040002` sorts above
+  `999998_2026-10-16_040001`. If the minimum is `000000`, stop and report ID
+  exhaustion; never wrap, reuse an ID, or expand the width silently.
+- Reusing today's snapshot keeps its full existing directory name and ID.
+  An explicit new shortlist/refresh allocates a new ID even on the same day.
+  A timestamp collision does not require renaming an older batch: the new ID
+  makes the full directory unique.
+- For discovery, strip only a leading six-digit ID plus underscore, then parse
+  the timestamp. Accept legacy `YYYY-MM-DD_HHmmss` names and their documented
+  collision suffixes during migration. Choose the latest report by timestamp,
+  never by lexicographic maximum of the full name: larger IDs are older.
+- Store the full directory name in Result.md's batch field, HTML batch metadata,
+  archive paths and new publication-ledger `batch` values. Build Result/HTML/PDF
+  URLs from this exact name, not from the timestamp alone.
+- When a directory is explicitly migrated, update repository-local links and
+  PDF URI annotations to the migrated paths. Resolve old ledger `batch` and
+  `artifact_url` paths by their unique timestamp suffix, updating only path
+  fields under the lock. Preserve candidate IDs, recommendation history, issue
+  selection/handling state and check timestamps; do not clear a ledger to fix
+  a path. If no unique directory matches, report the ambiguity instead of
+  inventing a replacement. Links pinned to historical commits remain valid and
+  must not be rewritten to paths that did not exist in those commits.
+
 Publish a Result.md snapshot every Asia/Taipei calendar day, even without status
-changes. Reuse today's directory on reruns or create YYYY-MM-DD_HHmmss at run
-time. Carry forward tracking and selections; preserve prior days unchanged.
-Follow PM's Daily Result snapshot rules for cross-batch reconciliation and links.
+changes. Reuse today's directory on reruns or allocate a new prefixed batch at
+run time. Carry forward tracking and selections; preserve prior days' contents.
+Directory/metadata/link changes to historical batches require an explicit
+migration request. Do not perform additional backfills or reorder historical
+batches merely because the naming rule changed. Follow PM's Daily Result
+snapshot rules for cross-batch reconciliation and links.
 
 A shortlist batch contains exactly three user-facing files (HTML source + PDF dispatch + Markdown results):
 

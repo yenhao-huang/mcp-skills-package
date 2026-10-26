@@ -151,7 +151,9 @@ PR tracking independently of this filter.
 
 If the ledger is missing or empty, backfill it from verified daily-repository
 HTML `data-issue` candidate sections (not every linked issue/PR), deduplicated
-per batch. Do not mistake dependency links for candidate IDs. Resolve duplicate
+per batch. Resolve legacy timestamp-only ledger paths against the prefixed
+archive using the project policy before reuse; retain the recommendation data.
+Do not mistake dependency links for candidate IDs. Resolve duplicate
 IDs across old/new batches before rendering. Publication entries contain
 `batch`, `week_start`, `focus`, `issue_numbers`, `artifact_url`, and `published_at`
 (use null if the historical publication time is unknown). Save append-only
@@ -260,8 +262,12 @@ PR still belong briefly in that row, with its last successful check time.
 
 Every Asia/Taipei calendar day must have a Result.md, even when all PR states
 are unchanged or no issues are selected. Run at the confirmed daily 04:00 time.
-Use executorch/YYYY-MM-DD_HHmmss/Result.md; reuse today's existing snapshot on
-reruns (choose the latest if multiple exist), otherwise create one at run time.
+Use `executorch/<id>_YYYY-MM-DD_HHmmss/Result.md` with a six-digit decreasing
+ID, seeded at `999999`, following the allocation and migration rules in
+[project policy](references/project-policy.md#storage-and-handoff). Reuse today's
+existing full directory name on reruns; if multiple exist, choose the latest
+by parsed timestamp suffix, not by lexicographic maximum or an unprefixed date
+glob. Otherwise allocate a new ID and timestamp at run time.
 Carry forward all tracked PRs, completed rows, actual selections and evidence
 from the latest snapshot; reconcile any older rows absent from it, deduplicating
 by repository/PR and preserving newer verified facts. Recheck current states.
@@ -339,7 +345,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 7. Validate today's Result.md (and HTML/PDF on shortlist days), exactly two
    consecutive pages per topic, all four first-page sections, the appropriate
    bug/feat requirements on page two, `1 + 2N` total pages, index targets, headings, three-status tracking rows, four stage columns, actual
-   selection evidence and redirect links. New shortlists use new timestamped
+   selection evidence and redirect links. New shortlists use newly allocated ID-prefixed timestamp
    batches; progress updates preserve historical snapshots and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
    authorized by the user; do not create a daily PR. Never copy JSON snapshots, STATE.md, schedules, templates,
