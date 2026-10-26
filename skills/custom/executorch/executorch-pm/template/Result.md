@@ -1,6 +1,6 @@
 # ExecuTorch Result
 
-批次：<YYYY-MM-DD_HHmmss>
+批次：<NNNNNN_YYYY-MM-DD_HHmmss>
 報告日期：<YYYY-MM-DD Asia/Taipei>
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
 選擇紀錄：尚未選擇；等待用戶從 issue-disptach.pdf 指定議題。
