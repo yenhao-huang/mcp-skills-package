@@ -98,6 +98,16 @@ user: read back the actual community PR before completing stage three, and
 verify that PR's mergedAt/merged state before completing stage four. Closed
 without merge is not completion. Failed API reads are unknown, never success.
 Track blockers and next actions as notes, not extra stages.
+The selected-issue table's last column is `目前社群 CI 情況`: a dated current
+community-CI summary with workflow fail/success counts, a fix-relevance verdict
+and linked evidence, following ci-triage.md. Keep development history in internal
+records and the code report; do not fill this cell with old fork/test narratives.
+New or unreviewed failures go to executorch-dev for read-only diagnosis with
+at least three investigate/reflect/deepen rounds. Return a directional true/false
+judgment and subjective P(true), including a concise evidence limitation when
+logs or permissions are missing; never substitute a confirmed clean verdict.
+Preserve investigation records across daily runs and synchronize any duplicated
+CI conclusion in the PR tracking table.
 
 Before publishing, inspect the full diff and commit messages for unsafe
 references and secrets. Stage only the intended batch files. The user explicitly
