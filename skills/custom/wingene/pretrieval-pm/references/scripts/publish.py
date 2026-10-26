@@ -17,6 +17,7 @@ import notice
 ZONE = ZoneInfo('Asia/Taipei')
 REMOTE = 'git@github.com:yenhao-huang/daily.git'
 REPORT_DIR = Path('wingene/pretrieval')
+REPORT_NAME = re.compile(r'(?:(?P<id>\d{6})_)?(?P<timestamp>\d{4}-\d{2}-\d{2}_\d{6}\.md)')
 
 
 class PublishError(RuntimeError):
@@ -55,15 +56,33 @@ def git(*args, cwd=None):
     return result.stdout.strip()
 
 
+def report_path(checkout, filename):
+    reports = []
+    for path in (checkout / REPORT_DIR).glob('*.md'):
+        match = REPORT_NAME.fullmatch(path.name)
+        if path.is_file() and match:
+            reports.append((path, match))
+    existing = [path for path, match in reports if match['timestamp'] == filename]
+    if len(existing) > 1:
+        raise FileExistsError('Multiple reports exist for this timestamp')
+    if existing:
+        return existing[0].relative_to(checkout)
+    ids = [int(match['id']) for _, match in reports if match['id'] is not None]
+    report_id = min(ids) - 1 if ids else 999999
+    if report_id < 0:
+        raise ValueError('Report IDs exhausted; refusing to wrap or renumber')
+    return REPORT_DIR / f'{report_id:06d}_{filename}'
+
+
 def publish(text, filename, remote=REMOTE, before_push=None):
     if not re.fullmatch(r'\d{4}-\d{2}-\d{2}_\d{6}\.md', filename):
         raise ValueError('Invalid report filename')
-    relative = REPORT_DIR / filename
     for attempt in range(3):
         try:
             with tempfile.TemporaryDirectory(prefix='pretrieval-publish-') as temp:
                 checkout = Path(temp) / 'daily'
                 git('clone', '--quiet', '--depth', '1', '--branch', 'main', remote, str(checkout))
+                relative = report_path(checkout, filename)
                 destination = checkout / relative
                 if destination.exists():
                     if destination.read_text(encoding='utf-8') == text:
@@ -72,7 +91,7 @@ def publish(text, filename, remote=REMOTE, before_push=None):
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(text, encoding='utf-8')
                 git('add', '--', str(relative), cwd=checkout)
-                git('commit', '--quiet', '-m', f'docs(pretrieval): add {filename[:-3]} issue report', cwd=checkout)
+                git('commit', '--quiet', '-m', f'docs(pretrieval): add {relative.stem} issue report', cwd=checkout)
                 if before_push:
                     before_push(attempt)
                 git('push', '--quiet', 'origin', 'HEAD:main', cwd=checkout)
@@ -123,6 +142,7 @@ def run_once(state_dir, preferences, scheduled_at=None, remote=REMOTE):
             save_json(pending, payload)
         path = publish(payload['report'], payload['filename'], remote)
         payload['path'] = path
+        payload['filename'] = Path(path).name
         save_json(state_dir / 'last-published.json', payload)
         pending.unlink()
         print(json.dumps({'published': path, 'scheduled_at': payload['scheduled_at']}, ensure_ascii=False), flush=True)

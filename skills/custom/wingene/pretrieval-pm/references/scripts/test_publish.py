@@ -83,6 +83,7 @@ class GitPublisherTests(unittest.TestCase):
         filename = '2026-10-15_083000.md'
         relative = publish.publish('hello\n', filename, str(self.remote))
         sha = publish.git('--git-dir', str(self.remote), 'rev-parse', 'main')
+        self.assertEqual(relative, 'wingene/pretrieval/999999_2026-10-15_083000.md')
         self.assertEqual(publish.publish('hello\n', filename, str(self.remote)), relative)
         self.assertEqual(publish.git('--git-dir', str(self.remote), 'rev-parse', 'main'), sha)
         self.assertEqual(publish.git('--git-dir', str(self.remote), 'show', 'main:keep.md'), 'existing user content')
@@ -90,6 +91,94 @@ class GitPublisherTests(unittest.TestCase):
             publish.publish('changed\n', filename, str(self.remote))
         with self.assertRaises(ValueError):
             publish.publish('evil', '../README.md', str(self.remote))
+
+    def seed_reports(self, reports):
+        directory = self.seed / publish.REPORT_DIR
+        directory.mkdir(parents=True, exist_ok=True)
+        for name, text in reports.items():
+            (directory / name).write_text(text)
+        publish.git('add', '--', str(publish.REPORT_DIR), cwd=self.seed)
+        publish.git('commit', '-m', 'existing reports', cwd=self.seed)
+        publish.git('push', 'origin', 'main', cwd=self.seed)
+
+    def remote_reports(self):
+        return publish.git('--git-dir', str(self.remote), 'ls-tree', '-r',
+                           '--name-only', 'main', '--', str(publish.REPORT_DIR)).splitlines()
+
+    def test_newer_reports_sort_first_and_old_timestamp_retry_keeps_id(self):
+        first = publish.publish('first', '2026-10-15_083000.md', str(self.remote))
+        second = publish.publish('second', '2026-10-16_083000.md', str(self.remote))
+        self.assertEqual(second, 'wingene/pretrieval/999998_2026-10-16_083000.md')
+        self.assertEqual(sorted(self.remote_reports()), [second, first])
+        sha = publish.git('--git-dir', str(self.remote), 'rev-parse', 'main')
+        self.assertEqual(publish.publish('first', '2026-10-15_083000.md', str(self.remote)), first)
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'rev-parse', 'main'), sha)
+
+    def test_reuses_legacy_timestamp_report_without_renaming_history(self):
+        legacy = '2026-10-15_083000.md'
+        self.seed_reports({legacy: 'existing'})
+        sha = publish.git('--git-dir', str(self.remote), 'rev-parse', 'main')
+        self.assertEqual(publish.publish('existing', legacy, str(self.remote)),
+                         'wingene/pretrieval/' + legacy)
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'rev-parse', 'main'), sha)
+        with self.assertRaises(FileExistsError):
+            publish.publish('different', legacy, str(self.remote))
+
+    def test_ambiguous_timestamp_reports_are_not_overwritten(self):
+        self.seed_reports({'999999_2026-10-15_083000.md': 'one',
+                           '2026-10-15_083000.md': 'two'})
+        sha = publish.git('--git-dir', str(self.remote), 'rev-parse', 'main')
+        with self.assertRaises(FileExistsError):
+            publish.publish('one', '2026-10-15_083000.md', str(self.remote))
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'rev-parse', 'main'), sha)
+
+    def test_id_exhaustion_never_wraps_or_renumbers(self):
+        self.seed_reports({'000000_2026-10-15_083000.md': 'last'})
+        sha = publish.git('--git-dir', str(self.remote), 'rev-parse', 'main')
+        with self.assertRaises(ValueError):
+            publish.publish('new', '2026-10-16_083000.md', str(self.remote))
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'rev-parse', 'main'), sha)
+
+    def test_concurrent_report_id_is_reallocated_after_push_race(self):
+        def concurrent(attempt):
+            if attempt == 0:
+                self.seed_reports({'999999_2026-10-14_083000.md': 'other report'})
+        result = publish.publish('new report', '2026-10-15_083000.md',
+                                 str(self.remote), concurrent)
+        self.assertEqual(result, 'wingene/pretrieval/999998_2026-10-15_083000.md')
+        self.assertEqual(len(self.remote_reports()), 2)
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'show',
+                         'main:wingene/pretrieval/999999_2026-10-14_083000.md'), 'other report')
+
+    def test_uncertain_successful_push_reuses_remote_id(self):
+        real_git = publish.git
+        lost_reply = False
+        def uncertain(*args, **kwargs):
+            nonlocal lost_reply
+            result = real_git(*args, **kwargs)
+            if args[0] == 'push' and not lost_reply:
+                lost_reply = True
+                raise publish.PublishError('reply lost after successful push')
+            return result
+        with patch('publish.git', side_effect=uncertain):
+            result = publish.publish('same report', '2026-10-15_083000.md', str(self.remote))
+        self.assertTrue(lost_reply)
+        self.assertEqual(result, 'wingene/pretrieval/999999_2026-10-15_083000.md')
+        self.assertEqual(self.remote_reports(), [result])
+        self.assertEqual(real_git('--git-dir', str(self.remote), 'rev-list', '--count', 'main'), '2')
+
+    def test_run_once_records_actual_filename_and_preserves_slot_time(self):
+        state = self.root / 'state'
+        slot = datetime.fromisoformat('2026-10-15T08:30:00+08:00')
+        with patch('publish.make_report', return_value='scheduled report'):
+            with redirect_stdout(StringIO()):
+                result = publish.run_once(state, self.root/'prefs.json', slot, str(self.remote))
+        saved = json.loads((state/'last-published.json').read_text())
+        self.assertEqual(saved, result)
+        self.assertEqual(saved['filename'], '999999_2026-10-15_083000.md')
+        self.assertEqual(saved['scheduled_at'], slot.isoformat())
+        self.assertEqual(saved['report'], 'scheduled report')
+        self.assertFalse((state/'pending.json').exists())
 
     def test_push_race_keeps_concurrent_commit(self):
         def concurrent(attempt):
@@ -100,7 +189,7 @@ class GitPublisherTests(unittest.TestCase):
                 publish.git('push', 'origin', 'main', cwd=self.seed)
         publish.publish('report\n', '2026-10-15_083000.md', str(self.remote), concurrent)
         self.assertEqual(publish.git('--git-dir', str(self.remote), 'show', 'main:concurrent.md'), 'another writer')
-        self.assertEqual(publish.git('--git-dir', str(self.remote), 'show', 'main:wingene/pretrieval/2026-10-15_083000.md'), 'report')
+        self.assertEqual(publish.git('--git-dir', str(self.remote), 'show', 'main:wingene/pretrieval/999999_2026-10-15_083000.md'), 'report')
 
 
 class StopTick(Exception):
