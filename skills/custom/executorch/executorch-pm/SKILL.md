@@ -91,13 +91,29 @@ topic pages. Keep existing dispatches historical unless a refresh is requested.
 
 ## Focus part
 
-Current focus scopes (editable here; this is the source of truth):
+Default focus scopes (editable here; this is the source of truth):
 
 - `build operator`: operator/kernel implementation, missing operator support,
   registration, selective build, and operator-specific build/link integration.
   This is one combined category, not separate build and operator scopes.
 - `quantization`: quantizers, calibration, quantized operators, precision/dtype
   behavior, accuracy regressions, and quantized backend lowering.
+
+### Week-specific focus: 2026-10-26 through 2026-11-01 (Asia/Taipei)
+
+The user requested `quantization` and `speculative decoding` for this week.
+During this date range, replace `build operator` with `speculative decoding`:
+EAGLE/MTP/draft models, target verification, acceptance/rejection sampling, and
+KV-cache commit/rollback or tree masking directly required by speculation.
+A generic decoding, KV-cache, build or performance issue does not qualify
+without this explicit relationship. Search each active scope separately;
+include terms such as `EAGLE`, `MTP`, `draft model`, and `speculative decoding`.
+No fixed split is required. Mark assigned or actively implemented work as
+coordination/review only, explain the exception, and never present it as
+unclaimed implementation work. If enough independent candidates cannot be
+verified, report a shortage instead of padding the list. Outside this week use
+the configured default scopes unless the user changes them; preserve the
+historical week's focus in its publication record.
 
 Focus controls candidate search and eligibility, not just the final heading.
 Search each category separately with several related terms; do not require the
@@ -121,6 +137,38 @@ Existing dispatches remain historical snapshots unless a refresh is requested.
 Focus never removes selected issues from Result.md or stops their PR tracking.
 
 ## Issue recommendation history
+
+### Published shortlist deduplication
+
+Also read [recommendation-history.json](recommendation-history.json), a separate
+publication ledger. An issue merely being recommended does not make it handled,
+selected or user-rejected. Before a fresh weekly search, load previously
+published candidate IDs from all prior weekly dispatches, especially the
+preceding week, and exclude them from new recommendations. Only an explicit
+user request may return an old issue as a clearly labeled follow-up; describe
+new evidence rather than silently recycling it. Preserve selected issues and
+PR tracking independently of this filter.
+
+If the ledger is missing or empty, backfill it from verified daily-repository
+HTML `data-issue` candidate sections (not every linked issue/PR), deduplicated
+per batch. Do not mistake dependency links for candidate IDs. Resolve duplicate
+IDs across old/new batches before rendering. Publication entries contain
+`batch`, `week_start`, `focus`, `issue_numbers`, `artifact_url`, and `published_at`
+(use null if the historical publication time is unknown). Save append-only
+records only after verifying the corresponding daily commit/files exist.
+Failed or unpublished drafts do not enter the ledger. Keep this data inside
+the installed skill, never publish it to daily or reset it during upgrades.
+
+Same-week reuse is allowed only for the latest valid batch with the current
+focus and no disallowed IDs; exempt only that batch's own publication entry
+when validating its reuse. An explicit refresh or focus correction invalidates
+same-day reuse: create a new timestamped batch, preserve the old snapshot and
+carry forward Result.md's actual selections and tracking. A focus change does
+not clear recommendation history. Under the existing run.lock, atomically
+update the ledger without overwriting concurrent state. A malformed ledger or
+unavailable historical artifacts blocks publication instead of disabling the
+filter. Interactive updates to this data and user-requested focus corrections
+are authorized; scheduled jobs must not change the focus on their own.
 
 Read root [issues.json](issues.json) before every shortlist search, ranking,
 same-day reuse, and final publication. This is persistent recommendation state,
@@ -154,7 +202,7 @@ updates do not select new issues, start development, or stop PR tracking.
 An explicit request to revisit an issue may be handled as follow-up; it does not
 silently re-enable weekly recommendations.
 
-Maintain this JSON as a data-only exception to the scheduled skill-edit ban.
+Maintain issues.json and recommendation-history.json as data-only exceptions to the scheduled skill-edit ban.
 Use the shared state/run.lock for interactive updates; scheduled jobs already
 hold it and must not acquire it recursively. Validate and atomically replace
 only issues.json. If sandbox denies access, report the pending registry update;
@@ -263,8 +311,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10
    numbered topics, exactly two consecutive slides each, following the two-page
    issue introduction above. Both pages retain `(<scope>) <summary>` headings
-   and a redirect issue link. Use only the active Focus part scopes: currently
-   `build operator` or `quantization`. Do not include the word `title` or a
+   and a redirect issue link. Use only the current date-resolved Focus part scopes above. Do not include the word `title` or a
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
 4. Initialize `Result.md` from [template/Result.md](template/Result.md) with an
@@ -307,14 +354,14 @@ execute Daily Result snapshot and workflow steps 6–7; for `weekly`, execute
 Focus part and workflow steps 1–4 and 7, including shared Humanizer and frontend-slides.
 Use the current Asia/Taipei date. The launcher holds the checkout lock: do not
 call it again. Both modes preserve the latest same-day selections and artifacts;
-if today's validated shortlist is already published and still passes issues.json exclusions, return its links without
+if today's validated shortlist is already published, its focus matches the current date-resolved scopes, no refresh was requested, and it passes both registries, return its links without
 generating another batch. Weekly always waits for the user's selection.
 
 Verify this checkout's origin is https://github.com/yenhao-huang/daily.git,
 branch main and no unrelated local changes. Publish only permitted daily
 artifacts using HEAD:refs/heads/main; reconcile concurrent changes without reset
 or force push. Never write to a community repo, initiate development, alter
-cron/skill instructions/credentials (issues.json updates above are permitted), or bypass sandbox restrictions. Missing access or tools
+cron/skill instructions/credentials (both recommendation registries above may be updated), or bypass sandbox restrictions. Missing access or tools
 is a blocker, not permission to change security settings.
 
 End with Traditional Chinese verified links or the exact blocker. Cron records
