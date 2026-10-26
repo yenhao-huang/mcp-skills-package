@@ -1,6 +1,0 @@
-# Host is UTC: 20:00 UTC = 04:00 Asia/Taipei the following day.
-SHELL=/bin/sh
-PATH=/usr/local/bin:/usr/bin:/bin
-HOME=/home/howard
-MAILTO=""
-0 20 * * * howard /home/howard/.codex/skills/executorch-pm/references/scripts/run-daily-result.sh

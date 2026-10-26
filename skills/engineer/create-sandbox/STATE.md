@@ -1,19 +1,16 @@
 # Create Sandbox State
 
-This file is per-run working state. Copy it to `STATE.md` before starting a new
-execution.
+Run ID: 20261022-sandbox-template-references
+Instance: /home/howard/mcp-skills-package/skills/engineer/create-sandbox
+Started: 2026-10-22T08:43:11.678Z
+Scope: Normalize create-sandbox templates under references/template and add a second AGENTS.md line requiring dev and Git skills.
 
-Run ID: 20260812-add-container-init
-Instance: /workspace/mcp-skills-package/skills/engineer/create-sandbox
-Started: 2026-08-12T07:21:56Z
-Scope: Add Docker's init process to sandbox containers so PID 1 reaps orphaned child processes.
-
-Last updated: 2026-08-12T07:25:00Z
+Last updated: 2026-10-22T08:43:11.678Z
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | User requested adding `--init` to the canonical sandbox Docker run arguments. | No Docker execution was requested. |
-| 1. Read Relevant Context | completed | Read SKILL.md, lifecycle/environment/state rules, repository instructions, and the current `src/build_and_exec.sh` after syncing `origin/main`. | Keep the existing `sleep infinity` lifecycle; Docker's init process becomes PID 1 and reaps adopted processes. |
-| 2. Execute Workflow | completed | Added `--init` immediately after `run -d` in the canonical Docker argument array. | Existing lifecycle and all other Docker arguments are unchanged. |
-| 3. Validate Result | completed | `bash -n` passed for `build_and_exec.sh`, `after_create_container.sh`, and `test_service.sh`; generic skill validation, exact `--init` assertion, required-layout checks, and `git diff --check` passed. | Docker was not executed. |
-| 4. Handoff Summary | completed | Final handoff will report that new containers run with Docker's init process and include commit/push details. | Existing containers must be recreated to receive `--init`. |
+| 0. Define Scope | completed | User requested plural references/template path and a second agent instruction line. | Keep existing global-only configuration. |
+| 1. Read Relevant Context | completed | Read skill-create workflow/layout/state rules, create-sandbox workflow/lifecycle/layout/state rules, current templates, and bootstrap template lookup. | Existing installer already supports multiline templates. |
+| 2. Execute Workflow | completed | Moved AGENTS.md/CLAUDE.md into references/template, updated bootstrap TEMPLATE_DIR, skill/lifecycle/filetree references, and appended the second dev/Git guidance line. | Original repository-reading line and global-only setup preserved. |
+| 3. Validate Result | completed | Mocked-Docker fresh install, rerun, existing-global upgrade preservation, exact two/one template lines, and install/remove/reinstall passed. Shell syntax, generic skill validation, old active-path search, and git diff --check passed. | No actual Docker build or running-container mutation. |
+| 4. Handoff Summary | completed | Published cd6f009 and created/read back https://github.com/yenhao-huang/mcp-skills-package/pull/96, linked to issue #95. | PR open; review/merge and main verification pending. |

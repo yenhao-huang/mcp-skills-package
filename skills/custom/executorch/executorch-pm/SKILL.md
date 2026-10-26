@@ -13,19 +13,35 @@ Templates and internal schedule/state files remain inside the skill.
 The exact output filename is `issue-disptach.pdf` (user spelling); do not
 normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
 
+## Prose review with Humanizer
+
+Before rendering any HTML/PDF or finalizing Result.md and community draft prose,
+apply the shared [Humanizer skill](../../../content-producer/humanizer/SKILL.md)
+in embedded mode. In flat installations resolve `$humanizer` by name beside this
+skill. Read its writing guide, draft the revision, compare facts and save only
+the final prose. Make subjects/actions clear and remove redundant framing.
+
+Keep issue identity/order, examples, numbers, dates, code, URLs, citations,
+uncertainty and proposed-versus-verified status. Preserve all required headings,
+topic/page pairs, tables, selection evidence and tracking statuses. Rebuild the
+font subset after text changes, then run the HTML/PDF checks below. A wording
+preview preserves historical files and does not refresh or select candidates.
+
 ## HTML-to-PDF presentation
 
-Use the bundled [frontend-slides skill](references/frontend-slides/SKILL.md)
-for every HTML generation/update and PDF conversion. Read its
-[SOURCE.md](references/frontend-slides/SOURCE.md) for provenance and PM overrides,
-then its SKILL.md and relevant HTML/viewport references before rendering.
-The upstream source is https://github.com/zarazhangrui/frontend-slides, pinned
-to commit 9906a34d640d2111f724544cbc50f7f130569ae1. No separate installation or
-network fetch is required. PM output and community-silence rules take precedence.
+Use the shared [frontend-slides skill](../../../content-producer/frontend-slides/SKILL.md)
+for every HTML generation/update and PDF conversion. Read its provenance and
+relevant rendering references. For flat installations resolve `$frontend-slides`
+by name beside this skill; provision it together with `$humanizer` before a PM
+run. If either dependency is missing, report the missing dependency instead of
+silently skipping it. PM output and community-silence rules take precedence.
+Use the existing approved design, do not repeat style questions, and do not
+execute the upstream hosting/deployment helpers.
 Use [template/issue-disptach.html](template/issue-disptach.html) as a reusable
 reading-first example, replacing sample content, counts and dates, and adding
-one issue slide per candidate. Keep the issue number, `(<scope>) <summary>`,
-問題釐清, 可能解法 and all relevant redirect source links. Do not add a cover slide. Start with the index and include
+exactly two consecutive issue slides per candidate, following the two-page
+contract below. Keep the same issue number, `(<scope>) <summary>` and relevant
+redirect source links on both pages. Do not add a cover slide. Start with the index and include
 a link to Result.md. Preserve source facts when converting an existing batch;
 conversion alone does not authorize fresh selection or a shortlist refresh.
 
@@ -42,21 +58,62 @@ CSS must reveal every slide, disable animations and hide editing/navigation
 controls. Wait for document.fonts.ready and clear slide inert/aria-hidden state.
 Preserve selectable Chinese text and clickable redirect source links. Make the
 Result.md link an absolute URL to this batch in the personal daily repository.
-Verify PDF page count (index + candidate count), extracted text, source
+Verify PDF page count (1 index + 2 × candidate count; 21 pages for 10 candidates), extracted text, source
 links and rendered page bounds; visually inspect the PDF before publication.
 Publish issue-disptach.html, issue-disptach.pdf and Result.md together. Retain
 the generated HTML alongside its PDF, and keep the reusable template in the skill. PDF is static; do not describe keyboard
 navigation or local editing as PDF features. Do not enable hosting.
 
+## Two-page issue introduction
+
+Every shortlisted issue/topic has exactly two consecutive pages, in this order:
+
+1. **背景與解法**: four clearly labeled sections: `問題釐清` (trigger,
+   observed problem and impact), `可能解法` (evidence-backed options and
+   explicitly marked hypotheses), `應用場景` (who encounters it and in which
+   workflow/hardware), and `專有名詞介紹` (brief plain-language definitions of
+   the technical terms used for this topic). Keep each section concise.
+2. **需求**: choose the structure from the actual requested behavior, using
+   the issue body/discussion as evidence rather than guessing from its label:
+   - **bug**: `修正前` describes the current observable failure and trigger;
+     `修正後（預期）` describes the expected observable behavior for the same
+     scenario. A proposed fix is not evidence that it already works.
+   - **feat**: only `重點功能`, `Input`, and `Output`; explain the core capability,
+     the input it accepts, and the output/result it produces. Omit secondary
+     functions and implementation detail.
+
+If the type or a required fact is unclear, label it `待釐清` and state the
+missing evidence; never invent behavior, inputs, outputs or reproduction data.
+Keep both pages about the same issue, retaining issue identity and source links.
+The index has one entry per topic and jumps to its first page; navigation must
+include both pages. Page count is `1 + 2N` for N candidates; no cover or extra
+topic pages. Keep existing dispatches historical unless a refresh is requested.
+
 ## Focus part
 
-Current focus scopes (editable here; this is the source of truth):
+Default focus scopes (editable here; this is the source of truth):
 
 - `build operator`: operator/kernel implementation, missing operator support,
   registration, selective build, and operator-specific build/link integration.
   This is one combined category, not separate build and operator scopes.
 - `quantization`: quantizers, calibration, quantized operators, precision/dtype
   behavior, accuracy regressions, and quantized backend lowering.
+
+### Week-specific focus: 2026-10-26 through 2026-11-01 (Asia/Taipei)
+
+The user requested `quantization` and `speculative decoding` for this week.
+During this date range, replace `build operator` with `speculative decoding`:
+EAGLE/MTP/draft models, target verification, acceptance/rejection sampling, and
+KV-cache commit/rollback or tree masking directly required by speculation.
+A generic decoding, KV-cache, build or performance issue does not qualify
+without this explicit relationship. Search each active scope separately;
+include terms such as `EAGLE`, `MTP`, `draft model`, and `speculative decoding`.
+No fixed split is required. Mark assigned or actively implemented work as
+coordination/review only, explain the exception, and never present it as
+unclaimed implementation work. If enough independent candidates cannot be
+verified, report a shortage instead of padding the list. Outside this week use
+the configured default scopes unless the user changes them; preserve the
+historical week's focus in its publication record.
 
 Focus controls candidate search and eligibility, not just the final heading.
 Search each category separately with several related terms; do not require the
@@ -79,6 +136,88 @@ When the user changes focus, update this section and the template's focus line.
 Existing dispatches remain historical snapshots unless a refresh is requested.
 Focus never removes selected issues from Result.md or stops their PR tracking.
 
+## Issue recommendation history
+
+### Published shortlist deduplication
+
+Also read [recommendation-history.json](recommendation-history.json), a separate
+publication ledger. An issue merely being recommended does not make it handled,
+selected or user-rejected. Before a fresh weekly search, load previously
+published candidate IDs from all prior weekly dispatches, especially the
+preceding week, and exclude them from new recommendations. Only an explicit
+user request may return an old issue as a clearly labeled follow-up; describe
+new evidence rather than silently recycling it. Preserve selected issues and
+PR tracking independently of this filter.
+
+If the ledger is missing or empty, backfill it from verified daily-repository
+HTML `data-issue` candidate sections (not every linked issue/PR), deduplicated
+per batch. Do not mistake dependency links for candidate IDs. Resolve duplicate
+IDs across old/new batches before rendering. Publication entries contain
+`batch`, `week_start`, `focus`, `issue_numbers`, `artifact_url`, and `published_at`
+(use null if the historical publication time is unknown). Save append-only
+records only after verifying the corresponding daily commit/files exist.
+Failed or unpublished drafts do not enter the ledger. Keep this data inside
+the installed skill, never publish it to daily or reset it during upgrades.
+
+Same-week reuse is allowed only for the latest valid batch with the current
+focus and no disallowed IDs; exempt only that batch's own publication entry
+when validating its reuse. An explicit refresh or focus correction invalidates
+same-day reuse: create a new timestamped batch, preserve the old snapshot and
+carry forward Result.md's actual selections and tracking. A focus change does
+not clear recommendation history. Under the existing run.lock, atomically
+update the ledger without overwriting concurrent state. A malformed ledger or
+unavailable historical artifacts blocks publication instead of disabling the
+filter. Interactive updates to this data and user-requested focus corrections
+are authorized; scheduled jobs must not change the focus on their own.
+
+Read root [issues.json](issues.json) before every shortlist search, ranking,
+same-day reuse, and final publication. This is persistent recommendation state,
+not a report or a replacement for Result.md. Keep it inside the installed skill;
+never publish it to daily. Its repository is pytorch/executorch and issue keys
+are decimal issue numbers, not PR numbers. Entries contain status, title, reason,
+updated_at (Asia/Taipei ISO timestamp), evidence and append-only history.
+
+Statuses:
+- `in_progress`: user selected or development underway; exclude from new issues.
+- `handled`: existing development/processed work; exclude. This does not mean
+  upstream merged, fixed or Done; retain normal PR tracking separately.
+- `excluded`: user explicitly rejected the issue; exclude until user restores it.
+- `eligible`: explicitly restored by the user; still verify unresolved status,
+  current focus and competing work before recommending it.
+Absent entries are eligible for investigation, never automatically selected.
+
+Filter in_progress, handled and excluded before ranking and recheck the final
+candidate IDs against the registry. Fetch replacement candidates rather than
+silently returning a repeated issue; report a shortage if necessary. Existing
+fork work is also a duplicate even when it was not yet recorded. Do not assume
+silence, a low ranking, an old recommendation, a closed fork PR or elapsed time
+means exclusion or restoration. Never label a user-rejected issue without user
+evidence. Record the user's actual rejection/re-enable wording and time in history.
+
+On user selection set in_progress; on verified completed processing set handled;
+on explicit rejection set excluded; re-enable only on explicit user request.
+Preserve earlier reasons/evidence/history, especially excluded decisions, during
+updates. Background discovery must not undo an existing exclusion. Registry
+updates do not select new issues, start development, or stop PR tracking.
+An explicit request to revisit an issue may be handled as follow-up; it does not
+silently re-enable weekly recommendations.
+
+Maintain issues.json and recommendation-history.json as data-only exceptions to the scheduled skill-edit ban.
+Use the shared state/run.lock for interactive updates; scheduled jobs already
+hold it and must not acquire it recursively. Validate and atomically replace
+only issues.json. If sandbox denies access, report the pending registry update;
+do not escalate or bypass security. A missing, malformed, unsupported-version,
+wrong-repository or unknown-status registry blocks shortlist publication; never
+treat read failure as an empty exclusion list. Do not reset it from STATE.md.
+On skill upgrades, preserve the installed registry; merge new seed IDs without
+overwriting existing entries/history. Record evidence rather than fabricate dates.
+
+Historical reports remain snapshots. If today's saved shortlist includes a now
+excluded entry, do not present it unchanged as the current plan: regenerate the
+candidate artifacts under the usual validation rules and preserve Result.md's
+actual selections/tracking. In this conversation, the earlier October 19 issue
+7718 recommendation predates this registry and is now excluded from new plans.
+
 ## PR tracking summary
 
 Maintain a user-facing `PR 追蹤表` in Result.md, alongside the existing four-stage
@@ -91,6 +230,11 @@ issue detail. Its progress column has exactly three values:
 - `Done`: the same community PR has verified merged=true / mergedAt evidence.
 
 Columns: `追蹤項目 | 社群 PR | 進度 | 目前狀況／下一步 | 查核時間`.
+For each selected issue, copy its `選擇的 issue` cell exactly into `追蹤項目`,
+including the label, issue number and redirect URL. Keep selected issues in the
+same order in both tables; place independently tracked PRs afterward. Never
+invent a selection or drop a tracked PR to align the tables. Validate this
+identity and ordering before publishing.
 Record check timestamps in Asia/Taipei and use redirect links, including comment
 anchors. User-provided PRs are tracked even outside the current shortlist/focus;
 tracking does not select a shortlist issue or authorize development. Deduplicate
@@ -105,6 +249,15 @@ selected-issue table separately; do not infer its history from a supplied PR.
 
 ## Daily Result snapshot
 
+Result.md contains only current actual selections, the four-stage issue progress,
+and PR tracking with check times, blockers, next steps and supporting evidence.
+Do not include historical candidate lists, original shortlist/history sections,
+previous-report navigation, cron/sandbox diagnostics, manual-backfill narratives
+or execution logs. Keep these in internal STATE.md and cron logs; issues.json
+remains the exclusion registry. When carrying forward a report, remove these
+legacy sections rather than copying them. API read failures relevant to a tracked
+PR still belong briefly in that row, with its last successful check time.
+
 Every Asia/Taipei calendar day must have a Result.md, even when all PR states
 are unchanged or no issues are selected. Run at the confirmed daily 04:00 time.
 Use executorch/YYYY-MM-DD_HHmmss/Result.md; reuse today's existing snapshot on
@@ -112,9 +265,9 @@ reruns (choose the latest if multiple exist), otherwise create one at run time.
 Carry forward all tracked PRs, completed rows, actual selections and evidence
 from the latest snapshot; reconcile any older rows absent from it, deduplicating
 by repository/PR and preserving newer verified facts. Recheck current states.
-Never overwrite prior days to record today's progress. Record report date,
-check time, prior Result.md link and original shortlist link; relative links must
-resolve from the new directory. No-change days still publish today's snapshot.
+Never overwrite prior days to record today's progress. Record report date and check time. Keep prior snapshot and original shortlist
+links in internal STATE.md; relative evidence links in Result.md must resolve
+from the new directory. No-change days still publish today's snapshot.
 On API failure publish the snapshot with prior status/last successful check time
 and a clearly dated failed-check note. Do not fabricate checks or missing dates.
 Only same-day identical reruns may skip a commit. Unchanged results can remain
@@ -125,14 +278,17 @@ tracking/selected rows, while its new candidates remain unselected.
 
 ## Schedule
 
+設定定時器使用 [set-daily-cron](../../../operations/set-daily-cron/SKILL.md) 的 [4 行 Codex cron 範本](../../../operations/set-daily-cron/references/template/codex.cron)。任務內容以本 skill 為準；範本與現有 launcher 擇一安裝，避免重複執行。
+
 Timezone: `Asia/Taipei`. Every Monday at 04:00 collect 10 candidates; every day
 at 04:00 check PR progress. Monday performs both jobs once. Collection waits
 for user selection before development. Skill instructions do not activate a
 scheduler. The user has explicitly authorized and enabled local cron for the
 daily Result job; see [cron operations](references/cron-operations.md) for current
-state, limitations and verification. Cron directly calls the 14-line
-`references/scripts/run-daily-result.sh`; report logic lives in daily_result.py.
-Weekly shortlist remains disabled.
+state, limitations and verification. `references/scripts/add-cron.sh` installs the daily and Monday entries.
+`references/scripts/run-cron.sh` is a compact Codex launcher, not the report
+implementation. Task logic is specified in this skill. Installation does not
+prove execution or notification delivery; see cron operations for actual status.
 Use the supported automation API when available, deduplicate jobs,
 and read back enabled state before claiming activation. Otherwise record
 `not_enabled` internally; never silently install cron. The confirmed intent is
@@ -144,7 +300,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    and Result.md. Use `references/template/STATE.template.md` for a new internal run.
    Determine shortlist, selection, draft maintenance, or PR-check mode.
    Verify source access and the personal output repository before mutation.
-2. For a shortlist, apply Focus part searches and relevance checks first,
+2. For a shortlist, load issues.json and apply its exclusions, then apply Focus part searches and relevance checks first,
    paginate open issues from `pytorch/executorch`, exclude PRs
    and duplicates, and read candidate bodies, all comments and linked work.
    Prefer actionable unresolved issues without an active assignee or fix PR.
@@ -152,10 +308,10 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Fetch more candidates until 10 are found or eligible results are exhausted.
    Report shortages honestly. Do not implement or select on the user's behalf.
 3. Read [template/issue-disptach.html](template/issue-disptach.html) and write the
-   batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10 numbered issue slides with
-   `(<scope>) <summary>` headings,
-   each with a redirect issue link, `問題釐清` and `可能解法`. Use only the active Focus part scopes: currently
-   `build operator` or `quantization`. Do not include the word `title` or a
+   batch's `issue-disptach.html`, then export `issue-disptach.pdf`: up to 10
+   numbered topics, exactly two consecutive slides each, following the two-page
+   issue introduction above. Both pages retain `(<scope>) <summary>` headings
+   and a redirect issue link. Use only the current date-resolved Focus part scopes above. Do not include the word `title` or a
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
 4. Initialize `Result.md` from [template/Result.md](template/Result.md) with an
@@ -180,7 +336,9 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
    prior facts. Do not initiate development or perform any community writes.
-7. Validate today's Result.md (and HTML/PDF on shortlist days), counts, headings, three-status tracking rows, four stage columns, actual
+7. Validate today's Result.md (and HTML/PDF on shortlist days), exactly two
+   consecutive pages per topic, all four first-page sections, the appropriate
+   bug/feat requirements on page two, `1 + 2N` total pages, index targets, headings, three-status tracking rows, four stage columns, actual
    selection evidence and redirect links. New shortlists use new timestamped
    batches; progress updates preserve historical snapshots and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
@@ -188,3 +346,24 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    progress.md or development logs to daily. Record publication evidence in
    internal STATE.md. Notify only for meaningful changes or required action;
    keep unchanged daily checks quiet.
+
+## Scheduled execution
+
+The user requested daily progress and Monday shortlist scheduling. For `daily`,
+execute Daily Result snapshot and workflow steps 6–7; for `weekly`, execute
+Focus part and workflow steps 1–4 and 7, including shared Humanizer and frontend-slides.
+Use the current Asia/Taipei date. The launcher holds the checkout lock: do not
+call it again. Both modes preserve the latest same-day selections and artifacts;
+if today's validated shortlist is already published, its focus matches the current date-resolved scopes, no refresh was requested, and it passes both registries, return its links without
+generating another batch. Weekly always waits for the user's selection.
+
+Verify this checkout's origin is https://github.com/yenhao-huang/daily.git,
+branch main and no unrelated local changes. Publish only permitted daily
+artifacts using HEAD:refs/heads/main; reconcile concurrent changes without reset
+or force push. Never write to a community repo, initiate development, alter
+cron/skill instructions/credentials (both recommendation registries above may be updated), or bypass sandbox restrictions. Missing access or tools
+is a blocker, not permission to change security settings.
+
+End with Traditional Chinese verified links or the exact blocker. Cron records
+this in MODE-last-message.txt. It does not deliver a message to this chat; neither
+exit 0 nor a saved final response is sufficient evidence of publication.

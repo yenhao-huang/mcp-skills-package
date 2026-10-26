@@ -70,6 +70,10 @@ Do not use this skill when:
 
 ## References
 
+- Use `references/template/AGENTS.md` and `references/template/CLAUDE.md` as
+  global-instruction templates. Post-create bootstrap installs them
+  at the container user's `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`,
+  preserving existing content and avoiding duplicate lines.
 - Read `references/rules/lifecycle.md` before changing build/run/post-create
   behavior or explaining which work happens before vs. after container create.
 - Read `references/rules/mounts.md` before asking mount questions, validating

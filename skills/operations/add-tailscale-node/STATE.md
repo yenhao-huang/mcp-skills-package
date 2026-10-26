@@ -1,19 +1,19 @@
 # Add Tailscale Node State
 
-Run ID: 20261017-home-multi-node
+Run ID: 20261022-home-lifecycle-validation
 Instance: skills/operations/add-tailscale-node
-Started: 2026-10-17 Asia/Taipei
-Scope: Issue #57; home multi-node skill documentation and inventory template only. No live endpoint configuration changes.
-Inventory path: references/template/home-nodes.template.yaml (reusable template, not a live inventory)
-Resolved home endpoint and configuration source: user@100.88.157.6:22 is the current user-provided default; future explicit input and selected inventory override it.
+Started: 2026-10-22 Asia/Taipei
+Scope: Issue #94; add explicit @home authorization lifecycle, scoped firewall reconciliation, and at least three validation rounds after any unexpected directional failure. Skill documentation only.
+Inventory path: references/template/home-nodes.template.yaml (template only)
+Resolved home endpoint and configuration source: Resolved at runtime; no live endpoint changes in this skill-edit task.
 
-Last updated: 2026-10-17 Asia/Taipei
+Last updated: 2026-10-22 Asia/Taipei
 
 | Step | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| 0. Define Scope | completed | https://github.com/yenhao-huang/mcp-skills-package/issues/57 | Each approved node requires home -> node and node -> home SSH. |
-| 1. Inspect Environment | completed | Read skill-create, required rules, existing container workflow and official Windows key-management/Tailscale CLI documentation. | PR #56 is merged; new branch feat/tailscale-home-multi-node starts from main 6d3b620. |
-| 2. Create Or Update Skill | completed | Added references/home-multi-node.md and references/template/home-nodes.template.yaml; updated skill routing, env/filetree/state template and catalog. | Home override precedence, approved inventory, public-key exchange, per-peer firewall limits, host-key verification, migration and scoped rollback documented. |
-| 3. Static Validation | completed | quick_validate.py: Skill is valid!; Python/PyYAML required-layout, reference-target, YAML-example and non-secret inventory-template checks passed; git diff --check passed after state normalization. | No helper scripts or additional dependencies added. |
-| 4. Runtime Validation | blocked | No disposable authenticated home/node fixture supplied. | Required add -> rollback -> add lifecycle unrun. Existing live-node login successes from this chat do not substitute for lifecycle or migration tests. No runtime completeness claimed. |
-| 5. Handoff | pending | Draft PR https://github.com/yenhao-huang/mcp-skills-package/pull/58 links #57; base main, head feat/tailscale-home-multi-node. | Await runtime validation and PR review/merge; verify merged main before claiming completion. |
+| 0. Define Scope | completed | https://github.com/yenhao-huang/mcp-skills-package/issues/94 | User requested @home add/remove authorization, firewall synchronization and current bidirectional status after at least three rounds on failure. |
+| 1. Inspect Environment | completed | Read AGENTS.md, skill-create rules, current main skill and references; PR #58 merged. | Clean task branch feat/tailscale-home-lifecycle-validation created from GitHub main. |
+| 2. Create Or Update Skill | completed | Updated entry point, @home add/remove lifecycle, three-round failure protocol, current-status reporting and inventory/state fields. | Shared-key removal preserves other peers; revoked access is not reauthorized; unreachable sources remain untested. |
+| 3. Static Validation | completed | quick_validate.py passed; required layout/category and entry-point references passed; YAML inventory and commented node example parsed; 10 documentation contract checks passed; git diff --check passed. | Static evidence only, not execution of an agent or live retry/revocation lifecycle. |
+| 4. Runtime Validation | blocked | No disposable authenticated home/node pair supplied for add -> rollback -> add or failure/revocation scenarios. | Earlier five-node successful login checks are not a lifecycle test. No production authorization was revoked or network changed solely to test documentation. |
+| 5. Handoff | pending | Draft PR https://github.com/yenhao-huang/mcp-skills-package/pull/97 links issue #94; base main, head feat/tailscale-home-lifecycle-validation. | Await runtime lifecycle validation and review/merge; main verification required before completion. |

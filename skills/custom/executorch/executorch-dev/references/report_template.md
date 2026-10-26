@@ -42,12 +42,49 @@ cd <repository-path>
 
 ## 1. reproduce：如何 Reproduce
 
-在未修改的 baseline 執行，記錄可重跑的完整命令與原始證據。
+在未修改的 baseline 執行。文件中的驗證程式碼只列能直接呼叫並由外部工具
+驗證的命令，使用 repository 原有的 build／test 流程；不用 agent 自行撰寫的
+Python／shell harness 包住一大串操作，也不以手動 compiler/linker 指令或連結
+其他 checkout 的 cached runtime 取代標準編譯。
+
+命令按「git 建立 worktree → 依賴設定 → CMake 設定 → make 編譯 → ctest」
+順序列出，讓讀者可以逐行執行並核對輸出。非 CMake 任務使用該 repo 對應的
+標準工具，不強套 CMake。實際執行文件列出的完整命令，記錄 exit code 與結果；
+不可只執行自訂腳本後宣稱下列流程已驗證。缺少依賴或標準流程失敗時標記 blocked，
+不改用自製 harness 當作完成證據。
+
+以下是 C++ kernel 測試的命令結構，尚不是可直接執行的驗證紀錄。產出報告時，
+將所有佔位符換成已確認的實際值；flags、依賴與 filter 依當次 issue 調整。
+首次建立的 worktree 目錄必須不存在，最後一層名稱為 `executorch`。若已建立，
+先確認路徑與 revision，註明可跳過 worktree 建立；不覆寫現有 checkout。
 
 ```bash
-cd <baseline-worktree>
-<reproduction-command-with-all-required-arguments>
+cd <verified-repository-path>
+
+git worktree add --detach <new-parent>/executorch <verified-baseline-sha>
+
+cd <new-parent>/executorch
+
+git submodule update --init --recursive -- <required-submodule-paths>
+
+cmake -S . -B cmake-out -G "Unix Makefiles" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DPYTHON_EXECUTABLE=<verified-python-path> \
+  -DEXECUTORCH_BUILD_TESTS=ON \
+  <verified-build-options>
+
+make -C cmake-out -j<verified-job-count> <registered-test-target>
+
+GTEST_FILTER='<selected-test-suite>.*' \
+  ctest --test-dir cmake-out \
+  -R '^<registered-test-target>$' \
+  --output-on-failure
 ```
+
+標明命令在哪個 checkout／commit 執行；修改另一個 checkout 不會自動更新測試
+worktree。新功能的 baseline 若尚未註冊對應測試，明確記錄這項限制，不把零個
+測試或沒有符合條件的測試當作通過。CTest 的 target 數與 GTest 的 case 數分開
+記錄，並用 `cmake-out/Testing/Temporary/LastTest.log` 核對實際執行的測試名稱與數量。
 
 - 正確行為：<本來應發生什麼>
 - 實際行為：<實測失敗現象>

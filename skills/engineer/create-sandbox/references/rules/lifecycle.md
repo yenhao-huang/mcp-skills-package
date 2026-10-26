@@ -31,8 +31,9 @@ which work belongs before vs. after container creation.
 The outer sandbox container runs with `--privileged`. The internal daemon
 stores its state in the confirmed host directory bind-mounted at
 `/var/lib/docker`, so bind-mount source paths used by inner containers resolve
-in the sandbox filesystem. Host Docker remains disabled by default; when
-explicitly enabled, expose it separately at `/var/run/host-docker.sock`.
+in the sandbox filesystem. Host Docker is also exposed by default at
+`/var/run/host-docker.sock`; set `ENABLE_HOST_DOCKER=0` to disable this mount.
+The default Docker client still targets the internal daemon.
 
 ## After Create-Container
 
@@ -40,6 +41,27 @@ Run `src/after_create_container.sh` against the running
 container. This phase performs workspace-level bootstrap:
 
 - Confirm the container is running.
+- Apply the global templates from `references/template/` to the
+  container user's `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`.
+  `AGENTS.md` contains the repository-reading instruction and a second line
+  requiring the dev skill for development and `skills/engineer/git` for Git.
+  The latter imports `@../.codex/AGENTS.md`, relative to `~/.claude/`.
+  Preserve existing content and append only missing exact template lines.
+  This runs even when `RUN_AGENT_PACKAGE_INIT=0`; these templates do not
+  create project-root instruction files. To undo this setup, remove only
+  the template lines added to these two global files, preserving other content.
+- Add the following exact lines to the container user's `~/.bashrc` when
+  absent, preserving existing content and avoiding duplicates on reruns:
+
+  ```bash
+  alias codex-bypass="codex --dangerously-bypass-approvals-and-sandbox"
+  alias claude-bypass="claude --allow-dangerously-skip-permissions"
+  ```
+
+  This runs even when `RUN_AGENT_PACKAGE_INIT=0`. New interactive Bash
+  sessions load the aliases; existing sessions can run `source ~/.bashrc`.
+  To remove these shortcuts, remove the two lines above from `~/.bashrc`
+  and run `unalias codex-bypass claude-bypass` in any existing sessions.
 - If `RUN_AGENT_PACKAGE_INIT=1`, clone or update the agent package in
   `${CONTAINER_WORKDIR}/${AGENT_PACKAGE_DIRNAME}`.
 - Run `${AGENT_PACKAGE_DIRNAME}/init.sh` from `${CONTAINER_WORKDIR}` to populate

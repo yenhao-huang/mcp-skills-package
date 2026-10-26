@@ -2,6 +2,7 @@
 # template to store a live peer list or credentials. No automatic reconciler
 # consumes this file: the skill reads, validates and applies it during a run.
 version: 1
+invocation_mode: null  # '@home' when explicitly selected; not a literal host
 home:
   host: '100.88.157.6'  # current default; may also be a verified MagicDNS name
   user: 'user'
@@ -15,6 +16,8 @@ nodes: []
 # Each approved node entry records:
 # - name: a unique local name
 #   approved: true
+#   desired_state: present  # absent only for explicit revocation, not offline peers
+#   operation: add  # add or remove
 #   host: a verified Tailscale IP or MagicDNS name
 #   user: the verified SSH account (not the tailnet login name)
 #   port: 22
@@ -25,5 +28,17 @@ nodes: []
 #   ssh_host_key_fingerprints: []
 #   home_to_node: pending  # pending, verified, failed, offline
 #   node_to_home: pending
+#   key_authorization: pending  # configured, removed, shared-key-source-removed
+#   firewall_authorization: pending  # configured or removed; record exact managed rules
+#   validation:
+#     minimum_rounds: 1  # becomes at least 3 after any unexpected directional failure
+#     completed_rounds: 0
+#     actual_attempts: {home_to_node: 0, node_to_home: 0}
+#     rounds: []  # each round records both directions; see STATE.template.md
+#     last_checked_at: null  # timestamp/timezone for the latest check, even failed/untested
+#     expected: authenticated  # denied for explicit revocation; do not reauthorize on denial
+#     current_status: unverified  # connected, partial, unverified, revoked, skipped
+#     cause: null
+#     next_action: null
 #   verified_at: null  # timestamp only after authenticated application tests
 # Record changed files/rules, previous values and rollback paths in STATE.md.

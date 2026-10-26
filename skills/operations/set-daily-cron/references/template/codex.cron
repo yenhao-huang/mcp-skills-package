@@ -1,0 +1,4 @@
+HOME=/home/howard
+PATH=/usr/local/bin:/usr/bin:/bin
+0 20 * * * howard /usr/bin/flock -w 7200 /home/howard/.local/state/executorch-cron/run.lock /usr/local/bin/codex exec --sandbox danger-full-access -c 'approval_policy="never"' --ephemeral --skip-git-repo-check -C /workspace/executorch-worktrees/daily '讀取 /home/howard/.codex/skills/executorch-pm/SKILL.md，執行 Scheduled execution 的 daily 任務；已持有排程鎖，不要再次呼叫 launcher。' >> /home/howard/.local/state/executorch-cron/daily-template.log 2>&1
+0 20 * * 0 howard /usr/bin/flock -w 7200 /home/howard/.local/state/executorch-cron/run.lock /usr/local/bin/codex exec --sandbox danger-full-access -c 'approval_policy="never"' --ephemeral --skip-git-repo-check -C /workspace/executorch-worktrees/daily '讀取 /home/howard/.codex/skills/executorch-pm/SKILL.md，執行 Scheduled execution 的 weekly 任務；已持有排程鎖，不要再次呼叫 launcher。' >> /home/howard/.local/state/executorch-cron/weekly-template.log 2>&1

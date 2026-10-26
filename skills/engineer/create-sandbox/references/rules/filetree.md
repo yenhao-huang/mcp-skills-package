@@ -20,6 +20,8 @@ create-sandbox/
 │   │   ├── service-tests.md
 │   │   └── state-rules.md
 │   └── template/
+│       ├── AGENTS.md
+│       ├── CLAUDE.md
 │       └── STATE.template.md
 └── src/
     ├── Dockerfile
@@ -34,7 +36,10 @@ create-sandbox/
   short rules here.
 - `STATE.md`: Per-run working state.
 - `references/rules/`: Detailed operating rules loaded only when relevant.
-- `references/template/`: Copyable templates.
+- `references/template/`: Copyable state and container-user global instruction
+  templates. `AGENTS.md` contains repository and development/Git guidance;
+  `CLAUDE.md` imports `@../.codex/AGENTS.md` from its installed
+  `~/.claude/CLAUDE.md` location.
 - `src/`: Deterministic executable templates and scripts used by
   the workflow.
 

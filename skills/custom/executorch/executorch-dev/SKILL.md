@@ -84,7 +84,24 @@ before any action; these project constraints govern inherited instructions.
    message — not even to label it "upstream issue" or "closes" — regardless of
    the format used elsewhere in the same run.
 
+## One issue per pull request
+
+- When the user selects multiple issues, handle each on its own task-created
+  branch and open a separate fork PR for each issue. Never combine different
+  issues into one PR, even when they share an operator family or implementation.
+- Keep each PR's code, tests, acceptance report and issue reference scoped to
+  that issue. Record each issue-to-branch-to-PR mapping in STATE.md and the
+  corresponding Result.md row; verify delivery separately for every issue.
+- Prefer independent branches from the intended base. If shared code creates
+  a dependency, place it in the prerequisite issue's PR and base the dependent
+  PR on that branch. Explicitly document the dependency and base, and keep the
+  dependent PR diff limited to its own issue. Do not duplicate shared changes
+  or merge the issues into one PR to avoid handling the dependency.
+
 ## Definition Of Done
+
+For a multi-issue request, every issue must independently satisfy this definition
+with its own branch and PR; one combined PR does not complete the request.
 
 A solved issue is a pull request on the user's designated fork, not a commit on
 this machine. The run is complete only when both of these are true, and the
@@ -148,6 +165,17 @@ existing remote history.
       behavior, exit code, and relevant output. If reproduction is blocked or
       unsuccessful, record the limitation and investigate before claiming a
       reproduced bug; never invent baseline evidence.
+      The docs reproduction steps must use repository-supported external tools
+      directly: explicit `git worktree` setup at a verified revision, dependency
+      initialization, standard configuration/build, and the registered test runner
+      (for C++ pooling tests, CMake, make, and CTest). Show the actual commands and
+      required arguments in order, not a call to an agent-written Python/shell
+      validation harness. Do not replace this flow with manual compiler/linker
+      commands or linking cached runtime objects. Run the documented commands in
+      that checkout; identify existing worktrees and commands that are one-time
+      setup. If a standard step cannot run, mark it blocked rather than substituting
+      a custom harness. Keep paths, revisions, options, and test filters specific
+      to the selected issue; see the report template for the command layout.
    2. **dev**: Diagnose the root cause and implement the smallest complete fix.
       Explain the changed behavior and map the changes to acceptance criteria
       in the report. Review the diff and resolve actionable findings.
