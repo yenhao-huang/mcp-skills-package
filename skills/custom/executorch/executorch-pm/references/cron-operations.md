@@ -1,6 +1,6 @@
 # Install PM cron
 
-`add-cron.sh` installs system cron. `run-cron.sh` is a nine-line launcher for
+`add-cron.sh` installs system cron. `run-cron.sh` is a compact launcher for
 Codex to execute the skill; it contains no deterministic daily/weekly report
 implementation. No Python job file is used.
 
@@ -27,6 +27,9 @@ Both jobs acquire one flock (wait up to two hours), each with a 90-minute run
 limit. Order is unspecified; the second job reads the latest same-day artifacts.
 State: /home/howard/.local/state/executorch-cron, overridable with
 EXECUTORCH_CRON_STATE. Logs: logs/DATE-MODE.log; output: MODE-last-message.txt.
+The launcher sets `umask 077` before creating state directories, logs or last-message
+files, keeping newly created artifacts private to the running account. Existing
+files retain their current permissions.
 No chat notification channel is configured. The old last-success file is
 historical and is not updated by this launcher.
 

@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+umask 077
 export TZ=Asia/Taipei GIT_TERMINAL_PROMPT=0
 case "${1:-}" in daily|weekly) ;; *) echo 'Usage: run-cron.sh daily|weekly' >&2; exit 2;; esac
 state=${EXECUTORCH_CRON_STATE:-/home/howard/.local/state/executorch-cron}

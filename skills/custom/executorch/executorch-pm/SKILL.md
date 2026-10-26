@@ -286,7 +286,7 @@ for user selection before development. Skill instructions do not activate a
 scheduler. The user has explicitly authorized and enabled local cron for the
 daily Result job; see [cron operations](references/cron-operations.md) for current
 state, limitations and verification. `references/scripts/add-cron.sh` installs the daily and Monday entries.
-`references/scripts/run-cron.sh` is a nine-line Codex launcher, not the report
+`references/scripts/run-cron.sh` is a compact Codex launcher, not the report
 implementation. Task logic is specified in this skill. Installation does not
 prove execution or notification delivery; see cron operations for actual status.
 Use the supported automation API when available, deduplicate jobs,
