@@ -10,4 +10,6 @@ Shared dependencies: skills/content-producer/{humanizer,frontend-slides}/.
 Install both alongside PM when using flat skill folders; do not recreate private
 copies under PM. Keep the PM presentation template and output rules here.
 
-issues.json at the PM skill root is persistent recommendation history. Preserve installed entries on upgrades; never reset or copy this file into daily.
+issues.json at the PM skill root is persistent selection/handling/exclusion state. Preserve installed entries on upgrades; never reset or copy this file into daily.
+
+recommendation-history.json at the PM skill root records published candidate IDs separately from issue selection/handling status. Preserve installed history on upgrades; backfill verified historical batches when empty. Never copy the ledger into daily.
