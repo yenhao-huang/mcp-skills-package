@@ -13,3 +13,5 @@ copies under PM. Keep the PM presentation template and output rules here.
 issues.json at the PM skill root is persistent selection/handling/exclusion state. Preserve installed entries on upgrades; never reset or copy this file into daily.
 
 recommendation-history.json at the PM skill root records published candidate IDs separately from issue selection/handling status. Preserve installed history on upgrades; backfill verified historical batches when empty. Never copy the ledger into daily.
+
+ci-investigations.json at the PM skill root is the persistent reviewed-CI-failure cache. Preserve installed records on upgrades; initialize only when absent. Never publish it to daily. Detailed read-only triage rules live in references/ci-triage.md.

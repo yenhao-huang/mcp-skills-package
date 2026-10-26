@@ -249,6 +249,21 @@ mark the failed check/uncertainty in notes, never invent a fourth status or Done
 Review approval and successful CI do not imply merge. Preserve the four-stage
 selected-issue table separately; do not infer its history from a supplied PR.
 
+## Community CI status and failure triage
+
+The selected-issue table's last column is `目前社群 CI 情況`, replacing
+`目前進度與依據`. Use the exact dated field order from
+[template/Result.md](template/Result.md): `CI fail`, `CI sucess`, `Require fix`,
+then `Evidence`. Follow [references/ci-triage.md](references/ci-triage.md) to
+count the complete current community-PR CI set and investigate previously
+unreviewed failures read-only. Preserve the existing four stages and PR rows;
+this is not authorization to implement fixes, rerun CI or post community messages.
+Persist reviewed failure identities and evidence in
+[ci-investigations.json](ci-investigations.json), never in daily. Preserve this
+cache during upgrades; initialize only when absent and never copy a blank seed
+over live records. Cache updates are a data-only exception to the scheduled
+skill-edit ban, using the existing run.lock and atomic replacement.
+
 ## Daily Result snapshot
 
 Result.md contains only current actual selections, the four-stage issue progress,
@@ -332,7 +347,9 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    send notices, request reviews or post community comments.
 6. For daily tracking, update the three-status PR tracking summary above.
    Read selected issues and associated fork/community PRs
-   from Result.md, including previously tracked PRs now closed or merged. Read
+   from Result.md, including previously tracked PRs now closed or merged. Apply
+   community CI counting and cached failure triage above before finalizing the
+   selected-table CI cells; keep corresponding PR-row conclusions consistent. Read
    all relevant CI/review changes and publish today's Result.md snapshot,
    even if no status changed. Preserve prior days.
    Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
@@ -345,7 +362,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
 7. Validate today's Result.md (and HTML/PDF on shortlist days), exactly two
    consecutive pages per topic, all four first-page sections, the appropriate
    bug/feat requirements on page two, `1 + 2N` total pages, index targets, headings, three-status tracking rows, four stage columns, actual
-   selection evidence and redirect links. New shortlists use newly allocated ID-prefixed timestamp
+   selection evidence, CI summary format/count scope, failure investigation evidence,
+   and redirect links. New shortlists use newly allocated ID-prefixed timestamp
    batches; progress updates preserve historical snapshots and selection history.
    Commit and push directly to verified `yenhao-huang/daily` main, as
    authorized by the user; do not create a daily PR. Never copy JSON snapshots, STATE.md, schedules, templates,
@@ -367,7 +385,7 @@ Verify this checkout's origin is https://github.com/yenhao-huang/daily.git,
 branch main and no unrelated local changes. Publish only permitted daily
 artifacts using HEAD:refs/heads/main; reconcile concurrent changes without reset
 or force push. Never write to a community repo, initiate development, alter
-cron/skill instructions/credentials (both recommendation registries above may be updated), or bypass sandbox restrictions. Missing access or tools
+cron/skill instructions/credentials (the recommendation registries and CI investigation cache above may be updated), or bypass sandbox restrictions. Missing access or tools
 is a blocker, not permission to change security settings.
 
 End with Traditional Chinese verified links or the exact blocker. Cron records
