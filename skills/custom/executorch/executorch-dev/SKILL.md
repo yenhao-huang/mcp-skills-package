@@ -31,6 +31,31 @@ before any action; these project constraints govern inherited instructions.
   community submission and merge are separate read-only PM tracking stages.
 - Community replies remain drafts. Daily PM checks do not authorize new code work.
 
+## Codex execution permission
+
+The user has explicitly authorized `codex exec --sandbox danger-full-access`
+for user-selected ExecuTorch development tasks, including their task-specific
+tmux workers. This is standing permission to use that invocation within this
+skill's development scope; do not ask again solely to select this sandbox mode.
+Use the selected issue's worktree as the working directory, for example:
+
+```bash
+codex exec --sandbox danger-full-access -C "$issue_worktree" "$task_prompt"
+```
+
+This mode removes Codex's shell sandbox isolation, allowing commands the
+filesystem and network access available to the process. It does not grant OS
+privileges or override host-enforced restrictions, managed policies, or tool
+approval requirements. Request any required execution approval through the
+host's normal mechanism; do not bypass a rejection.
+
+Keep this setting local to the task invocation. It does not authorize global
+configuration changes, `--dangerously-bypass-approvals-and-sandbox`, or broader
+work. Preserve the project policy's write destinations, community silence,
+and authorization requirements for merges and other consequential operations.
+Read-only CI review remains read-only and does not inherit development write
+permission from this section.
+
 ## Read-only CI review mode
 
 When PM or the user hands off community CI failures, use
