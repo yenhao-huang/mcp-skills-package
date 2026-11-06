@@ -119,6 +119,29 @@ Definition Of Done below applies to implementation, not this diagnostic handoff.
    message — not even to label it "upstream issue" or "closes" — regardless of
    the format used elsewhere in the same run.
 
+## Development branch names
+
+- Every ExecuTorch issue development branch must use
+  `fix/<issue-id>-<short-description>`. Use the numeric issue ID and a nonempty
+  lowercase, hyphen-separated description, for example
+  `fix/22431-vulkan-per-token` or `fix/24125-qnn-gather`.
+  `agent/fix-22431` and `fix/22431` do not satisfy this rule.
+- Before implementation and again before push or PR creation, check the local
+  branch with `git branch --show-current` and validate the intended fork head
+  name. Both must match `^fix/[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$`, and the ID must
+  match the selected issue. This rule also applies to task-specific workers.
+- When asked to migrate an existing branch, inspect its worktree, tracking
+  branch and open PRs first. Rename locally with
+  `git branch -m <old-name> <new-name>` after checking for a name collision;
+  preserve its commit and all uncommitted files. Record the new local name and
+  any legacy remote/PR head separately in `STATE.md`.
+- GitHub closes an open PR when its head branch is renamed. Do not silently
+  close or replace an existing PR to enforce naming. If remote migration would
+  affect an open PR, prepare the migration and obtain approval for that effect;
+  retain the legacy remote and its PR until then and report migration as pending.
+  Do not publish further development under a legacy name. New branches and PRs
+  must use the required format.
+
 ## One issue per pull request
 
 - When the user selects multiple issues, handle each on its own task-created
@@ -182,7 +205,9 @@ existing remote history.
      different issue.
    - If not resolved, continue to implementation — but reuse the reporter's
      workaround or diagnosis as a starting point when it points to the fix.
-4. Read the repository instructions and
+4. Apply `Development branch names` before implementation; create or verify
+   the issue branch and record its name in `STATE.md`. Read the repository
+   instructions and
    [references/report_template.md](references/report_template.md). Create an
    issue report at the repository's established report location (for example,
    `docs/howard/<issue-number>.md`) and record its path in `STATE.md`. Goal and
