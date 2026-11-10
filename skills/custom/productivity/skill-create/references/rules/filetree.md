@@ -21,12 +21,14 @@ skills/<category>/<skill-name>/
 ```
 
 `custom` and the approved `engineer/git` and `engineer/openspec` groups
-may use one extra subcategory level:
+may use one extra subcategory level. The approved
+`engineer/perf_engineer/nvidia_gpu_profiler` group uses two levels:
 
 ```text
 skills/custom/<subcategory>/<skill-name>/
 skills/engineer/git/<skill-name>/
 skills/engineer/openspec/<skill-name>/
+skills/engineer/perf_engineer/nvidia_gpu_profiler/<skill-name>/
 ```
 
 The files shown without an "optional" comment are required for every new
@@ -43,6 +45,8 @@ repo-local skill.
   user-specific skills, such as `productivity` or `wingene`.
 - `skills/engineer/git/` and `skills/engineer/openspec/`: Approved engineering
   subcategories for Git/GitHub and OpenSpec skills.
+- `skills/engineer/perf_engineer/nvidia_gpu_profiler/`: Approved engineering
+  group for NVIDIA GPU profiling skills (Nsight Systems, Nsight Compute).
 - `STATE.md`: Per-run working state. Keep it at the skill root so it is easy to
   find and update.
 - `references/rules/`: Reusable operating rules, such as state handling and
@@ -71,8 +75,9 @@ Also inspect the skill directory against this file and
 
 - The path must be `skills/<category>/<skill-name>/`, except `custom` may use
   `skills/custom/<subcategory>/<skill-name>/` and the engineering groups may
-  use `skills/engineer/git/<skill-name>/` or
-  `skills/engineer/openspec/<skill-name>/`.
+  use `skills/engineer/git/<skill-name>/`,
+  `skills/engineer/openspec/<skill-name>/`, or
+  `skills/engineer/perf_engineer/nvidia_gpu_profiler/<skill-name>/`.
 - The category must be one of the approved categories.
 - Required Markdown files must be present.
 - `SKILL.md` must contain a second-level `## Workflow` heading.
