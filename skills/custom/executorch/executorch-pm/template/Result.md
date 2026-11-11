@@ -1,14 +1,13 @@
-# ExecuTorch Result
-
-批次：<NNNNNN_YYYY-MM-DD_HHmmss>
-報告日期：<YYYY-MM-DD Asia/Taipei>
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
-選擇紀錄：尚未選擇；等待用戶從 issue-disptach.pdf 指定議題。
 
 | 選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況 |
 | --- | --- | --- | --- | --- | --- |
 
-<!-- 以下為模板使用規則，產出報告時移除此說明區；只保留批次／日期／選擇紀錄、唯一表格與必要的簡短查核說明。 -->
+<!-- 以下為模板使用規則，產出報告時移除此說明區；首行只保留更新時間，不加標題、批次、報告日期或括號註記。 -->
+
+不輸出「追蹤範圍與選擇紀錄」或「CI 判讀」等說明區段。
+選題依據、停止追蹤決定與通用 CI 判讀規則保留在內部狀態／規則；
+移除公開說明不代表重新啟用追蹤。
 
 Result.md 恰有上方一張六欄表，不另加 PR 摘要表或三狀態進度欄。
 以使用者指定的 [2026-11-06 版本](https://github.com/yenhao-huang/daily/blob/main/executorch/999976_2026-11-06_040301/Result.md)為結構範例，狀態與查核時間仍需每日重新確認。

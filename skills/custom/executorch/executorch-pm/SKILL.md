@@ -279,6 +279,12 @@ skill-edit ban, using the existing run.lock and atomic replacement.
 
 ## Daily Result snapshot
 
+Start with only `更新時間：YYYY-MM-DD HH:mm:ss Asia/Taipei`, without a title,
+batch/date lines or parenthetical editing notes. Do not publish tracking/selection
+history or a generic CI-interpretation section. Keep selection evidence and explicit
+stop/resume decisions in internal STATE.md; removing public history never resumes
+stopped tracking. Preserve existing internal decisions when starting a new run.
+
 Result.md contains current actual selections and independently tracked PRs in
 one six-column table, with four-stage progress, check times, blockers, next
 steps and supporting evidence. Never restore a second table during carry-forward.
@@ -300,7 +306,8 @@ glob. Otherwise allocate a new ID and timestamp at run time.
 Carry forward all tracked PRs, completed rows, actual selections and evidence
 from the latest snapshot; reconcile any older rows absent from it, deduplicating
 by repository/PR and preserving newer verified facts. Recheck current states.
-Never overwrite prior days to record today's progress. Record report date and check time. Keep prior snapshot and original shortlist
+Never overwrite prior days to record today's progress. Record publication metadata
+internally and retain per-issue check times in the report. Keep prior snapshot and original shortlist
 links in internal STATE.md; relative evidence links in Result.md must resolve
 from the new directory. No-change days still publish today's snapshot.
 On API failure publish the snapshot with prior status/last successful check time
@@ -349,12 +356,11 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    and a redirect issue link. Use only the current date-resolved Focus part scopes above. Do not include the word `title` or a
    colon after the closing parenthesis. Ground the diagnosis in the discussion, mark proposed solutions as
    hypotheses, and mention hardware, prior fixes and remaining uncertainty.
-4. Initialize `Result.md` from [template/Result.md](template/Result.md) with a
-   waiting-for-selection statement for new candidates. Preserve prior actual
+4. Initialize `Result.md` from [template/Result.md](template/Result.md) for new candidates. Preserve prior actual
    selections and independently tracked PR rows in the single table; use an
    empty table only when neither selections nor tracked PRs exist.
    Present the dispatch and wait. On actual selection, record the chosen issue,
-   time and user evidence in Result.md, recheck its current state, and hand off
+   time and user evidence in internal STATE.md, recheck its current state, and hand off
    only selected unresolved issues to `$executorch-dev` with the batch path.
    Do not replace resolved selections without another user choice.
 5. For drafting, use [references/community-templates.md](references/community-templates.md).

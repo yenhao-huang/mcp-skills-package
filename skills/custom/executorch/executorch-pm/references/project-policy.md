@@ -49,7 +49,7 @@ acquire it recursively when the launcher already holds it):
   the timestamp. Accept legacy `YYYY-MM-DD_HHmmss` names and their documented
   collision suffixes during migration. Choose the latest report by timestamp,
   never by lexicographic maximum of the full name: larger IDs are older.
-- Store the full directory name in Result.md's batch field, HTML batch metadata,
+- Store the full directory name in internal STATE.md, HTML batch metadata,
   archive paths and new publication-ledger `batch` values. Build Result/HTML/PDF
   URLs from this exact name, not from the timestamp alone.
 - When a directory is explicitly migrated, update repository-local links and
@@ -81,10 +81,10 @@ A shortlist batch contains exactly three user-facing files (HTML source + PDF di
 - `Result.md`: actual selected issues and the four stages from the PM skill's
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 
-Before any selection, Result.md explicitly says no issues have been selected and
-has no selected-issue rows. Independently tracked PRs, if present, remain clearly
+Before any selection, Result.md has no selected-issue rows. Record the
+waiting-for-selection state internally. Independently tracked PRs, if present, remain clearly
 marked as tracking-only rows in the same table. Later shortlists preserve existing
-selections and PR tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row, with time/evidence.
+selections and PR tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row; retain its time/evidence in internal STATE.md.
 Never treat ranking, silence or elapsed time as selection.
 
 Development updates only the selected issue row and concise evidence in
