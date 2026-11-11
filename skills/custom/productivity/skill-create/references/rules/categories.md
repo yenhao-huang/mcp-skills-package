@@ -74,6 +74,7 @@ Current examples:
 
 - `perf-nsight-systems`
 - `perf-nsight-compute-analysis`
+- `install-nsys-ncu-tool`
 
 ### operations
 
