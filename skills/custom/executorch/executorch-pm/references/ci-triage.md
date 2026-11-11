@@ -1,8 +1,8 @@
 # Community CI summary and read-only triage
 
-Use this procedure for the single Result.md table's `目前社群 CI 情況` column.
-Publish the conclusion once in its row; do not append a second PR-summary
-table. Preserve the four stage columns, concise PR links and selection evidence.
+Use this procedure for each issue in Result.md Details under `社群評論 stage`.
+Publish the full CI conclusion once there; keep the table compact and do not
+append a second PR table. Preserve lifecycle semantics and internal selection evidence.
 
 ## Workflow
 
@@ -17,7 +17,7 @@ table. Preserve the four stage columns, concise PR links and selection evidence.
    cancelled, neutral and action_required separate, briefly in Evidence when
    material. Check-run-only CI not covered by this Actions inventory must be
    disclosed separately; do not count a bot's aggregate verdict as another
-   workflow. State the head SHA and workflow-counting unit once outside the Evidence cells. If the inventory is incomplete, use unknown counts with the last
+   workflow. State the head SHA and workflow-counting unit in that issue's Details. If the inventory is incomplete, use unknown counts with the last
    successful check time rather than reporting partial counts as complete.
 3. For each failed workflow enumerate all failed jobs and matrix variants.
    Compare their identities against `ci-investigations.json` before deep
@@ -43,7 +43,7 @@ table. Preserve the four stage columns, concise PR links and selection evidence.
    relevant changed/unchanged source or baseline evidence, reasoning, reviewed
    timestamp and head/run/attempt identity. Link evidence with redirect.github.com
    in published output. Raw logs and detailed investigation remain internal.
-6. Render the row in this exact order (date is Asia/Taipei; spelling intentional):
+6. Render the CI paragraph in community Details in this exact order (date is Asia/Taipei; spelling intentional):
 
    ```text
    YYYY/MM/DD; CI fail: <count>; CI sucess: <count>; Require fix: <P(true)>% (true|false); Evidence: <links, error and causal reasoning>
@@ -61,7 +61,7 @@ table. Preserve the four stage columns, concise PR links and selection evidence.
    Evidence is one short sentence (prefer <=100 Chinese characters excluding
    URLs), with the main cause, material gap and 1–2 links; no job inventory,
    development history or repeated counting rules. Put heads and count scope
-   once outside the cells; retain full three-round notes internally.
+   in the issue's Details; retain full three-round notes internally.
 7. Save the reviewed record atomically under the existing shared run.lock
    (scheduled callers already hold it; never recursively acquire it). If the
    cache is absent, initialize it; if malformed, preserve/backup it and treat
@@ -70,7 +70,7 @@ table. Preserve the four stage columns, concise PR links and selection evidence.
    a dated limitation. Do not mark an unread log as investigated successfully. A low-confidence or incomplete record
    does not complete causal triage: check for new evidence/access on later runs,
    but do not repeatedly download the same known-expired log without a change.
-   Escape Markdown table pipes and keep the summary in one cell/line.
+   Keep CI evidence below the table; do not move the full summary into a cell.
 
 ## Cache contract
 
