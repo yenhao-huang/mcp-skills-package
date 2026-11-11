@@ -10,8 +10,13 @@ All user-facing reports use Traditional Chinese. A shortlist batch contains only
 `issue-disptach.html`, `issue-disptach.pdf` and `Result.md`, with exact spelling and capitalization.
 On progress-only days, publish only Result.md.
 Templates and internal schedule/state files remain inside the skill.
-The exact output filename is `issue-disptach.pdf` (user spelling); do not
+The exact batch output filename is `issue-disptach.pdf` (user spelling); do not
 normalize it to issue-dispatch.pdf or retain Markdown dispatches in daily.
+Also keep a byte-identical PDF backup directly in `executorch/000000_slide-summary/`
+as `<source-id>_YYYY-MM-DD.pdf`, preserving the source batch's six-digit prefix.
+Follow [slide backup rules](references/project-policy.md#slide-summary-backups)
+for publication, explicit backfills and validation; do not create per-batch
+subdirectories in the summary.
 
 ## Prose review with Humanizer
 
@@ -396,6 +401,10 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Validate actual selection evidence, check times, CI summary format/count scope,
    failure investigation evidence and redirect links before publication. New shortlists use newly allocated ID-prefixed timestamp
    batches; progress updates preserve historical snapshots and selection history.
+   On shortlist publication, include the prefixed flat PDF backup and summary
+   index in the same commit as its source batch. Verify PDF byte identity,
+   newest-first filename order and index links using the slide backup rules.
+   Progress-only runs leave slide-summary unchanged.
    Commit and push directly to verified `yenhao-huang/daily` main, as
    authorized by the user; do not create a daily PR. Never copy JSON snapshots, STATE.md, schedules, templates,
    progress.md or development logs to daily. Record publication evidence in
