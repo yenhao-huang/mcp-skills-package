@@ -1,6 +1,6 @@
 更新時間：<YYYY-MM-DD HH:mm:ss Asia/Taipei>
 
-| 選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況 |
+| 選擇的 issue | 選擇 issue stage | issue 開發 stage | 用戶在社群寄送 PR stage | 社群評論 stage | 該 PR 被 merge stage |
 | --- | --- | --- | --- | --- | --- |
 
 ## Details
@@ -31,7 +31,10 @@ CI：<YYYY/MM/DD>; CI fail: <count>; CI sucess: <count>; Require fix: <P(true)>%
 各 stage 寫「目前無追蹤項目。」，不建立虛構範例列。
 
 只輸出一張六欄摘要表，再依序放 Details 的兩個 stage。四個進度欄以
-未開始／進行中／完成／受阻／待確認 起首，可接短 PR 連結；CI 欄只放簡短計數或狀態。
+未開始／進行中／完成／受阻／待確認 起首，可接短 PR 連結。
+「社群評論 stage」放在合併欄左側，僅摘要已查證的評論／審查狀態，例如待審查、
+回報待驗證、已核准或待確認，不填 CI 計數，也不代表合併完成。尚無社群 PR 時，
+若有相關 issue 留言則摘要其狀態，否則填尚無社群 PR。
 開發細節、測試、社群評論、CI Evidence、Require fix、阻礙與查核時間全部放在 Details。
 兩個 stage 內依表格順序重複各 issue 小節，保留同一身份與來源連結；不得增加第二張表。
 

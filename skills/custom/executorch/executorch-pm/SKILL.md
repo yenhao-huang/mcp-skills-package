@@ -227,10 +227,14 @@ then `## Details` with exactly two stage sections, `### issue 開發 stage`
 and `### 社群評論 stage`. Group issues under each stage in table order.
 The table columns are:
 
-`選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況`
+`選擇的 issue | 選擇 issue stage | issue 開發 stage | 用戶在社群寄送 PR stage | 社群評論 stage | 該 PR 被 merge stage`
 
 The four lifecycle cells start with `未開始`, `進行中`, `完成`, `受阻`, or
-`待確認`; a short PR link may follow. Keep CI cells to brief counts/status.
+`待確認`; a short PR link may follow. The separate `社群評論 stage` cell
+summarizes verified comment/review state, such as `待審查`, `回報待驗證`,
+`已核准` or `待確認`; it is not a CI count or merge verdict. When no community
+PR exists, summarize a known issue comment if relevant, otherwise use `尚無社群 PR`.
+Place it immediately before `該 PR 被 merge stage`; CI evidence remains in Details.
 Put implementation, fork evidence, validation and limits in development Details;
 put community issue comments, reviews, PR state, CI evidence and next steps in
 community Details. Include source links and original check times there, not in
@@ -265,7 +269,7 @@ count the complete current community-PR CI set and delegate previously
 unreviewed failure diagnosis to `executorch-dev` in read-only CI review mode.
 Require at least three investigate/reflect/deepen rounds and a directional
 `Require fix: <P(true)>% (true|false)` assessment; do not publish unknown for
-that verdict. Evidence stays one concise sentence with 1–2 links. Preserve the existing four stages and PR rows;
+that verdict. Evidence stays one concise sentence with 1–2 links. Preserve lifecycle semantics and tracked rows;
 this is not authorization to implement fixes, rerun CI or post community messages.
 Persist reviewed failure identities and evidence in
 [ci-investigations.json](ci-investigations.json), never in daily. Preserve this
@@ -370,10 +374,10 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    community Details; move legacy long cells and summary evidence into those sections. Read
    all relevant CI/review changes and publish today's Result.md snapshot,
    even if no status changed. Preserve prior days.
-   Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
-   `該 PR 被 merge`, allowing concise PR links after each stage status.
-   Treat fork PRs as development evidence only. Stage three
-   requires a verified community PR submitted by the user; stage four requires
+   Use the exact stage column names/order from the table contract, with concise
+   status/PR links and a separate community-comment summary before merge.
+   Treat fork PRs as development evidence only. The submission stage requires a
+   verified community PR submitted by the user; the merge stage requires
    that same PR's merged state. Neither a closed PR nor a merged fork PR counts.
    If the user reports a new PR, verify its issue relationship and destination
    read-only before recording it. Record unavailable checks as unknown; retain
@@ -384,7 +388,8 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    count Markdown table blocks: require exactly one with the six headers in
    the specified order and six cells per row (escape literal pipes). Reject a
    second table, a PR-summary heading or a three-status progress column. Check
-   lifecycle-status prefixes while allowing concise PR links. Require the two
+   lifecycle-status prefixes while allowing concise PR links; check the separate
+   community-comment summary against its source, not the lifecycle prefix list. Require the two
    Details stages and matching issue identity/order; keep long prose out of cells.
    Reconcile active selected, independent and completed rows against prior snapshots
    and internal stop/resume decisions. Reject public history and generic CI sections.

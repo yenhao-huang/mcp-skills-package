@@ -78,8 +78,8 @@ A shortlist batch contains exactly three user-facing files (HTML source + PDF di
   redirect source links. Page one covers 問題釐清、可能解法、應用場景、專有名詞介紹;
   page two covers 需求: bugs compare 修正前 and 修正後（預期）, while features
   explain only 重點功能、Input、Output. Follow PM's two-page contract.
-- `Result.md`: actual selected issues and the four stages from the PM skill's
-  `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
+- `Result.md`: actual selected issues and stage summaries from the PM skill's
+  `template/Result.md`, with community comments immediately before merge.
 
 Before any selection, Result.md has no selected-issue rows. Record the
 waiting-for-selection state internally. Independently tracked PRs, if present, remain clearly
@@ -95,8 +95,8 @@ STATE.md, or template files to daily. Templates and scheduling intent stay in
 the skill. Internal caches may be local but must not be staged to daily.
 
 Fork PRs are evidence for issue 開發 only. Community submission belongs to the
-user: read back the actual community PR before completing stage three, and
-verify that PR's mergedAt/merged state before completing stage four. Closed
+user: read back the actual community PR before completing the submission stage, and
+verify that PR's mergedAt/merged state before completing the merge stage. Closed
 without merge is not completion. Failed API reads are unknown, never success.
 Track blockers and next actions as notes, not extra stages.
 Publish current community CI counts, fix-relevance verdict and linked evidence
