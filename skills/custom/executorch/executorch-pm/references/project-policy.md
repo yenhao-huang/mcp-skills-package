@@ -54,7 +54,7 @@ acquire it recursively when the launcher already holds it):
   the timestamp. Accept legacy `YYYY-MM-DD_HHmmss` names and their documented
   collision suffixes during migration. Choose the latest report by timestamp,
   never by lexicographic maximum of the full name: larger IDs are older.
-- Store the full directory name in Result.md's batch field, HTML batch metadata,
+- Store the full directory name in internal STATE.md, HTML batch metadata,
   archive paths and new publication-ledger `batch` values. Build Result/HTML/PDF
   URLs from this exact name, not from the timestamp alone.
 - When a directory is explicitly migrated, update repository-local links and
@@ -83,16 +83,16 @@ A shortlist batch contains exactly three user-facing files (HTML source + PDF di
   redirect source links. Page one covers 問題釐清、可能解法、應用場景、專有名詞介紹;
   page two covers 需求: bugs compare 修正前 and 修正後（預期）, while features
   explain only 重點功能、Input、Output. Follow PM's two-page contract.
-- `Result.md`: actual selected issues and the four stages from the PM skill's
-  `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
+- `Result.md`: actual selected issues and stage summaries from the PM skill's
+  `template/Result.md`, with community comments immediately before merge.
 
-Before any selection, Result.md explicitly says no issues have been selected and
-has no selected-issue rows. Independently tracked PRs, if present, remain clearly
+Before any selection, Result.md has no selected-issue rows. Record the
+waiting-for-selection state internally. Independently tracked PRs, if present, remain clearly
 marked as tracking-only rows in the same table. Later shortlists preserve existing
-selections and PR tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row, with time/evidence.
+selections and PR tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row; retain its time/evidence in internal STATE.md.
 Never treat ranking, silence or elapsed time as selection.
 
-Development updates only the selected issue row and concise evidence in
+Development updates only the selected issue summary row and its Details in
 Result.md. Keep reproduction logs, tests, reports and branch details in the
 code repository under its existing conventions; link when useful. Do not
 publish development directories, progress.md, JSON snapshots, schedule.json,
@@ -100,20 +100,19 @@ STATE.md, or template files to daily. Templates and scheduling intent stay in
 the skill. Internal caches may be local but must not be staged to daily.
 
 Fork PRs are evidence for issue 開發 only. Community submission belongs to the
-user: read back the actual community PR before completing stage three, and
-verify that PR's mergedAt/merged state before completing stage four. Closed
+user: read back the actual community PR before completing the submission stage, and
+verify that PR's mergedAt/merged state before completing the merge stage. Closed
 without merge is not completion. Failed API reads are unknown, never success.
 Track blockers and next actions as notes, not extra stages.
-The selected-issue table's last column is `目前社群 CI 情況`: a dated current
-community-CI summary with workflow fail/success counts, a fix-relevance verdict
-and linked evidence, following ci-triage.md. Keep development history in internal
-records and the code report; do not fill this cell with old fork/test narratives.
+Publish current community CI counts, fix-relevance verdict and linked evidence
+in the issue's community Details, following ci-triage.md. Keep raw investigation
+logs internally; development/validation prose belongs in development Details.
 New or unreviewed failures go to executorch-dev for read-only diagnosis with
 at least three investigate/reflect/deepen rounds. Return a directional true/false
 judgment and subjective P(true), including a concise evidence limitation when
 logs or permissions are missing; never substitute a confirmed clean verdict.
 Preserve investigation records across daily runs; publish each CI conclusion
-once in the corresponding single-table row.
+once in the corresponding community Details section.
 
 Before publishing, inspect the full diff and commit messages for unsafe
 references and secrets. Stage only the intended batch files and, when publishing
@@ -167,21 +166,18 @@ separate from the three-file shortlist batch contract above.
   and all index links resolve. Verify the remote commit and backup paths after
   publishing and record evidence in internal STATE.md.
 
-## Single-table progress tracking
+## Result layout
 
-Result.md contains exactly one table with six columns in this order:
-`選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況`.
-Use the user-approved 2026-11-06 structure linked from the PM skill and template.
-Do not add a separate PR-summary table or three-status progress column.
-Four-stage cells may contain concise PR links after their status; fork PRs
-remain development evidence only.
+Use the PM skill's Table and Details contract and template as the format source
+of truth. Result.md has one compact six-column table followed by development
+and community stage sections. Keep PR links/statuses concise in table cells;
+move implementation, validation, comments/reviews, CI evidence, blockers and
+check times into the matching Details section. Never add a second PR table.
 
-Keep independently tracked PRs after actual selections in this same table.
-Label them `僅追蹤 PR（未選題）`; do not infer a selection or development history.
-Preserve completed rows and closed-unmerged PRs. On migration from a two-table
-snapshot, fold all links, merge evidence, blockers and check timestamps into
-the matching row before dropping the legacy summary from the new snapshot.
-Do not rewrite historical reports. Read failures retain verified facts and
-the last successful check time. Verify exactly one table, all six headers,
-stage-status prefixes and complete row carry-forward before publication.
-PM owns the format and cross-batch reconciliation rules.
+Carry forward actual selections and independent PRs, including completed and
+closed-unmerged work, subject to explicit user stop/resume decisions preserved
+in internal STATE.md. A historical row cannot re-enable stopped tracking.
+Keep selection provenance internally when removing public history sections.
+Preserve original evidence and check times while migrating long cells or legacy
+summary tables into Details; do not rewrite historical reports. Validate table
+identity/order against both stage sections and internal tracking state.
