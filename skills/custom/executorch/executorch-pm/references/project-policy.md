@@ -82,8 +82,9 @@ A shortlist batch contains exactly three user-facing files (HTML source + PDF di
   `template/Result.md`: 選擇 issue、issue 開發、用戶在社群寄送 PR、該 PR 被 merge.
 
 Before any selection, Result.md explicitly says no issues have been selected and
-has no selected-issue rows. Later shortlists preserve existing selections and PR
-tracking; progress-only days contain Result.md alone. Only real user selection creates a row, with time/evidence.
+has no selected-issue rows. Independently tracked PRs, if present, remain clearly
+marked as tracking-only rows in the same table. Later shortlists preserve existing
+selections and PR tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row, with time/evidence.
 Never treat ranking, silence or elapsed time as selection.
 
 Development updates only the selected issue row and concise evidence in
@@ -106,8 +107,8 @@ New or unreviewed failures go to executorch-dev for read-only diagnosis with
 at least three investigate/reflect/deepen rounds. Return a directional true/false
 judgment and subjective P(true), including a concise evidence limitation when
 logs or permissions are missing; never substitute a confirmed clean verdict.
-Preserve investigation records across daily runs and synchronize any duplicated
-CI conclusion in the PR tracking table.
+Preserve investigation records across daily runs; publish each CI conclusion
+once in the corresponding single-table row.
 
 Before publishing, inspect the full diff and commit messages for unsafe
 references and secrets. Stage only the intended batch files. The user explicitly
@@ -124,10 +125,21 @@ still requires task-created branches and pull requests, and community writes
 remain forbidden. Keep local files and report the exact blocker if publishing
 fails; never claim uploaded when only locally saved.
 
-## PR summary tracking
+## Single-table progress tracking
 
-Result.md also contains a PR tracking table with exactly `未發 PR`, `PR 未 merge`,
-and `Done`. Done requires verified community merge; closed without merge remains
-PR 未 merge with a note. Track user-supplied PRs independently of shortlist selection
-and preserve the four-stage detail. Read failures retain prior status and mark
-uncertainty in notes. PM owns the summary format and cross-batch discovery rules.
+Result.md contains exactly one table with six columns in this order:
+`選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況`.
+Use the user-approved 2026-11-06 structure linked from the PM skill and template.
+Do not add a separate PR-summary table or three-status progress column.
+Four-stage cells may contain concise PR links after their status; fork PRs
+remain development evidence only.
+
+Keep independently tracked PRs after actual selections in this same table.
+Label them `僅追蹤 PR（未選題）`; do not infer a selection or development history.
+Preserve completed rows and closed-unmerged PRs. On migration from a two-table
+snapshot, fold all links, merge evidence, blockers and check timestamps into
+the matching row before dropping the legacy summary from the new snapshot.
+Do not rewrite historical reports. Read failures retain verified facts and
+the last successful check time. Verify exactly one table, all six headers,
+stage-status prefixes and complete row carry-forward before publication.
+PM owns the format and cross-batch reconciliation rules.

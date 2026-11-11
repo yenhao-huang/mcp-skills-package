@@ -1,8 +1,8 @@
 # Community CI summary and read-only triage
 
-Use this procedure for Result.md's `目前社群 CI 情況` column and keep any CI
-conclusion repeated in the PR tracking table consistent. Do not replace the
-four stage columns or their selection evidence.
+Use this procedure for the single Result.md table's `目前社群 CI 情況` column.
+Publish the conclusion once in its row; do not append a second PR-summary
+table. Preserve the four stage columns, concise PR links and selection evidence.
 
 ## Workflow
 

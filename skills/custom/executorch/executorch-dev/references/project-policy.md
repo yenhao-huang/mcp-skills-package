@@ -42,7 +42,7 @@ A shortlist batch contains exactly three user-facing files (HTML source + PDF di
 
 Before any selection, Result.md explicitly says no issues have been selected and
 has no selected-issue rows. Later shortlists preserve existing selections and PR
-tracking; progress-only days contain Result.md alone. Only real user selection creates a row, with time/evidence.
+tracking; progress-only days contain Result.md alone. Only real user selection creates a selected-issue row, with time/evidence.
 Never treat ranking, silence or elapsed time as selection.
 
 Development updates only the selected issue row and concise evidence in
@@ -73,10 +73,15 @@ still requires task-created branches and pull requests, and community writes
 remain forbidden. Keep local files and report the exact blocker if publishing
 fails; never claim uploaded when only locally saved.
 
-## PR summary tracking
+## Single-table progress tracking
 
-Result.md also contains a PR tracking table with exactly `未發 PR`, `PR 未 merge`,
-and `Done`. Done requires verified community merge; closed without merge remains
-PR 未 merge with a note. Track user-supplied PRs independently of shortlist selection
-and preserve the four-stage detail. Read failures retain prior status and mark
-uncertainty in notes. PM owns the summary format and cross-batch discovery rules.
+Follow the PM skill's [single-table contract](../../executorch-pm/SKILL.md#single-table-result-contract)
+and [Result template](../../executorch-pm/template/Result.md). Result.md has exactly
+one six-column table; do not append a PR-summary table or three-status column.
+Preserve concise PR links after stage statuses and use fork PRs only as
+development evidence. Keep independently tracked PRs as clearly labeled
+tracking-only rows without inventing user selection or development history.
+Preserve completed rows, closed-unmerged PRs and dated uncertainty. When carrying
+forward an old two-table report, fold its tracking evidence into the matching
+single-table rows without changing historical snapshots. PM owns the format,
+publication checks and cross-batch discovery rules.
