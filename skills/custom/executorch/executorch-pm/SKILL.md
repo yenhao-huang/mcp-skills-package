@@ -220,49 +220,45 @@ candidate artifacts under the usual validation rules and preserve Result.md's
 actual selections/tracking. In this conversation, the earlier October 19 issue
 7718 recommendation predates this registry and is now excluded from new plans.
 
-## Single-table Result contract
+## Table and Details contract
 
-Result.md has exactly one Markdown table, using these six columns in order:
+Use [template/Result.md](template/Result.md): one compact six-column table,
+then `## Details` with exactly two stage sections, `### issue 開發 stage`
+and `### 社群評論 stage`. Group issues under each stage in table order.
+The table columns are:
 
 `選擇的 issue | 選擇 issue | issue 開發 | 用戶在社群寄送 PR | 該 PR 被 merge | 目前社群 CI 情況`
 
-Use [template/Result.md](template/Result.md). The user-approved format reference is
-[2026-11-06 Result.md](https://github.com/yenhao-huang/daily/blob/main/executorch/999976_2026-11-06_040301/Result.md);
-copy its structure, never its historical statuses or timestamps. Do not append
-a separate PR tracking/summary table or a three-status progress column.
+The four lifecycle cells start with `未開始`, `進行中`, `完成`, `受阻`, or
+`待確認`; a short PR link may follow. Keep CI cells to brief counts/status.
+Put implementation, fork evidence, validation and limits in development Details;
+put community issue comments, reviews, PR state, CI evidence and next steps in
+community Details. Include source links and original check times there, not in
+long table cells. Never append a second PR table or three-status summary column.
 
-The four stage cells start with `未開始`, `進行中`, `完成`, `受阻`, or `待確認`.
-A concise annotation and PR link after the status is allowed, for example
-`完成 · [PR 24122](https://redirect.github.com/pytorch/executorch/pull/24122)`
-or `受阻 · [fork PR 45](https://github.com/yenhao-huang/executorch/pull/45)`.
-Keep fork evidence in `issue 開發`; verified community PR links may appear in
-the corresponding development/submission/merge stage. Do not require plain
-status-only cells or add a separate PR column.
+Preserve selected issue order; put independent PRs afterward with identity/link
+and `僅追蹤 PR（未選題）`, selection `未開始` and unknown development `待確認`.
+Tracking alone never selects an issue or authorizes development. Community
+submission and merge require verified evidence for the same community PR;
+closed-unmerged and merged fork PRs are not community merge completion.
 
-Keep selected issue rows in their established order. Preserve independently
-tracked PRs after selected rows in the same table: label the first cell
-`僅追蹤 PR（未選題）` with the PR identity/link, mark `選擇 issue` as `未開始`,
-and leave unverified development history `待確認`. A supplied PR alone is not
-a user selection or authorization to develop. Set submission/merge stages
-only from verified community evidence; closed-unmerged is never merge complete.
-Deduplicate by repository/PR, retain completed rows and reconcile every batch's
-Result.md so removing the old summary table never drops independently tracked
-PRs. When a tracked PR is linked to an actual selection, merge its evidence
-into the selected row without duplicating it.
-
-During carry-forward, fold legacy PR-summary links, merge evidence, blockers,
-next steps and check times into the matching row's stage annotations; keep
-CI-specific evidence in the CI cell. Remove the redundant summary table from the new snapshot only.
-Preserve source dates and uncertainty. Record check timestamps in Asia/Taipei.
-A failed read retains the prior verified status and last successful timestamp,
-with a dated failure note; review approval and successful CI do not prove merge.
-Keep detailed histories, head inventories and diagnostics internally; a short
-head/count-scope note may appear outside the table as in the reference.
+Deduplicate by repository/PR and reconcile historical snapshots against current
+internal selection and stop/resume decisions. Retain completed and closed PRs
+unless explicitly stopped by the user; do not restore stopped rows from older
+reports. Preserve those decisions when resetting per-run state. When a tracked
+PR belongs to an actual selection, combine its evidence without duplicating rows.
+During migration, move existing long cells or a legacy second table's evidence
+into matching Details, retaining source dates, caveats and check times. Remove
+only redundant formatting in the new snapshot; preserve historical reports.
+Read failures retain prior verified facts and last successful check times with
+a dated limitation. Review approval and successful CI do not establish merge.
+If no items are tracked, retain the empty table and two stage headings with a
+brief empty-state sentence; do not leave placeholder issue sections.
 
 ## Community CI status and failure triage
 
-The selected-issue table's last column is `目前社群 CI 情況`, replacing
-`目前進度與依據`. Use the exact dated field order from
+Publish each full CI assessment in the corresponding issue under
+`社群評論 stage` in Details. Use the exact dated field order from
 [template/Result.md](template/Result.md): `CI fail`, `CI sucess`, `Require fix`,
 then `Evidence`. Follow [references/ci-triage.md](references/ci-triage.md) to
 count the complete current community-PR CI set and delegate previously
@@ -286,14 +282,14 @@ stop/resume decisions in internal STATE.md; removing public history never resume
 stopped tracking. Preserve existing internal decisions when starting a new run.
 
 Result.md contains current actual selections and independently tracked PRs in
-one six-column table, with four-stage progress, check times, blockers, next
-steps and supporting evidence. Never restore a second table during carry-forward.
+one compact table with lifecycle progress, followed by development/community
+Details with check times, blockers, next steps and supporting evidence. Never restore a second table during carry-forward.
 Do not include historical candidate lists, original shortlist/history sections,
 previous-report navigation, cron/sandbox diagnostics, manual-backfill narratives
 or execution logs. Keep these in internal STATE.md and cron logs; issues.json
 remains the exclusion registry. When carrying forward a report, remove these
 legacy sections rather than copying them. API read failures relevant to a tracked
-PR still belong briefly in that row, with its last successful check time.
+PR belong in its Details, with its last successful check time.
 
 Every Asia/Taipei calendar day must have a Result.md, even when all PR states
 are unchanged or no issues are selected. Run at the confirmed daily 04:00 time.
@@ -303,7 +299,8 @@ ID, seeded at `999999`, following the allocation and migration rules in
 existing full directory name on reruns; if multiple exist, choose the latest
 by parsed timestamp suffix, not by lexicographic maximum or an unprefixed date
 glob. Otherwise allocate a new ID and timestamp at run time.
-Carry forward all tracked PRs, completed rows, actual selections and evidence
+Apply internal stop/resume decisions first, then carry forward active tracked
+PRs, completed rows, actual selections and evidence
 from the latest snapshot; reconcile any older rows absent from it, deduplicating
 by repository/PR and preserving newer verified facts. Recheck current states.
 Never overwrite prior days to record today's progress. Record publication metadata
@@ -370,7 +367,7 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    Read selected issues and associated fork/community PRs
    from Result.md, including previously tracked PRs now closed or merged. Apply
    community CI counting and cached failure triage above before finalizing the
-   single-table CI cells; fold any legacy summary evidence into the same rows. Read
+   community Details; move legacy long cells and summary evidence into those sections. Read
    all relevant CI/review changes and publish today's Result.md snapshot,
    even if no status changed. Preserve prior days.
    Use exactly four stages: `選擇 issue`, `issue 開發`, `用戶在社群寄送 PR`,
@@ -387,8 +384,10 @@ in [references/schedule.json](references/schedule.json), never copied to daily.
    count Markdown table blocks: require exactly one with the six headers in
    the specified order and six cells per row (escape literal pipes). Reject a
    second table, a PR-summary heading or a three-status progress column. Check
-   stage-status prefixes while allowing concise PR-link annotations; reconcile
-   all selected, independently tracked and completed rows against prior snapshots.
+   lifecycle-status prefixes while allowing concise PR links. Require the two
+   Details stages and matching issue identity/order; keep long prose out of cells.
+   Reconcile active selected, independent and completed rows against prior snapshots
+   and internal stop/resume decisions. Reject public history and generic CI sections.
    Validate actual selection evidence, check times, CI summary format/count scope,
    failure investigation evidence and redirect links before publication. New shortlists use newly allocated ID-prefixed timestamp
    batches; progress updates preserve historical snapshots and selection history.
