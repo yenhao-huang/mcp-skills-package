@@ -1,0 +1,21 @@
+name: nsys-ncu-tool
+services:
+  profiler:
+    image: vllm-openai:v0.32.0-cu129-nsight   # built from Dockerfile, see README
+    pull_policy: never
+    cap_add: [SYS_ADMIN]   # GPU performance counters (ncu / nsys --gpu-metrics)
+    ipc: host
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ${WORK_DIR:-./work}:/work
+      - ${MODEL_DIR:-/home/wingene/transformers_models/gemma-4-26B-A4B-it}:/model:ro
+    environment:
+      HF_HUB_OFFLINE: "1"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
