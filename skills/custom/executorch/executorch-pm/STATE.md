@@ -1,17 +1,18 @@
 # ExecuTorch PM State
 
-Run ID: community-ci-110
-Scope: Replace the Result status narrative with community CI counts and evidence-based fix relevance.
+Run ID: single-table-118
+Instance: codex/fix-118-executorch-single-table
+Started: 2026-11-11 Asia/Taipei
+Scope: Restore the user-approved single-table Result.md format.
 Mode: user-requested skill update
-Publication status: source PR 111 open; revision validated: delegate to executorch-dev, three review rounds, directional probability and concise evidence
+Archive path: none; daily reports remain unchanged
+Selection status: unchanged
+Publication status: PR 119 open; awaiting review/merge and scheduler synchronization
 
 | Step | Status | Evidence |
 | --- | --- | --- |
-| Read context | completed | Read the referenced Result.md, current PM skill/template/policy and skill-change rules. |
-| Collect or process selection | skipped | No issue selection or development requested. |
-| Save records | completed | Replaced the column; added exact date/count/verdict/evidence format, read-only triage and persistent cache contract. |
-| Validate and publish | completed | Source and installed Codex/Claude generic validators passed; exact format, existing stages, cache schema, links and whitespace checks passed. Applied targeted policy hunks under the active scheduler run.lock; registry hashes preserved. |
-| Handoff | in_progress | Source PR https://github.com/yenhao-huang/mcp-skills-package/pull/111 open, pending merge. Scheduler and installed skill updated; no historical Result rewrite, actual CI investigation, community write or CI rerun performed. |
-
-## 2026-10-26 directional developer review revision
-Source/installed PM and dev policy updated: PM delegates; dev performs at least three substantive investigate/reflect/deepen rounds; P(true) with true/false tendency replaces unknown verdicts, concise Evidence stays one sentence. Existing investigation history retained. Source generic validators passed using /data/venv_et_batch2026/bin/python, layout/link and diff checks passed. Actual dev three-round findings saved internally; today report preview updated separately. PR 111 remains open, unmerged.
+| Read context | completed | Read package AGENTS.md, skill-create rules, PM template/policy/CI/schedule and the user-provided 2026-11-06 Result.md. |
+| Collect or process selection | skipped | No issue selection, CI diagnosis or development requested. |
+| Save records | completed | Issue https://github.com/yenhao-huang/mcp-skills-package/issues/118 created before edits; branch based on f4256ba008edb7320458b2f528e2e9bd33904630. |
+| Validate and publish | completed | quick_validate.py: Skill is valid!; validate_format.py: one-table/header/status annotation/reference, saved schedule prompt-only diff, layout, stale-rule, whitespace and link checks passed. No runtime installation or service change; lifecycle validation is not applicable. |
+| Handoff | in_progress | PR https://github.com/yenhao-huang/mcp-skills-package/pull/119 opened and attached to this chat. Source branch codex/fix-118-executorch-single-table targets main. CLI credentials were invalid; used the authenticated GitHub connector. Await review/merge and verified installation; no daily reports or live schedules changed. |
