@@ -15,3 +15,10 @@ issues.json at the PM skill root is persistent selection/handling/exclusion stat
 recommendation-history.json at the PM skill root records published candidate IDs separately from issue selection/handling status. Preserve installed history on upgrades; backfill verified historical batches when empty. Never copy the ledger into daily.
 
 ci-investigations.json at the PM skill root is the persistent reviewed-CI-failure cache. Preserve installed records on upgrades; initialize only when absent. Never publish it to daily. Detailed read-only triage rules live in references/ci-triage.md.
+
+Daily output exception: `executorch/000000_slide-summary/` contains flat,
+byte-identical `<source-id>_YYYY-MM-DD.pdf` backups and a README.md index.
+Preserve the source batch prefix and original batch files; do not create
+per-batch subdirectories here. This fixed summary directory is not a batch
+and must be excluded from batch ID allocation and latest-report discovery.
+See `../project-policy.md#slide-summary-backups` for publication and migration.

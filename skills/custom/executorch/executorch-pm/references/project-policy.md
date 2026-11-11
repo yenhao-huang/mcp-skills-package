@@ -28,7 +28,12 @@
 Use `yenhao-huang/daily`, directory `executorch/<id>_<time>/`, where `<id>` is
 exactly six decimal digits and `<time>` is an Asia/Taipei timestamp
 `YYYY-MM-DD_HHmmss`. GitHub's ascending filename order must show newer batches
-first. Apply these allocation rules under the existing shared run lock (do not
+first. Treat only direct child directories matching
+`^[0-9]{6}_[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}$` with a valid timestamp
+as prefixed batches. Exclude `000000_slide-summary` and its files from batch
+discovery, latest-report selection and ID allocation; its `000000` is a fixed
+sorting prefix, not an allocated batch ID. Apply these allocation rules under
+the existing shared run lock (do not
 acquire it recursively when the launcher already holds it):
 
 - Seed an empty archive at `999999`. For a user-authorized migration of existing
@@ -37,7 +42,7 @@ acquire it recursively when the launcher already holds it):
   If prefixed and legacy directories coexist, do not seed a second sequence;
   require an explicit migration mapping before allocating or moving old IDs.
 - For each new batch, allocate `min(existing prefixed IDs) - 1`, formatted with
-  six digits; use all existing prefixed directories to avoid collisions. For
+  six digits; use all valid prefixed batch directories to avoid collisions. For
   example, `999997_2026-10-17_040002` sorts above
   `999998_2026-10-16_040001`. If the minimum is `000000`, stop and report ID
   exhaustion; never wrap, reuse an ID, or expand the width silently.
@@ -111,7 +116,9 @@ Preserve investigation records across daily runs; publish each CI conclusion
 once in the corresponding single-table row.
 
 Before publishing, inspect the full diff and commit messages for unsafe
-references and secrets. Stage only the intended batch files. The user explicitly
+references and secrets. Stage only the intended batch files and, when publishing
+a shortlist or explicitly maintaining backups, the corresponding slide-summary
+PDFs and README.md. The user explicitly
 authorizes direct commits and normal pushes to `main` in `yenhao-huang/daily`;
 no task branch or pull request is needed for this repository. Verify the remote
 repository, fetch main and preserve unrelated changes before publishing. Use
@@ -124,6 +131,41 @@ This exception applies only to daily records. The skill-package repository
 still requires task-created branches and pull requests, and community writes
 remain forbidden. Keep local files and report the exact blocker if publishing
 fails; never claim uploaded when only locally saved.
+
+## Slide-summary backups
+
+Keep `executorch/000000_slide-summary/` as the top-sorted PDF archive. This is
+separate from the three-file shortlist batch contract above.
+
+- Copy each published batch's `issue-disptach.pdf` directly into the summary as
+  `<source-id>_YYYY-MM-DD.pdf`. Reuse the six-digit ID and date from the source
+  batch; do not allocate a separate summary ID, strip the prefix, or renumber
+  existing batches. For example, `999973_2026-11-09_040657/issue-disptach.pdf`
+  becomes `000000_slide-summary/999973_2026-11-09.pdf`.
+- Keep the archive flat: no batch subdirectories. The decreasing ID places newer
+  PDFs first in ascending filename order and distinguishes same-day batches,
+  such as `999986_2026-10-26.pdf` and `999987_2026-10-26.pdf`.
+- Keep source HTML, PDF and Result.md in their original batch. Copy PDF bytes
+  unchanged; do not re-render a PDF or rewrite its embedded links just to create
+  a backup. Maintain only the PDF copies and a README.md index in the summary.
+  The index lists PDFs newest first and links to each original batch's HTML and
+  report; its relative links must resolve from the summary directory.
+- On shortlist publication, include the validated source artifacts, PDF copy and
+  index update in the same daily commit. An identical existing copy is a no-op.
+  A different existing file at the same backup path requires checking the
+  source and user-authorized revision before replacement; never silently
+  overwrite another batch. Progress-only daily runs leave the summary unchanged.
+- Backfill or rename historical backups only when explicitly requested. Enumerate
+  all source batch PDFs, map each by its full source batch name, then verify the
+  new copies and index before removing superseded summary paths. Preserve source
+  batches. Ambiguous unprefixed files or legacy batches without a unique migration
+  mapping block that migration; do not infer identity from date alone.
+- Before publishing, compare each added/updated copy with its source by hash or
+  exact bytes. For a full backfill require one copy per source PDF, including
+  same-day batches. Check that the summary has no nested directories, all PDF
+  names retain their source IDs, ascending names place newer batches first,
+  and all index links resolve. Verify the remote commit and backup paths after
+  publishing and record evidence in internal STATE.md.
 
 ## Single-table progress tracking
 
