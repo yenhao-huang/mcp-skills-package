@@ -64,6 +64,17 @@ Current examples:
 - `openspec-propose`
 - `openspec-sync-specs`
 
+#### engineer/perf_engineer/nvidia_gpu_profiler
+
+Performance-engineering skills for profiling NVIDIA GPU workloads with Nsight
+Systems (`nsys`) and Nsight Compute (`ncu`). Store these under
+`skills/engineer/perf_engineer/nvidia_gpu_profiler/`.
+
+Current examples:
+
+- `perf-nsight-systems`
+- `perf-nsight-compute-analysis`
+
 ### operations
 
 Automation, scheduling, infrastructure setup, runtime services, MCP setup,
@@ -144,6 +155,8 @@ Current examples:
 - Prefer a business-function category over `others`.
 - Use `engineer/git/<skill-name>` for Git/GitHub skills and
   `engineer/openspec/<skill-name>` for OpenSpec skills.
+- Use `engineer/perf_engineer/nvidia_gpu_profiler/<skill-name>` for NVIDIA GPU
+  profiling skills (`nsys`, `ncu`).
 - Use `custom` when the skill is tied to a specific company, project, user, or
   local environment.
 - Use `custom/<subcategory>` when multiple internal skills share the same owner
