@@ -46,6 +46,7 @@ bash mcp-skills-package/init-windows.sh 'C:\Users\User\my-project'
 | `design-system` | `skills/engineer/design-system/SKILL.md` | 建立與檢查前端 design tokens、排版、資料呈現、載入穩定性及動態規則。 |
 | `humanizer` | `skills/content-producer/humanizer/SKILL.md` | 修正制式或生硬口吻，保留技術事實、來源、固定格式與資料欄位。 |
 | `frontend-slides` | `skills/content-producer/frontend-slides/SKILL.md` | 製作獨立 HTML 簡報並輸出 PDF；共用既有設計與渲染參考。 |
+| `manim` | `skills/content-producer/manim/SKILL.md` | 以 Manim 製作數學動畫、方程推導與論文解說影片；整合 3brown1blue 的場景規劃、模板及視覺檢查流程。 |
 | `executorch-pm` | `skills/custom/executorch/executorch-pm/SKILL.md` | 整理候選議題與 PR 進度，透過 Humanizer 修訂文字、frontend-slides 製作簡報。 |
 | `find-skills` | `skills/custom/productivity/find-skills/SKILL.md` | 優先從受管理的 skill libraries 搜尋與驗證候選，再提供推薦或安裝指引。 |
 | `start-deer` | `skills/custom/productivity/start-deer/SKILL.md` | 透過 DeerFlow 整理單篇或多篇 PDF，支援 Codex 授權、逐頁引用、比較分析與獨立研究結果。 |
